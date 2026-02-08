@@ -9,7 +9,7 @@ import {
 
 export const BaseUserSchema = z.object({
   id: zodUuid(),
-  username: zodName(),
+  name: zodName(),
   password: z.string(),
   isActive: z.boolean().default(true),
   isTeacher: z.boolean().default(false),
