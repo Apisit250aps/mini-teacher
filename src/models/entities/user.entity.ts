@@ -6,6 +6,7 @@ import {
   zodTimestamp,
   zodUuid,
 } from '@/lib/zod/fields'
+import { last } from 'lodash'
 
 export const BaseUserSchema = z.object({
   id: zodUuid(),
@@ -16,6 +17,7 @@ export const BaseUserSchema = z.object({
   firstName: zodName().optional(),
   lastName: zodName().optional(),
   email: zodEmail().optional(),
+  lastLoginAt: zodDate().optional(),
   createdAt: zodDate(),
   updatedAt: zodTimestamp(),
 })
@@ -36,4 +38,12 @@ export const UpdateUserSchema = BaseUserSchema.omit({
   })
   .partial()
 
+export const UserLoginSchema = BaseUserSchema.pick({
+  name: true,
+  password: true,
+})
+
 export type User = z.infer<typeof BaseUserSchema>
+export type CreateUser = z.infer<typeof CreateUserSchema>
+export type UpdateUser = z.infer<typeof UpdateUserSchema>
+export type UserLogin = z.infer<typeof UserLoginSchema>

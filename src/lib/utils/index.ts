@@ -28,7 +28,8 @@ export function onErrorMessage(error: unknown): string {
     )
   } else if (typeof error === 'string') {
     return error
+  } else if (error instanceof Error) {
+    return error.message
   }
   return 'เกิดข้อผิดพลาดที่ไม่คาดคิดขึ้น'
-
 }
