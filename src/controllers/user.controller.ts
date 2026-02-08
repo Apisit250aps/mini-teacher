@@ -1,6 +1,6 @@
-import { safeValidate } from '@/lib/utils'
-import { CreateUserSchema, type User } from '@/models/entities'
-import { createUser, findUserByName } from '@/models/repositories'
+import { onErrorMessage, safeValidate } from '@/lib/utils'
+import { CreateUserSchema, UpdateUserSchema, type User } from '@/models/entities'
+import { createUser, findUserById, findUserByName, updateUser } from '@/models/repositories'
 import { NextRequest, NextResponse } from 'next/server'
 
 type UserParams = {
@@ -17,7 +17,7 @@ export async function CreateUser(
       return NextResponse.json(
         {
           success: false,
-          message: 'Validation failed',
+          message: 'ตรวจสอบข้อมูลไม่ถูกต้อง',
           error: validate.error!,
         },
         { status: 400 },
@@ -28,20 +28,20 @@ export async function CreateUser(
       return NextResponse.json(
         {
           success: false,
-          message: 'Username already exists',
-          error: 'Username already exists',
+          message: 'ชื่อผู้ใช้ซ้ำ',
+          error: 'ชื่อผู้ใช้ซ้ำ',
         },
-        { status: 400 },
+        { status: 409 },
       )
     }
     const insert = await createUser(validate.data)
     if (!insert) {
-      throw new Error('User creation failed')
+      throw new Error('การสร้างผู้ใช้ล้มเหลว')
     }
     return NextResponse.json(
       {
         success: true,
-        message: 'User created successfully',
+        message: 'สร้างผู้ใช้สำเร็จ',
         data: insert,
       },
       { status: 201 },
@@ -50,8 +50,61 @@ export async function CreateUser(
     return NextResponse.json(
       {
         success: false,
-        message: 'Failed to create user',
-        error: (error as Error).message,
+        message: 'ข้อผิดพลาดภายในเซิร์ฟเวอร์',
+        error: onErrorMessage(error),
+      },
+      { status: 500 },
+    )
+  }
+}
+
+export async function UpdateUser(
+  req: NextRequest,
+  { params }: { params: Promise<UserParams> },
+): Promise<NextResponse<ApiResponse<User | null>>> {
+  try {
+    const { userId } = await params
+    const body = await req.json()
+    const validate = await safeValidate(UpdateUserSchema, body)
+    if (!validate.data) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'ตรวจสอบข้อมูลไม่ถูกต้อง',
+          error: validate.error!,
+        },
+        { status: 400 },
+      )
+    }
+    const user = await findUserById(userId)
+    if (!user) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'ไม่พบผู้ใช้',
+          error: 'ไม่พบผู้ใช้',
+        },
+        { status: 404 },
+      )
+    }
+    const update = await updateUser(userId, validate.data)
+    if (!update) {
+      throw new Error('การอัปเดตผู้ใช้ล้มเหลว')
+    }
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'อัปเดตผู้ใช้สำเร็จ',
+        data: update,
+      },
+      { status: 200 },
+    )
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: 'ข้อผิดพลาดภายในเซิร์ฟเวอร์',
+        error: onErrorMessage(error),
       },
       { status: 500 },
     )

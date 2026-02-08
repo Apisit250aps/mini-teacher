@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function zodError<T>(error: z.ZodError<T>): string {
-  return `Field ${error.issues[0].path.join('.')}! ${error.issues[0].message}`
+  return `${error.issues[0].message}`
 }
 
 export async function safeValidate<T>(
@@ -24,10 +24,11 @@ export function onErrorMessage(error: unknown): string {
     return zodError(error)
   } else if (error instanceof AxiosError) {
     return (
-      (error.response?.data.error as string) || 'An unexpected error occurred.'
+      (error.response?.data.error as string) || 'เกิดข้อผิดพลาดที่ไม่คาดคิดขึ้น'
     )
   } else if (typeof error === 'string') {
     return error
   }
-  return 'An unexpected error occurred.'
+  return 'เกิดข้อผิดพลาดที่ไม่คาดคิดขึ้น'
+
 }

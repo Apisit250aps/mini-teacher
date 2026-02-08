@@ -20,7 +20,10 @@ export async function createUser(user: User): Promise<User | null> {
   }
 }
 
-export async function updateUser(id: string, user: User): Promise<User | null> {
+export async function updateUser(
+  id: string,
+  user: Partial<User>,
+): Promise<User | null> {
   try {
     const users = await usersCollection()
     const set = omitBy(

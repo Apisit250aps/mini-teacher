@@ -6,6 +6,6 @@ export const zodName = () =>
   z.string().refine((val) => !val.includes(' '), {
     message: 'ห้ามมีเว้นวรรค',
   })
-export const zodEmail = () => z.email()
-export const zodDate = () => z.date()
+export const zodEmail = () => z.email('รูปแบบอีเมลไม่ถูกต้อง')
+export const zodDate = () => z.date('รูปแบบวันที่ไม่ถูกต้อง')
 export const zodTimestamp = () => z.date().default(() => new Date())
