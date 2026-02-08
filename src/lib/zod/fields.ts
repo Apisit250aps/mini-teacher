@@ -8,4 +8,4 @@ export const zodName = () =>
   })
 export const zodEmail = () => z.email()
 export const zodDate = () => z.date()
-export const zodTimestamp = () => z.number().default(() => Date.now())
+export const zodTimestamp = () => z.date().default(() => new Date())

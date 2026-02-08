@@ -10,14 +10,20 @@ import {
 export const BaseUserSchema = z.object({
   id: zodUuid(),
   name: zodName(),
-  password: z.string(),
+  password: z.string().min(8),
   isActive: z.boolean().default(true),
   isTeacher: z.boolean().default(false),
-  firstName: zodName(),
-  lastName: zodName(),
-  email: zodEmail(),
+  firstName: zodName().optional(),
+  lastName: zodName().optional(),
+  email: zodEmail().optional(),
   createdAt: zodDate(),
   updatedAt: zodTimestamp(),
 })
+
+export const CreateUserSchema = BaseUserSchema.extend({
+  createdAt: zodTimestamp(),
+})
+
+export const UpdateUserSchema = BaseUserSchema.partial()
 
 export type User = z.infer<typeof BaseUserSchema>
