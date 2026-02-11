@@ -1,7 +1,6 @@
 import { yearsCollection } from '@/lib/mongo'
 import { Year } from '@/models/entities'
-import { v7 as uuidv7 } from 'uuid';
-
+import { v7 as uuidv7 } from 'uuid'
 
 export async function createYear(year: Year): Promise<Year> {
   const yearsCol = await yearsCollection()
@@ -44,11 +43,23 @@ export async function initYear(userId: string) {
     await createYear({
       id: uuidv7(),
       user: userId,
-      year: new Date().getFullYear(),
+      year: new Date().getFullYear() + 543,
       term: 1,
       createdAt: new Date(),
       updatedAt: new Date(),
       isActive: true,
     })
   }
+}
+
+export async function getUniqYear(
+  userId: string,
+  year: number,
+  term: number,
+): Promise<Year | null> {
+  const yearsCol = await yearsCollection()
+  return yearsCol.findOne(
+    { user: userId, year, term },
+    { projection: { _id: 0 } },
+  )
 }

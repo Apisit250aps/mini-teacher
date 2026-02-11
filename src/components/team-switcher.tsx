@@ -42,7 +42,7 @@ export function TeamSwitcher() {
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">
-                  ปีการศึกษา {activeYear.year + 543}
+                  ปีการศึกษา {activeYear.year}
                 </span>
                 <span className="truncate text-xs">
                   ภาคเรียนที่ {activeYear.term}
