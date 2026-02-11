@@ -6,7 +6,6 @@ import {
   zodTimestamp,
   zodUuid,
 } from '@/lib/zod/fields'
-import { last } from 'lodash'
 
 export const BaseUserSchema = z.object({
   id: zodUuid(),
