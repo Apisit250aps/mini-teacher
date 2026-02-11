@@ -5,7 +5,7 @@ import './globals.css'
 import { Toaster } from '@/components/ui/sonner'
 import { SessionProvider } from 'next-auth/react'
 import { auth } from '@/auth'
-import { OverlayProvider } from '@/hooks/use-overlay';
+import { OverlayProvider } from '@/hooks/contexts/use-overlay';
 
 const sarabun = Sarabun({
   variable: '--font-sarabun',
