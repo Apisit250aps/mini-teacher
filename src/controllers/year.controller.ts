@@ -1,14 +1,21 @@
 import { auth } from '@/auth'
 import { onErrorMessage, safeValidate } from '@/lib/utils'
 import { CreateYearSchema, UpdateYearSchema, Year } from '@/models/entities'
-import { createYear, getUniqYear, updateYear } from '@/models/repositories'
+import {
+  authCreateYear,
+  authDeleteYear,
+  authGetAllYears,
+  authGetYearById,
+  authUpdateYear,
+  getUniqYear,
+} from '@/models/repositories'
 import { NextRequest, NextResponse } from 'next/server'
 
 type YearParams = {
   yearId: string
 }
 
-export async function CreateYear(
+export async function AuthCreateYear(
   req: NextRequest,
 ): Promise<NextResponse<ApiResponse<Year>>> {
   try {
@@ -48,7 +55,7 @@ export async function CreateYear(
       )
     }
 
-    const year = await createYear(validate.data)
+    const year = await authCreateYear(validate.data)
     return NextResponse.json(
       { success: true, message: 'Year created successfully', data: year },
       { status: 201 },
@@ -65,7 +72,7 @@ export async function CreateYear(
   }
 }
 
-export async function UpdateYear(
+export async function AuthUpdateYear(
   req: NextRequest,
   { params }: { params: Promise<YearParams> },
 ): Promise<NextResponse<ApiResponse<Year>>> {
@@ -88,7 +95,7 @@ export async function UpdateYear(
       )
     }
 
-    const update = await updateYear(yearId, validate.data)
+    const update = await authUpdateYear(yearId, session.user.id, validate.data)
     if (!update) {
       return NextResponse.json(
         { success: false, message: 'Year not found' },
@@ -97,6 +104,108 @@ export async function UpdateYear(
     }
     return NextResponse.json(
       { success: true, message: 'Year updated successfully', data: update },
+      { status: 200 },
+    )
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: 'Internal Server Error',
+        error: onErrorMessage(error),
+      },
+      { status: 500 },
+    )
+  }
+}
+
+export async function AuthGetYearById(
+  req: NextRequest,
+  { params }: { params: Promise<YearParams> },
+): Promise<NextResponse<ApiResponse<Year>>> {
+  try {
+    const session = await auth()
+    if (!session) {
+      return NextResponse.json(
+        { success: false, message: 'Unauthorized' },
+        { status: 401 },
+      )
+    }
+    const { yearId } = await params
+    const year = await authGetYearById(yearId, session.user.id)
+    if (!year) {
+      return NextResponse.json(
+        { success: false, message: 'Year not found' },
+        { status: 404 },
+      )
+    }
+    return NextResponse.json(
+      { success: true, message: 'Year fetched successfully', data: year },
+      { status: 200 },
+    )
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: 'Internal Server Error',
+        error: onErrorMessage(error),
+      },
+      { status: 500 },
+    )
+  }
+}
+
+export async function AuthGetAllYears(
+  req: NextRequest,
+): Promise<NextResponse<ApiResponse<Year[]>>> {
+  try {
+    const session = await auth()
+    if (!session) {
+      return NextResponse.json(
+        { success: false, message: 'Unauthorized' },
+        { status: 401 },
+      )
+    }
+    const years = await authGetAllYears(session.user.id)
+    return NextResponse.json(
+      { success: true, message: 'Years fetched successfully', data: years },
+      { status: 200 },
+    )
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: 'Internal Server Error',
+        error: onErrorMessage(error),
+      },
+      { status: 500 },
+    )
+  }
+}
+
+export async function AuthDeleteYear(
+  req: NextRequest,
+  { params }: { params: Promise<YearParams> },
+): Promise<NextResponse<ApiResponse<null>>> {
+  try {
+    const session = await auth()
+    if (!session) {
+      return NextResponse.json(
+        { success: false, message: 'Unauthorized' },
+        { status: 401 },
+      )
+    }
+    const { yearId } = await params
+    const year = await authGetYearById(yearId, session.user.id)
+    if (!year) {
+      return NextResponse.json(
+        { success: false, message: 'Year not found' },
+        { status: 404 },
+      )
+    }
+
+    await authDeleteYear(yearId, session.user.id)
+    return NextResponse.json(
+      { success: true, message: 'Year deleted successfully', data: null },
       { status: 200 },
     )
   } catch (error) {
