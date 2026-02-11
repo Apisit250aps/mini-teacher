@@ -1,5 +1,6 @@
 import { auth } from '@/auth'
-import YearLayout from '@/components/layouts/year-layout';
+import DashboardLayout from '@/components/layouts/dashboard-layout'
+
 import { initYear } from '@/models/repositories'
 import { redirect } from 'next/navigation'
 
@@ -15,5 +16,5 @@ export default async function Layout({
 
   await initYear(session.user.id)
 
-  return <YearLayout>{children}</YearLayout>
+  return <DashboardLayout>{children}</DashboardLayout>
 }

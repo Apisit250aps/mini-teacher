@@ -3,7 +3,8 @@ import { GalleryVerticalEnd } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Field, FieldGroup } from '@/components/ui/field'
-import { Input, InputPassword } from '@/components/ui/input'
+import { Input } from '@/components/ui/input'
+import { InputPassword } from '@/components/ui/input-password'
 import {
   Form,
   FormControl,
