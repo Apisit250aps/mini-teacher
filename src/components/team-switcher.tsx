@@ -69,8 +69,10 @@ export function TeamSwitcher() {
                 <div className="flex size-6 items-center justify-center rounded-md border">
                   <Calendar className="size-3.5 shrink-0" />
                 </div>
-                {year.year}
-                <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
+                {year.term} / {year.year}
+                {activeYear.id === year.id && (
+                  <DropdownMenuShortcut>Current</DropdownMenuShortcut>
+                )}
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
