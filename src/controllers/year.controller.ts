@@ -6,6 +6,7 @@ import {
   authDeleteYear,
   authGetAllYears,
   authGetYearById,
+  authSetActiveYear,
   authUpdateYear,
   getUniqYear,
 } from '@/models/repositories'
@@ -206,6 +207,43 @@ export async function AuthDeleteYear(
     await authDeleteYear(yearId, session.user.id)
     return NextResponse.json(
       { success: true, message: 'Year deleted successfully', data: null },
+      { status: 200 },
+    )
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: 'Internal Server Error',
+        error: onErrorMessage(error),
+      },
+      { status: 500 },
+    )
+  }
+}
+
+export async function AuthSetActiveYear(
+  req: NextRequest,
+  { params }: { params: Promise<YearParams> },
+): Promise<NextResponse<ApiResponse<null>>> {
+  try {
+    const session = await auth()
+    if (!session) {
+      return NextResponse.json(
+        { success: false, message: 'Unauthorized' },
+        { status: 401 },
+      )
+    }
+    const { yearId } = await params
+    const year = await authGetYearById(yearId, session.user.id)
+    if (!year) {
+      return NextResponse.json(
+        { success: false, message: 'Year not found' },
+        { status: 404 },
+      )
+    }
+    await authSetActiveYear(session.user.id, yearId)
+    return NextResponse.json(
+      { success: true, message: 'Active year set successfully', data: null },
       { status: 200 },
     )
   } catch (error) {

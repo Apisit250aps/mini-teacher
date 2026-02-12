@@ -70,3 +70,15 @@ export async function AuthDeleteYearService({ yearId }: { yearId: string }) {
     throw onErrorMessage(error)
   }
 }
+
+export async function AuthSetActiveYearService({ yearId }: { yearId: string }) {
+  try {
+    const result = await client.patch<ApiResponse<null>>(`/api/year/${yearId}`)
+    if (!result.data.success) {
+      throw new Error(result.data.message)
+    }
+    return result.data.data
+  } catch (error) {
+    throw onErrorMessage(error)
+  }
+}

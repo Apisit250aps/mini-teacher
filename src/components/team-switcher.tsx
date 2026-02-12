@@ -24,7 +24,7 @@ import YearCreateForm from './app/year/year-create-form'
 
 export function TeamSwitcher() {
   const { isMobile } = useSidebar()
-  const { activeYear, years, setActiveYear } = useYear()
+  const { activeYear, years, onSetyearActive } = useYear()
 
   if (!activeYear) {
     return null
@@ -65,7 +65,7 @@ export function TeamSwitcher() {
             {years?.map((year) => (
               <DropdownMenuItem
                 key={year.id}
-                onClick={() => setActiveYear(year!)}
+                onClick={() => onSetyearActive(year!)}
                 className="gap-2 p-2"
               >
                 <div className="flex size-6 items-center justify-center rounded-md border">

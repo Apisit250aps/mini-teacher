@@ -94,6 +94,18 @@ export async function authCreateYear(year: Year): Promise<Year> {
   return year
 }
 
+export async function authSetActiveYear(
+  userId: string,
+  yearId: string,
+): Promise<void> {
+  const yearsCol = await yearsCollection()
+  await yearsCol.updateMany({ user: userId }, { $set: { isActive: false } })
+  await yearsCol.updateOne(
+    { id: yearId, user: userId },
+    { $set: { isActive: true } },
+  )
+}
+
 export async function getUniqYear(
   userId: string,
   year: number,
