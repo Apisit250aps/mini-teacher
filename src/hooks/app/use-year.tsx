@@ -6,7 +6,8 @@ type YearContextValue = {
   activeYear: Year
   years?: Year[]
   setActiveYear: React.Dispatch<React.SetStateAction<Year>>
-  setYears?: React.Dispatch<React.SetStateAction<Year[]>>
+  setYears?: (years: Year[]) => void
+  onYearsCreate?: (newYear: Year) => Promise<void>
 }
 
 const YearContext = React.createContext<YearContextValue | null>(null)
@@ -22,7 +23,12 @@ export function YearProvider({
   const [activeYear, setActiveYear] = React.useState<Year>(years[0])
   return (
     <YearContext.Provider
-      value={{ activeYear, years: yearsState, setActiveYear, setYears }}
+      value={{
+        activeYear,
+        years: yearsState,
+        setActiveYear,
+        setYears,
+      }}
     >
       {children}
     </YearContext.Provider>

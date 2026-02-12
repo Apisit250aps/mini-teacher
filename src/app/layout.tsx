@@ -5,7 +5,8 @@ import './globals.css'
 import { Toaster } from '@/components/ui/sonner'
 import { SessionProvider } from 'next-auth/react'
 import { auth } from '@/auth'
-import { OverlayProvider } from '@/hooks/contexts/use-overlay';
+import { OverlayProvider } from '@/hooks/contexts/use-overlay'
+import TanstackQueryProvider from '@/hooks/contexts/tanstack-query'
 
 const sarabun = Sarabun({
   variable: '--font-sarabun',
@@ -28,9 +29,11 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${sarabun.className} antialiased`}>
-        <SessionProvider session={session}>
-          <OverlayProvider>{children}</OverlayProvider>
-        </SessionProvider>
+        <TanstackQueryProvider>
+          <SessionProvider session={session}>
+            <OverlayProvider>{children}</OverlayProvider>
+          </SessionProvider>
+        </TanstackQueryProvider>
         <Toaster position="top-right" />
       </body>
     </html>

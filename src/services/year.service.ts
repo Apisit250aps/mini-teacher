@@ -2,7 +2,7 @@ import client from '@/lib/client'
 import { onErrorMessage } from '@/lib/utils'
 import { Year } from '@/models/entities'
 
-export async function AuthCreateYearService({ data }: { data: Year }) {
+export async function AuthCreateYearService({ data }: { data: Partial<Year> }) {
   try {
     const result = await client.post<ApiResponse<Year>>('/api/year', data)
     if (!result.data.success) {
@@ -20,7 +20,7 @@ export async function AuthGetAllYearsService() {
     if (!result.data.success) {
       throw new Error(result.data.message)
     }
-    return result.data
+    return result.data.data
   } catch (error) {
     throw onErrorMessage(error)
   }

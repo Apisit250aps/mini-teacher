@@ -19,6 +19,8 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 import { useYear } from '@/hooks/app/use-year'
+import ModalDialog from './share/overlay/modal-dialog'
+import YearCreateForm from './app/year/year-create-form'
 
 export function TeamSwitcher() {
   const { isMobile } = useSidebar()
@@ -60,9 +62,9 @@ export function TeamSwitcher() {
             <DropdownMenuLabel className="text-muted-foreground text-xs">
               Years
             </DropdownMenuLabel>
-            {years?.map((year, index) => (
+            {years?.map((year) => (
               <DropdownMenuItem
-                key={year.year}
+                key={year.id}
                 onClick={() => setActiveYear(year!)}
                 className="gap-2 p-2"
               >
@@ -76,12 +78,24 @@ export function TeamSwitcher() {
               </DropdownMenuItem>
             ))}
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2 p-2">
-              <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
-                <Plus className="size-4" />
-              </div>
-              <div className="text-muted-foreground font-medium">Add team</div>
-            </DropdownMenuItem>
+            <ModalDialog
+              title={'เพิ่มปีการศึกษา'}
+              description={'สร้างปีการศึกษาใหม่'}
+              dialogKey="ADD_YEAR_DIALOG"
+              closeOutside={false}
+              trigger={
+                <DropdownMenuItem className="gap-2 p-2">
+                  <div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
+                    <Plus className="size-4" />
+                  </div>
+                  <div className="text-muted-foreground font-medium">
+                    เพิ่มปีการศึกษา
+                  </div>
+                </DropdownMenuItem>
+              }
+            >
+              <YearCreateForm />
+            </ModalDialog>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
