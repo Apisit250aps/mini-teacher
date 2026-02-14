@@ -1,11 +1,8 @@
-import axios, { AxiosError } from 'axios'
+import createFetchClient from 'openapi-fetch'
+import createClient from 'openapi-react-query'
+import type { paths } from '@/lib/client/api/v1'
 
-const client = axios.create({})
-client.interceptors.response.use(
-  (response) => response,
-  (error: AxiosError) =>
-    Promise.resolve({
-      ...error,
-    }),
-)
+const fetchClient = createFetchClient<paths>()
+const client = createClient(fetchClient)
+
 export default client
