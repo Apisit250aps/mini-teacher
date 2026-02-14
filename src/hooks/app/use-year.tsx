@@ -3,13 +3,14 @@ import { Year } from '@/models/entities'
 import React, { useCallback } from 'react'
 import { useYearQueries } from '../queries/use-year'
 import { toast } from 'sonner'
+import { useOverlay } from '../contexts/use-overlay'
 
 type YearContextValue = {
   activeYear: Year
   years?: Year[]
-  onSetyearActive: (year: Year) => Promise<void>
   setYears?: (years: Year[]) => void
-  onYearsCreate?: (newYear: Year) => Promise<void>
+  onSetyearActive: (year: Year) => Promise<void>
+  onYearsCreate: (data: { year: string; term: string }) => Promise<void>
 }
 
 const YearContext = React.createContext<YearContextValue | null>(null)
@@ -21,7 +22,9 @@ export function YearProvider({
   children: React.ReactNode
   years: Year[]
 }) {
-  const { active, list } = useYearQueries()
+  const { active, list, create } = useYearQueries()
+  const { closeAll } = useOverlay()
+  //
   const [yearsState, setYears] = React.useState<Year[]>(years)
   const [activeYear, setActiveYear] = React.useState<Year>(
     years.find((y) => y.isActive) || years[0],
@@ -63,13 +66,49 @@ export function YearProvider({
     [active, list],
   )
 
+  const onYearsCreate = useCallback(
+    async (data: { year: string; term: string }) => {
+      await create.mutateAsync(
+        {
+          body: {
+            year: Number(data.year),
+            term: Number(data.term),
+          },
+        },
+        {
+          onSettled(data, error) {
+            if (error) {
+              toast.error('เกิดข้อผิดพลาดในการสร้างปีการศึกษา')
+              return
+            }
+            toast.success('สร้างปีการศึกษาเรียบร้อยแล้ว')
+            list.refetch().then((res) => {
+              if (res.data?.success && res.data?.data && setYears) {
+                setYears(
+                  res.data.data.map((item) => ({
+                    ...item,
+                    createdAt: new Date(item.createdAt),
+                    updatedAt: new Date(item.updatedAt),
+                  })),
+                )
+              }
+            })
+            closeAll()
+          },
+        },
+      )
+    },
+    [create, list, closeAll, setYears],
+  )
+
   return (
     <YearContext.Provider
       value={{
         activeYear,
         years: yearsState,
-        onSetyearActive,
         setYears,
+        onSetyearActive,
+        onYearsCreate,
       }}
     >
       {children}

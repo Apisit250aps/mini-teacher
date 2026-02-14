@@ -10,12 +10,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useYear } from '@/hooks/app/use-year'
-import { useOverlay } from '@/hooks/contexts/use-overlay'
-import { useYearQueries } from '@/hooks/queries/use-year'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
 import z from 'zod'
 
 export default function YearCreateForm() {
@@ -32,47 +28,14 @@ export default function YearCreateForm() {
     },
   })
 
-  const { create, list } = useYearQueries()
-  const { setYears } = useYear()
-  const { closeAll } = useOverlay()
-  const onSubmit = useCallback(
-    (data: { year: string; term: string }) => {
-      return create.mutateAsync(
-        {
-          body: {
-            year: Number(data.year),
-            term: Number(data.term),
-          },
-        },
-        {
-          onSettled(data, error) {
-            if (error) {
-              toast.error('เกิดข้อผิดพลาดในการสร้างปีการศึกษา')
-              return
-            }
-            toast.success('สร้างปีการศึกษาเรียบร้อยแล้ว')
-            list.refetch().then((res) => {
-              if (res.data?.success && res.data?.data && setYears) {
-                setYears(
-                  res.data.data.map((item) => ({
-                    ...item,
-                    createdAt: new Date(item.createdAt),
-                    updatedAt: new Date(item.updatedAt),
-                  })),
-                )
-              }
-            })
-            closeAll()
-          },
-        },
-      )
-    },
-    [create, list, closeAll, setYears],
-  )
+  const { onYearsCreate } = useYear()
 
   return (
     <Form {...methods}>
-      <form className="grid gap-4" onSubmit={methods.handleSubmit(onSubmit)}>
+      <form
+        className="grid gap-4"
+        onSubmit={methods.handleSubmit(onYearsCreate)}
+      >
         <FormField
           control={methods.control}
           name="year"
