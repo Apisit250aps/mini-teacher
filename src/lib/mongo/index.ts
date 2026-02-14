@@ -57,7 +57,7 @@ export async function studentsCollection(): Promise<Collection<Student>> {
     const db = await connect()
     _students = db.collection<Student>('students')
     await _students.createIndexes([
-      { key: { id: 1, code: 1 }, unique: true, name: 'uniq_id_code' },
+      { key: { teacher: 1, code: 1 }, unique: true, name: 'uniq_teacher_code' },
       { key: { id: 1 }, unique: true, name: 'uniq_id' },
       { key: { code: 1 }, name: 'idx_code' },
     ])
