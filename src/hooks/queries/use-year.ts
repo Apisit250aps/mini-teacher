@@ -1,3 +1,4 @@
+import client from '@/lib/client'
 import {
   AuthCreateYearService,
   AuthDeleteYearService,
@@ -8,11 +9,7 @@ import {
 import { useMutation, useQuery } from '@tanstack/react-query'
 
 export const useYearQueries = () => {
-  const list = useQuery({
-    queryKey: ['YEAR', 'ALL_YEAR'],
-    queryFn: AuthGetAllYearsService,
-  })
-
+  const list = client.useQuery('get', '/api/year')
   const active = useMutation({
     mutationKey: ['YEAR', 'SET_ACTIVE_YEAR'],
     mutationFn: AuthSetActiveYearService,

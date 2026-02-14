@@ -1,14 +1,14 @@
 openapi: 3.1.0
 info:
-  title: Widget Service
+  title: Mini Teacher Service
   version: 0.0.0
 tags:
-  - name: Widgets
+  - name: Years
 paths:
-  /widgets:
+  /api/year:
     get:
-      operationId: Widgets_list
-      description: List widgets
+      operationId: Years_list
+      description: List years
       parameters: []
       responses:
         '200':
@@ -16,18 +16,26 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/WidgetList'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Year'
+                  error:
+                    type: string
       tags:
-        - Widgets
+        - Years
     post:
-      operationId: Widgets_create
-      description: Create a widget
+      operationId: Years_create
+      description: Create a year
       parameters: []
       responses:
         '200':
@@ -35,25 +43,31 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Widget'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Year'
+                  error:
+                    type: string
       tags:
-        - Widgets
+        - Years
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Widget'
-  /widgets/{id}:
+              $ref: '#/components/schemas/Year'
+  /api/year/{id}:
     get:
-      operationId: Widgets_read
-      description: Read widgets
+      operationId: Years_read
+      description: Read year
       parameters:
         - name: id
           in: path
@@ -66,18 +80,24 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Widget'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Year'
+                  error:
+                    type: string
       tags:
-        - Widgets
+        - Years
     patch:
-      operationId: Widgets_update
-      description: Update a widget
+      operationId: Years_update
+      description: Update a year
       parameters:
         - name: id
           in: path
@@ -90,45 +110,30 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Widget'
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Year'
+                  error:
+                    type: string
       tags:
-        - Widgets
+        - Years
       requestBody:
         required: true
         content:
           application/merge-patch+json:
             schema:
-              $ref: '#/components/schemas/WidgetMergePatchUpdate'
+              $ref: '#/components/schemas/YearMergePatchUpdate'
     delete:
-      operationId: Widgets_delete
-      description: Delete a widget
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '204':
-          description: 'There is no content to send for this request, but the headers may be useful. '
-        default:
-          description: An unexpected error response.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-      tags:
-        - Widgets
-  /widgets/{id}/analyze:
-    post:
-      operationId: Widgets_analyze
-      description: Analyze a widget
+      operationId: Years_delete
+      description: Delete a year
       parameters:
         - name: id
           in: path
@@ -141,15 +146,52 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AnalyzeResult'
-        default:
-          description: An unexpected error response.
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/EmptyData'
+                  error:
+                    type: string
+      tags:
+        - Years
+  /api/year/{id}/analyze:
+    post:
+      operationId: Years_analyze
+      description: Analyze a year
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/AnalyzeResult'
+                  error:
+                    type: string
       tags:
-        - Widgets
+        - Years
 components:
   schemas:
     AnalyzeResult:
@@ -162,54 +204,54 @@ components:
           type: string
         analysis:
           type: string
-    Error:
+    EmptyData:
       type: object
-      required:
-        - code
-        - message
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
-    Widget:
+    Year:
       type: object
       required:
         - id
-        - weight
-        - color
+        - user
+        - year
+        - term
+        - isActive
+        - createdAt
+        - updatedAt
       properties:
         id:
           type: string
-        weight:
+        user:
+          type: string
+        year:
           type: integer
           format: int32
-        color:
+        term:
           type: string
-          enum:
-            - red
-            - blue
-    WidgetList:
-      type: object
-      required:
-        - items
-      properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/Widget'
-    WidgetMergePatchUpdate:
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    YearMergePatchUpdate:
       type: object
       properties:
         id:
           type: string
-        weight:
+        user:
+          type: string
+        year:
           type: integer
           format: int32
-        color:
+        term:
           type: string
-          enum:
-            - red
-            - blue
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
       description: ''

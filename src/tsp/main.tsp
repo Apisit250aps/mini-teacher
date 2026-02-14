@@ -1,23 +1,27 @@
 import "@typespec/http";
+import "@typespec/rest";
 
-using Http;
-@service(#{ title: "Widget Service" })
-namespace DemoService;
+using TypeSpec.Http;
+using TypeSpec.Rest;
 
-model Widget {
-  id: string;
-  weight: int32;
-  color: "red" | "blue";
-}
+@service(#{ title: "Mini Teacher Service" })
+namespace MiniTeacherService;
 
-model WidgetList {
-  items: Widget[];
-}
-
-@error
-model Error {
-  code: int32;
+model ApiResponse<T> {
+  success: boolean;
   message: string;
+  data?: T;
+  error?: string;
+}
+
+model Year {
+  id: string;
+  user: string;
+  year: int32;
+  term: string;
+  isActive: boolean;
+  createdAt: utcDateTime;
+  updatedAt: utcDateTime;
 }
 
 model AnalyzeResult {
@@ -25,20 +29,34 @@ model AnalyzeResult {
   analysis: string;
 }
 
-@route("/widgets")
-@tag("Widgets")
-interface Widgets {
-  /** List widgets */
-  @get list(): WidgetList | Error;
-  /** Read widgets */
-  @get read(@path id: string): Widget | Error;
-  /** Create a widget */
-  @post create(@body body: Widget): Widget | Error;
-  /** Update a widget */
-  @patch update(@path id: string, @body body: MergePatchUpdate<Widget>): Widget | Error;
-  /** Delete a widget */
-  @delete delete(@path id: string): void | Error;
+model EmptyData {}
 
-  /** Analyze a widget */
-  @route("{id}/analyze") @post analyze(@path id: string): AnalyzeResult | Error;
+@route("/api")
+namespace YearsApi {
+  @route("/year")
+  @tag("Years")
+  interface Years {
+    /** List years */
+    @get list(): ApiResponse<Year[]>;
+
+    /** Read year */
+    @get read(@path id: string): ApiResponse<Year>;
+
+    /** Create a year */
+    @post create(@body body: Year): ApiResponse<Year>;
+
+    /** Update a year */
+    @patch update(
+      @path id: string,
+      @body body: MergePatchUpdate<Year>,
+    ): ApiResponse<Year>;
+
+    /** Delete a year */
+    @delete delete(@path id: string): ApiResponse<EmptyData>;
+
+    /** Analyze a year */
+    @route("{id}/analyze")
+    @post
+    analyze(@path id: string): ApiResponse<AnalyzeResult>;
+  }
 }

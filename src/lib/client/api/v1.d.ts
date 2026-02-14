@@ -4,44 +4,44 @@
  */
 
 export interface paths {
-    "/widgets": {
+    "/api/year": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** @description List widgets */
-        get: operations["Widgets_list"];
+        /** @description List years */
+        get: operations["Years_list"];
         put?: never;
-        /** @description Create a widget */
-        post: operations["Widgets_create"];
+        /** @description Create a year */
+        post: operations["Years_create"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/widgets/{id}": {
+    "/api/year/{id}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** @description Read widgets */
-        get: operations["Widgets_read"];
+        /** @description Read year */
+        get: operations["Years_read"];
         put?: never;
         post?: never;
-        /** @description Delete a widget */
-        delete: operations["Widgets_delete"];
+        /** @description Delete a year */
+        delete: operations["Years_delete"];
         options?: never;
         head?: never;
-        /** @description Update a widget */
-        patch: operations["Widgets_update"];
+        /** @description Update a year */
+        patch: operations["Years_update"];
         trace?: never;
     };
-    "/widgets/{id}/analyze": {
+    "/api/year/{id}/analyze": {
         parameters: {
             query?: never;
             header?: never;
@@ -50,8 +50,8 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Analyze a widget */
-        post: operations["Widgets_analyze"];
+        /** @description Analyze a year */
+        post: operations["Years_analyze"];
         delete?: never;
         options?: never;
         head?: never;
@@ -66,27 +66,30 @@ export interface components {
             id: string;
             analysis: string;
         };
-        Error: {
-            /** Format: int32 */
-            code: number;
-            message: string;
-        };
-        Widget: {
+        EmptyData: Record<string, never>;
+        Year: {
             id: string;
+            user: string;
             /** Format: int32 */
-            weight: number;
-            /** @enum {string} */
-            color: "red" | "blue";
+            year: number;
+            term: string;
+            isActive: boolean;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
         };
-        WidgetList: {
-            items: components["schemas"]["Widget"][];
-        };
-        WidgetMergePatchUpdate: {
+        YearMergePatchUpdate: {
             id?: string;
+            user?: string;
             /** Format: int32 */
-            weight?: number;
-            /** @enum {string} */
-            color?: "red" | "blue";
+            year?: number;
+            term?: string;
+            isActive?: boolean;
+            /** Format: date-time */
+            createdAt?: string;
+            /** Format: date-time */
+            updatedAt?: string;
         };
     };
     responses: never;
@@ -97,7 +100,7 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    Widgets_list: {
+    Years_list: {
         parameters: {
             query?: never;
             header?: never;
@@ -112,21 +115,17 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["WidgetList"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["Year"][];
+                        error?: string;
+                    };
                 };
             };
         };
     };
-    Widgets_create: {
+    Years_create: {
         parameters: {
             query?: never;
             header?: never;
@@ -135,7 +134,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["Widget"];
+                "application/json": components["schemas"]["Year"];
             };
         };
         responses: {
@@ -145,21 +144,17 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Widget"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["Year"];
+                        error?: string;
+                    };
                 };
             };
         };
     };
-    Widgets_read: {
+    Years_read: {
         parameters: {
             query?: never;
             header?: never;
@@ -176,21 +171,17 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Widget"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["Year"];
+                        error?: string;
+                    };
                 };
             };
         };
     };
-    Widgets_delete: {
+    Years_delete: {
         parameters: {
             query?: never;
             header?: never;
@@ -201,25 +192,23 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description There is no content to send for this request, but the headers may be useful. */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description An unexpected error response. */
-            default: {
+            /** @description The request has succeeded. */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Error"];
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["EmptyData"];
+                        error?: string;
+                    };
                 };
             };
         };
     };
-    Widgets_update: {
+    Years_update: {
         parameters: {
             query?: never;
             header?: never;
@@ -230,7 +219,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/merge-patch+json": components["schemas"]["WidgetMergePatchUpdate"];
+                "application/merge-patch+json": components["schemas"]["YearMergePatchUpdate"];
             };
         };
         responses: {
@@ -240,21 +229,17 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["Widget"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["Year"];
+                        error?: string;
+                    };
                 };
             };
         };
     };
-    Widgets_analyze: {
+    Years_analyze: {
         parameters: {
             query?: never;
             header?: never;
@@ -271,16 +256,12 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["AnalyzeResult"];
-                };
-            };
-            /** @description An unexpected error response. */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["Error"];
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["AnalyzeResult"];
+                        error?: string;
+                    };
                 };
             };
         };
