@@ -14,3 +14,15 @@ type FormValueProps<T = unknown> = {
   value?: T
   onSubmit: (data: T) => void
 }
+
+
+// declare module "next/server" {
+//   interface NextRequest extends NextRequest {
+//     // กำหนด Type ของ user ตามที่คุณใช้งาน (เช่น Student หรือ User interface)
+//     user?: {
+//       id: string;
+//       role: string;
+//       teacher?: string;
+//     };
+//   }
+// }

@@ -6,15 +6,14 @@ import {
   UpdateStudentSchema,
 } from '@/models/entities'
 import {
-  createStudent,
-  deleteStudent,
   getStudentById,
   teacherCreateStudent,
   teacherDeleteStudent,
+  teacherGetAllStudent,
   teacherUpdateStudent,
-  updateStudent,
 } from '@/models/repositories'
-import { type NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
+import { type NextRequest } from 'next/server'
 
 type StudentParams = {
   studentId: string
@@ -216,6 +215,41 @@ export async function DeleteStudent(
         success: false,
         error: onErrorMessage(error),
         message: 'Failed to delete student',
+      },
+      { status: 500 },
+    )
+  }
+}
+
+export async function GetAllStudent(
+  req: NextRequest,
+): Promise<NextResponse<ApiResponse<Student[]>>> {
+  try {
+    const session = await auth()
+    if (!session) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Unauthorized',
+        },
+        { status: 401 },
+      )
+    }
+    const students = await teacherGetAllStudent(session.user.id)
+    return NextResponse.json(
+      {
+        success: true,
+        data: students,
+        message: 'Students retrieved successfully',
+      },
+      { status: 200 },
+    )
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: onErrorMessage(error),
+        message: 'Failed to retrieve students',
       },
       { status: 500 },
     )

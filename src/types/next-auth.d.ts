@@ -24,6 +24,10 @@ declare module 'next-auth' {
   interface Session {
     user: User
   }
+
+  interface NextAuthRequest {
+    user?: User
+  }
 }
 
 // The `JWT` interface can be found in the `next-auth/jwt` submodule
