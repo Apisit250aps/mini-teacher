@@ -10,11 +10,7 @@ export const BaseClassMemberSchema = z.object({
   updatedAt: zodTimestamp(),
 })
 
-export const ClassMemberSchema = BaseClassMemberSchema.omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-}).extend({
+export const ClassMemberSchema = BaseClassMemberSchema.extend({
   createdAt: zodTimestamp(),
   updatedAt: zodTimestamp(),
 })

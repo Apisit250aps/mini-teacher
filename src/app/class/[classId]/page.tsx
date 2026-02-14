@@ -13,7 +13,7 @@ export default async function Page({
     <div>
       <pre>
         {JSON.stringify(
-          member.map((m) => m.student),
+          member.map((m) => m),
           null,
           2,
         )}

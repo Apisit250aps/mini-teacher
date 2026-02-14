@@ -17,6 +17,12 @@ export async function deleteClassMember(
   await collection.deleteOne({ classId, studentId })
 }
 
+export async function getUniqMember(classId: string, studentId: string) {
+  const collection = await classMembersCollection()
+  const member = await collection.findOne({ classId, studentId })
+  return member
+}
+
 export async function getClassMembersByClassId(
   classId: string,
 ): Promise<ClassMemberDetail[]> {
