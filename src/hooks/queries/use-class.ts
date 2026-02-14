@@ -1,5 +1,5 @@
 import { $api } from '@/lib/client'
-import { useYear } from '../app/use-year'
+import { useYear } from '@/hooks/app/use-year'
 
 export const useClassQueries = () => {
   const { activeYear } = useYear()

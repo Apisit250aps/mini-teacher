@@ -1,9 +1,9 @@
 'use client'
 import { Year } from '@/models/entities'
 import React, { useCallback } from 'react'
-import { useYearQueries } from '../queries/use-year'
+import { useYearQueries } from '@/hooks/queries/use-year'
 import { toast } from 'sonner'
-import { useOverlay } from '../contexts/use-overlay'
+import { useOverlay } from '@/hooks/contexts/use-overlay'
 
 type YearContextValue = {
   activeYear: Year

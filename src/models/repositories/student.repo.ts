@@ -1,5 +1,5 @@
 import { studentsCollection } from '@/lib/mongo'
-import { Student } from '../entities'
+import { Student } from '@/models/entities'
 
 export async function createStudent(data: Student): Promise<Student> {
   const collection = await studentsCollection()

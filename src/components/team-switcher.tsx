@@ -19,8 +19,8 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar'
 import { useYear } from '@/hooks/app/use-year'
-import ModalDialog from './share/overlay/modal-dialog'
-import YearCreateForm from './app/year/year-create-form'
+import ModalDialog from '@/components/share/overlay/modal-dialog'
+import YearCreateForm from '@/components/app/year/year-create-form'
 
 export function TeamSwitcher() {
   const { isMobile } = useSidebar()

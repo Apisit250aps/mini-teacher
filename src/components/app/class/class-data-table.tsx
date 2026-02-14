@@ -7,7 +7,7 @@ import { useClass } from '@/hooks/app/use-class'
 import { Class, ClassFormValue } from '@/models/entities'
 import { Cell, ColumnDef } from '@tanstack/react-table'
 import { Pen, Trash } from 'lucide-react'
-import ClassForm from './class-form'
+import ClassForm from '@/components/app/class/class-form'
 import { ConfirmDialog } from '@/components/share/overlay/confirm-dialog'
 
 const ColumnActions = ({ cell }: { cell: Cell<Class, unknown> }) => {

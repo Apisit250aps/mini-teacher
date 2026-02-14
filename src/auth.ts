@@ -1,9 +1,9 @@
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
-import { UserLogin } from './models/entities'
-import { updateUser } from './models/repositories'
-import { verify } from './lib/utils/encryption'
-import { usersCollection } from './lib/mongo'
+import { UserLogin } from '@/models/entities'
+import { updateUser } from '@/models/repositories'
+import { verify } from '@/lib/utils/encryption'
+import { usersCollection } from '@/lib/mongo'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [

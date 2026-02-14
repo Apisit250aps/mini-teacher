@@ -1,10 +1,10 @@
 'use client'
 import { Class } from '@/models/entities'
 import React, { useCallback } from 'react'
-import { useClassQueries } from '../queries/use-class'
+import { useClassQueries } from '@/hooks/queries/use-class'
 import { Album } from 'lucide-react'
 import { toast } from 'sonner'
-import { useOverlay } from '../contexts/use-overlay'
+import { useOverlay } from '@/hooks/contexts/use-overlay'
 
 type ClassContextValue = {
   classes: Class[]

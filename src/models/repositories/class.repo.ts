@@ -1,5 +1,5 @@
 import { classesCollection } from '@/lib/mongo'
-import { Class } from '../entities'
+import { Class } from '@/models/entities'
 import { omit } from 'lodash'
 
 export async function createClass(newClass: Class): Promise<Class> {
