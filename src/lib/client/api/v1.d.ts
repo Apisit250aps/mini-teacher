@@ -41,10 +41,63 @@ export interface paths {
         patch: operations["Years_setActive"];
         trace?: never;
     };
+    "/year/{yearId}/class": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description List classes in a year */
+        get: operations["Classes_list"];
+        put?: never;
+        /** @description Create a class */
+        post: operations["Classes_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/year/{yearId}/class/year/{yearId}/class/{classId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["Classes_getById"];
+        /** @description Update a class */
+        put: operations["Classes_update"];
+        post?: never;
+        /** @description Delete a class */
+        delete: operations["Classes_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        Class: {
+            id: string;
+            year: string;
+            name: string;
+            subject: string;
+            isActive: boolean;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        CreateClassBody: {
+            year: string;
+            name: string;
+            subject: string;
+            isActive?: boolean;
+        };
         CreateYearBody: {
             /** Format: int32 */
             year: number;
@@ -53,6 +106,14 @@ export interface components {
             isActive?: boolean;
         };
         EmptyData: Record<string, never>;
+        UpdateClassBody: {
+            year?: string;
+            name?: string;
+            subject?: string;
+            isActive?: boolean;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
         UpdateYearBody: {
             user?: string;
             /** Format: int32 */
@@ -203,6 +264,152 @@ export interface operations {
             header?: never;
             path: {
                 yearId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["EmptyData"];
+                        error?: string;
+                    };
+                };
+            };
+        };
+    };
+    Classes_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                yearId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["Class"][];
+                        error?: string;
+                    };
+                };
+            };
+        };
+    };
+    Classes_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                yearId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateClassBody"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["Class"];
+                        error?: string;
+                    };
+                };
+            };
+        };
+    };
+    Classes_getById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                yearId: string;
+                classId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["Class"];
+                        error?: string;
+                    };
+                };
+            };
+        };
+    };
+    Classes_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                yearId: string;
+                classId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateClassBody"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["Class"];
+                        error?: string;
+                    };
+                };
+            };
+        };
+    };
+    Classes_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                yearId: string;
+                classId: string;
             };
             cookie?: never;
         };

@@ -4,6 +4,7 @@ info:
   version: 0.0.0
 tags:
   - name: Years
+  - name: Classes
 paths:
   /year:
     get:
@@ -161,8 +162,230 @@ paths:
                     type: string
       tags:
         - Years
+  /year/{yearId}/class:
+    get:
+      operationId: Classes_list
+      description: List classes in a year
+      parameters:
+        - name: yearId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Class'
+                  error:
+                    type: string
+      tags:
+        - Classes
+    post:
+      operationId: Classes_create
+      description: Create a class
+      parameters:
+        - name: yearId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Class'
+                  error:
+                    type: string
+      tags:
+        - Classes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateClassBody'
+  /year/{yearId}/class/year/{yearId}/class/{classId}:
+    put:
+      operationId: Classes_update
+      description: Update a class
+      parameters:
+        - name: yearId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Class'
+                  error:
+                    type: string
+      tags:
+        - Classes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateClassBody'
+    delete:
+      operationId: Classes_delete
+      description: Delete a class
+      parameters:
+        - name: yearId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/EmptyData'
+                  error:
+                    type: string
+      tags:
+        - Classes
+    get:
+      operationId: Classes_getById
+      parameters:
+        - name: yearId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Class'
+                  error:
+                    type: string
+      tags:
+        - Classes
 components:
   schemas:
+    Class:
+      type: object
+      required:
+        - id
+        - year
+        - name
+        - subject
+        - isActive
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        year:
+          type: string
+        name:
+          type: string
+        subject:
+          type: string
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CreateClassBody:
+      type: object
+      required:
+        - year
+        - name
+        - subject
+      properties:
+        year:
+          type: string
+        name:
+          type: string
+        subject:
+          type: string
+        isActive:
+          type: boolean
     CreateYearBody:
       type: object
       required:
@@ -179,6 +402,20 @@ components:
           type: boolean
     EmptyData:
       type: object
+    UpdateClassBody:
+      type: object
+      properties:
+        year:
+          type: string
+        name:
+          type: string
+        subject:
+          type: string
+        isActive:
+          type: boolean
+        updatedAt:
+          type: string
+          format: date-time
     UpdateYearBody:
       type: object
       properties:

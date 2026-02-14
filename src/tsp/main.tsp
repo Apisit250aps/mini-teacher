@@ -51,12 +51,73 @@ namespace YearsApi {
     @post create(@body body: CreateYearBody): ApiResponse<Year>;
 
     /** Update a year */
-    @put update(@path yearId: string, @body body: UpdateYearBody): ApiResponse<Year>;
+    @put update(
+      @path yearId: string,
+      @body body: UpdateYearBody,
+    ): ApiResponse<Year>;
 
     /** Set active year */
     @patch setActive(@path yearId: string): ApiResponse<EmptyData>;
 
     /** Delete a year */
     @delete delete(@path yearId: string): ApiResponse<EmptyData>;
+  }
+}
+
+model Class {
+  id: string;
+  year: string;
+  name: string;
+  subject: string;
+  isActive: boolean;
+  createdAt: utcDateTime;
+  updatedAt: utcDateTime;
+}
+
+model CreateClassBody {
+  year: string;
+  name: string;
+  subject: string;
+  isActive?: boolean;
+}
+
+model UpdateClassBody {
+  year?: string;
+  name?: string;
+  subject?: string;
+  isActive?: boolean;
+  updatedAt?: utcDateTime;
+}
+
+namespace ClassesApi {
+  @route("/year/{yearId}/class")
+  @tag("Classes")
+  interface Classes {
+    /** List classes in a year */
+    @get list(@path yearId: string): ApiResponse<Class[]>;
+
+    /** Create a class */
+    @post create(
+      @path yearId: string,
+      @body body: CreateClassBody,
+    ): ApiResponse<Class>;
+
+    /** Update a class */
+    @route("/year/{yearId}/class/{classId}")
+    @put
+    update(
+      @path yearId: string,
+      @path classId: string,
+      @body body: UpdateClassBody,
+    ): ApiResponse<Class>;
+
+    /** Delete a class */
+    @route("/year/{yearId}/class/{classId}")
+    @delete
+    delete(@path yearId: string, @path classId: string): ApiResponse<EmptyData>;
+
+    @route("/year/{yearId}/class/{classId}")
+    @get
+    getById(@path yearId: string, @path classId: string): ApiResponse<Class>;
   }
 }
