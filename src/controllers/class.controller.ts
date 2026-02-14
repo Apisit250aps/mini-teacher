@@ -9,21 +9,16 @@ import {
 import { NextRequest, NextResponse } from 'next/server'
 
 type ClassParams = {
-  yearId: string
   classId: string
 }
 
 export async function CreateClass(
   req: NextRequest,
-  { params }: { params: Promise<Omit<ClassParams, 'classId'>> },
 ): Promise<NextResponse<ApiResponse<Class>>> {
   try {
-    const { yearId } = await params
     const body = await req.json()
-
     const validate = await safeValidate(CreateClassSchema, {
       ...body,
-      year: yearId,
     })
 
     if (!validate.data) {
@@ -138,10 +133,20 @@ export async function DeleteClass(
 
 export async function GetClassYear(
   req: NextRequest,
-  { params }: { params: Promise<ClassParams> },
 ): Promise<NextResponse<ApiResponse<Class[]>>> {
   try {
-    const { yearId } = await params
+    const searchParams = req.nextUrl.searchParams
+    const yearId = searchParams.get('yearId')
+    if (!yearId) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Validation Error!',
+          error: 'yearId query parameter is required',
+        },
+        { status: 400 },
+      )
+    }
     const classes = await getClassesByYear(yearId)
     return NextResponse.json(
       {
