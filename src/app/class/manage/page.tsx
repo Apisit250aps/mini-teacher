@@ -1,4 +1,4 @@
-import ClassView from '@/views/class/class-view'
+import ClassView from '@/views/manage/class-view'
 import React from 'react'
 
 export default function Page() {

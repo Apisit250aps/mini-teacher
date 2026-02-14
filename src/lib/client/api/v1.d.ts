@@ -135,7 +135,6 @@ export interface components {
             isActive?: boolean;
         };
         CreateStudentBody: {
-            teacher: string;
             code: string;
             firstName: string;
             lastName: string;
@@ -170,13 +169,10 @@ export interface components {
             updatedAt?: string;
         };
         UpdateStudentBody: {
-            teacher?: string;
             code?: string;
             firstName?: string;
             lastName?: string;
             nickname?: string;
-            /** Format: date-time */
-            updatedAt?: string;
         };
         UpdateYearBody: {
             user?: string;

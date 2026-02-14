@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { LibraryBig } from 'lucide-react'
+import { GraduationCap, LibraryBig } from 'lucide-react'
 
 import { NavMenu } from '@/components/nav-menu'
 import { NavUser } from '@/components/nav-user'
@@ -17,7 +17,10 @@ import { useClass } from '@/hooks/app/use-class'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { classRoutes } = useClass()
-  const nav = [{ name: 'ห้องเรียน', url: 'manage', icon: LibraryBig }]
+  const nav = [
+    { name: 'ห้องเรียน', url: 'manage', icon: LibraryBig },
+    { name: 'นักเรียน', url: 'student', icon: GraduationCap },
+  ]
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>

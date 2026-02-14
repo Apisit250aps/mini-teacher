@@ -12,7 +12,6 @@ model Student {
 }
 
 model CreateStudentBody {
-  teacher: string;
   code: string;
   firstName: string;
   lastName: string;
@@ -20,10 +19,8 @@ model CreateStudentBody {
 }
 
 model UpdateStudentBody {
-  teacher?: string;
   code?: string;
   firstName?: string;
   lastName?: string;
   nickname?: string;
-  updatedAt?: utcDateTime;
 }

@@ -21,6 +21,15 @@ export const CreateStudentSchema = BaseStudentSchema.omit({
 })
 
 export const UpdateStudentSchema = CreateStudentSchema.partial()
+
+export const StudentFormSchema = CreateStudentSchema.pick({
+  code: true,
+  firstName: true,
+  lastName: true,
+  nickname: true,
+})
+
 export type Student = z.infer<typeof BaseStudentSchema>
 export type CreateStudent = z.infer<typeof CreateStudentSchema>
 export type UpdateStudent = z.infer<typeof UpdateStudentSchema>
+export type StudentFormValue = z.infer<typeof StudentFormSchema>

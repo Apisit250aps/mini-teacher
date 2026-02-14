@@ -526,13 +526,10 @@ components:
     CreateStudentBody:
       type: object
       required:
-        - teacher
         - code
         - firstName
         - lastName
       properties:
-        teacher:
-          type: string
         code:
           type: string
         firstName:
@@ -603,8 +600,6 @@ components:
     UpdateStudentBody:
       type: object
       properties:
-        teacher:
-          type: string
         code:
           type: string
         firstName:
@@ -613,9 +608,6 @@ components:
           type: string
         nickname:
           type: string
-        updatedAt:
-          type: string
-          format: date-time
     UpdateYearBody:
       type: object
       properties:
