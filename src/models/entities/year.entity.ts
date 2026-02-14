@@ -10,7 +10,6 @@ export const BaseYearSchema = z.object({
   createdAt: zodDate(),
   updatedAt: zodTimestamp(),
 })
-
 export const CreateYearSchema = BaseYearSchema.extend({
   createdAt: zodTimestamp(),
 })

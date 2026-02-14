@@ -1,10 +1,11 @@
 import type { Collection } from 'mongodb'
-import { User } from '@/models/entities'
+import { Class, User } from '@/models/entities'
 import { connect } from '@/lib/mongo/client'
-import { Year } from '@/models/entities/year.entity';
+import { Year } from '@/models/entities/year.entity'
 
 let _users: Collection<User> | null = null
 let _years: Collection<Year> | null = null
+let _classes: Collection<Class> | null = null
 
 export async function yearsCollection(): Promise<Collection<Year>> {
   if (!_years) {
@@ -32,4 +33,15 @@ export async function usersCollection(): Promise<Collection<User>> {
     ])
   }
   return _users
+}
+
+export async function classesCollection(): Promise<Collection<Class>> {
+  if (!_classes) {
+    const db = await connect()
+    _classes = db.collection<Class>('classes')
+    await _classes.createIndexes([
+      { key: { id: 1 }, unique: true, name: 'uniq_id' },
+    ])
+  }
+  return _classes
 }
