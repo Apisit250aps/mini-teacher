@@ -12,7 +12,6 @@ export const BaseClassSchema = z.object({
 })
 
 export const CreateClassSchema = BaseClassSchema.omit({
-  id: true,
   createdAt: true,
   updatedAt: true,
 }).extend({
