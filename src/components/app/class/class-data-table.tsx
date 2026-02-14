@@ -6,11 +6,12 @@ import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 import { useClass } from '@/hooks/app/use-class'
 import { Class, ClassFormValue } from '@/models/entities'
 import { Cell, ColumnDef } from '@tanstack/react-table'
-import { Pen } from 'lucide-react'
+import { Pen, Trash } from 'lucide-react'
 import ClassForm from './class-form'
+import { ConfirmDialog } from '@/components/share/overlay/confirm-dialog'
 
 const ColumnActions = ({ cell }: { cell: Cell<Class, unknown> }) => {
-  const { onClassUpdate } = useClass()
+  const { onClassUpdate, onClassDelete } = useClass()
 
   return (
     <ActionDropdown id={`CLASS_ACTION_COLUMNS_${cell.row.original.id}`}>
@@ -32,6 +33,17 @@ const ColumnActions = ({ cell }: { cell: Cell<Class, unknown> }) => {
           }}
         />
       </ModalDialog>
+      <ConfirmDialog
+        trigger={
+          <DropdownMenuItem variant="destructive" className="text-destructive">
+            <Trash />
+            ลบห้องเรียน
+          </DropdownMenuItem>
+        }
+        title="ยืนยันการลบห้องเรียน"
+        description="คุณแน่ใจหรือไม่ว่าต้องการลบห้องเรียนนี้? การกระทำนี้ไม่สามารถย้อนกลับได้"
+        onConfirm={() => onClassDelete(cell.row.original.id)}
+      />
     </ActionDropdown>
   )
 }

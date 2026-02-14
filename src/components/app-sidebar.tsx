@@ -24,7 +24,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <TeamSwitcher />
       </SidebarHeader>
       <SidebarContent>
-        <NavMenu nav={classRoutes} label="Classes" />
+        <NavMenu nav={classRoutes} label="ห้องเรียน" />
         <NavMenu nav={nav} label="การจัดการ" />
       </SidebarContent>
       <SidebarFooter>

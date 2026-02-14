@@ -2,6 +2,7 @@ import { onErrorMessage, safeValidate } from '@/lib/utils'
 import { Class, CreateClassSchema, UpdateClassSchema } from '@/models/entities'
 import {
   createClass,
+  deleteClass,
   getClassById,
   getClassesByYear,
   updateClass,
@@ -110,7 +111,7 @@ export async function DeleteClass(
 ): Promise<NextResponse<ApiResponse<null>>> {
   try {
     const { classId } = await params
-    await updateClass(classId, { isActive: false })
+    await deleteClass(classId)
     return NextResponse.json(
       {
         success: true,

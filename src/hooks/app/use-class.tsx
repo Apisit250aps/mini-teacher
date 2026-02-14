@@ -22,6 +22,7 @@ type ClassContextValue = {
       year: string
     },
   ) => Promise<void>
+  onClassDelete: (classId: string) => Promise<void>
 }
 
 const ClassContext = React.createContext<ClassContextValue | null>(null)
@@ -31,15 +32,19 @@ export function ClassProvider({ children }: { children: React.ReactNode }) {
     list: classList,
     create: createClass,
     update: updateClass,
+    remove: deleteClass,
   } = useClassQueries()
+  // state
   const { data, isPending } = classList
   const { closeAll } = useOverlay()
+  // memo
   const classes = React.useMemo(() => {
     if (isPending) return []
     return (data?.data as unknown as Class[]) || []
   }, [data, isPending])
 
   const classRoutes = React.useMemo(() => {
+    if (classes.length === 0) return [{ name: 'สร้างห้องเรียน', url: 'manage', icon: Album }]
     return classes.map((cls) => ({
       name: cls.name,
       url: `${cls.id}`,
@@ -107,9 +112,41 @@ export function ClassProvider({ children }: { children: React.ReactNode }) {
     [classList, closeAll, updateClass],
   )
 
+  const onClassDelete = useCallback(
+    async (classId: string) => {
+      await deleteClass.mutateAsync(
+        {
+          params: {
+            path: {
+              classId: classId,
+            },
+          },
+        },
+        {
+          onSettled(data, error) {
+            if (error) {
+              toast.error('เกิดข้อผิดพลาดในการลบชั้นเรียน')
+              return
+            }
+            toast.success('ลบชั้นเรียนเรียบร้อยแล้ว')
+            classList.refetch()
+            closeAll()
+          },
+        },
+      )
+    },
+    [classList, closeAll, deleteClass],
+  )
+
   return (
     <ClassContext.Provider
-      value={{ classes, classRoutes, onClassCreate, onClassUpdate }}
+      value={{
+        classes,
+        classRoutes,
+        onClassCreate,
+        onClassUpdate,
+        onClassDelete,
+      }}
     >
       {children}
     </ClassContext.Provider>
