@@ -31,17 +31,29 @@ export function YearProvider({
     async (year: Year) => {
       setActiveYear(year)
       await active.mutateAsync(
-        { yearId: year.id },
         {
-          onSettled: (data, error) => {
+          params: {
+            path: {
+              yearId: year.id,
+            },
+          },
+        },
+        {
+          onSettled(data, error) {
             if (error) {
-              toast.error('Error setting active year')
+              toast.error('เกิดข้อผิดพลาดในการตั้งค่าปีการศึกษา')
+              return
             }
-            toast.success('Active year set successfully')
+            toast.success('ตั้งค่าปีการศึกษาเรียบร้อยแล้ว')
             list.refetch().then((res) => {
-              if (res.data) {
-                setYears(res.data)
-                setActiveYear(res.data.find((y) => y.isActive) || res.data[0])
+              if (res.data?.success && res.data?.data) {
+                setYears(
+                  res.data.data.map((item) => ({
+                    ...item,
+                    createdAt: new Date(item.createdAt),
+                    updatedAt: new Date(item.updatedAt),
+                  })),
+                )
               }
             })
           },

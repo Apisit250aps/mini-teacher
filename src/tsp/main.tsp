@@ -18,20 +18,28 @@ model Year {
   id: string;
   user: string;
   year: int32;
-  term: string;
+  term: int32;
   isActive: boolean;
   createdAt: utcDateTime;
   updatedAt: utcDateTime;
 }
 
-model AnalyzeResult {
-  id: string;
-  analysis: string;
+model CreateYearBody {
+  year: int32;
+  term: int32;
+  isActive?: boolean;
+}
+
+model UpdateYearBody {
+  user?: string;
+  year?: int32;
+  term?: int32;
+  isActive?: boolean;
+  updatedAt?: utcDateTime;
 }
 
 model EmptyData {}
 
-@route("/api")
 namespace YearsApi {
   @route("/year")
   @tag("Years")
@@ -39,24 +47,16 @@ namespace YearsApi {
     /** List years */
     @get list(): ApiResponse<Year[]>;
 
-    /** Read year */
-    @get read(@path id: string): ApiResponse<Year>;
-
     /** Create a year */
-    @post create(@body body: Year): ApiResponse<Year>;
+    @post create(@body body: CreateYearBody): ApiResponse<Year>;
 
     /** Update a year */
-    @patch update(
-      @path id: string,
-      @body body: MergePatchUpdate<Year>,
-    ): ApiResponse<Year>;
+    @put update(@path yearId: string, @body body: UpdateYearBody): ApiResponse<Year>;
+
+    /** Set active year */
+    @patch setActive(@path yearId: string): ApiResponse<EmptyData>;
 
     /** Delete a year */
-    @delete delete(@path id: string): ApiResponse<EmptyData>;
-
-    /** Analyze a year */
-    @route("{id}/analyze")
-    @post
-    analyze(@path id: string): ApiResponse<AnalyzeResult>;
+    @delete delete(@path yearId: string): ApiResponse<EmptyData>;
   }
 }

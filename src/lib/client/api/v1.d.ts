@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-    "/api/year": {
+    "/year": {
         parameters: {
             query?: never;
             header?: never;
@@ -22,26 +22,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/year/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Read year */
-        get: operations["Years_read"];
-        put?: never;
-        post?: never;
-        /** @description Delete a year */
-        delete: operations["Years_delete"];
-        options?: never;
-        head?: never;
-        /** @description Update a year */
-        patch: operations["Years_update"];
-        trace?: never;
-    };
-    "/api/year/{id}/analyze": {
+    "/year/{yearId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -49,47 +30,51 @@ export interface paths {
             cookie?: never;
         };
         get?: never;
-        put?: never;
-        /** @description Analyze a year */
-        post: operations["Years_analyze"];
-        delete?: never;
+        /** @description Update a year */
+        put: operations["Years_update"];
+        post?: never;
+        /** @description Delete a year */
+        delete: operations["Years_delete"];
         options?: never;
         head?: never;
-        patch?: never;
+        /** @description Set active year */
+        patch: operations["Years_setActive"];
         trace?: never;
     };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        AnalyzeResult: {
-            id: string;
-            analysis: string;
+        CreateYearBody: {
+            /** Format: int32 */
+            year: number;
+            /** Format: int32 */
+            term: number;
+            isActive?: boolean;
         };
         EmptyData: Record<string, never>;
+        UpdateYearBody: {
+            user?: string;
+            /** Format: int32 */
+            year?: number;
+            /** Format: int32 */
+            term?: number;
+            isActive?: boolean;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
         Year: {
             id: string;
             user: string;
             /** Format: int32 */
             year: number;
-            term: string;
+            /** Format: int32 */
+            term: number;
             isActive: boolean;
             /** Format: date-time */
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-        };
-        YearMergePatchUpdate: {
-            id?: string;
-            user?: string;
-            /** Format: int32 */
-            year?: number;
-            term?: string;
-            isActive?: boolean;
-            /** Format: date-time */
-            createdAt?: string;
-            /** Format: date-time */
-            updatedAt?: string;
         };
     };
     responses: never;
@@ -134,7 +119,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["Year"];
+                "application/json": components["schemas"]["CreateYearBody"];
             };
         };
         responses: {
@@ -154,16 +139,20 @@ export interface operations {
             };
         };
     };
-    Years_read: {
+    Years_update: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                id: string;
+                yearId: string;
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateYearBody"];
+            };
+        };
         responses: {
             /** @description The request has succeeded. */
             200: {
@@ -186,7 +175,7 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                id: string;
+                yearId: string;
             };
             cookie?: never;
         };
@@ -208,43 +197,12 @@ export interface operations {
             };
         };
     };
-    Years_update: {
+    Years_setActive: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/merge-patch+json": components["schemas"]["YearMergePatchUpdate"];
-            };
-        };
-        responses: {
-            /** @description The request has succeeded. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        success: boolean;
-                        message: string;
-                        data?: components["schemas"]["Year"];
-                        error?: string;
-                    };
-                };
-            };
-        };
-    };
-    Years_analyze: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
+                yearId: string;
             };
             cookie?: never;
         };
@@ -259,7 +217,7 @@ export interface operations {
                     "application/json": {
                         success: boolean;
                         message: string;
-                        data?: components["schemas"]["AnalyzeResult"];
+                        data?: components["schemas"]["EmptyData"];
                         error?: string;
                     };
                 };

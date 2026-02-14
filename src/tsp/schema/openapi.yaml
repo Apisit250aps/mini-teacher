@@ -5,7 +5,7 @@ info:
 tags:
   - name: Years
 paths:
-  /api/year:
+  /year:
     get:
       operationId: Years_list
       description: List years
@@ -63,43 +63,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Year'
-  /api/year/{id}:
-    get:
-      operationId: Years_read
-      description: Read year
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/Year'
-                  error:
-                    type: string
-      tags:
-        - Years
-    patch:
+              $ref: '#/components/schemas/CreateYearBody'
+  /year/{yearId}:
+    put:
       operationId: Years_update
       description: Update a year
       parameters:
-        - name: id
+        - name: yearId
           in: path
           required: true
           schema:
@@ -128,14 +98,14 @@ paths:
       requestBody:
         required: true
         content:
-          application/merge-patch+json:
+          application/json:
             schema:
-              $ref: '#/components/schemas/YearMergePatchUpdate'
-    delete:
-      operationId: Years_delete
-      description: Delete a year
+              $ref: '#/components/schemas/UpdateYearBody'
+    patch:
+      operationId: Years_setActive
+      description: Set active year
       parameters:
-        - name: id
+        - name: yearId
           in: path
           required: true
           schema:
@@ -161,12 +131,11 @@ paths:
                     type: string
       tags:
         - Years
-  /api/year/{id}/analyze:
-    post:
-      operationId: Years_analyze
-      description: Analyze a year
+    delete:
+      operationId: Years_delete
+      description: Delete a year
       parameters:
-        - name: id
+        - name: yearId
           in: path
           required: true
           schema:
@@ -187,25 +156,45 @@ paths:
                   message:
                     type: string
                   data:
-                    $ref: '#/components/schemas/AnalyzeResult'
+                    $ref: '#/components/schemas/EmptyData'
                   error:
                     type: string
       tags:
         - Years
 components:
   schemas:
-    AnalyzeResult:
+    CreateYearBody:
       type: object
       required:
-        - id
-        - analysis
+        - year
+        - term
       properties:
-        id:
-          type: string
-        analysis:
-          type: string
+        year:
+          type: integer
+          format: int32
+        term:
+          type: integer
+          format: int32
+        isActive:
+          type: boolean
     EmptyData:
       type: object
+    UpdateYearBody:
+      type: object
+      properties:
+        user:
+          type: string
+        year:
+          type: integer
+          format: int32
+        term:
+          type: integer
+          format: int32
+        isActive:
+          type: boolean
+        updatedAt:
+          type: string
+          format: date-time
     Year:
       type: object
       required:
@@ -225,27 +214,8 @@ components:
           type: integer
           format: int32
         term:
-          type: string
-        isActive:
-          type: boolean
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-    YearMergePatchUpdate:
-      type: object
-      properties:
-        id:
-          type: string
-        user:
-          type: string
-        year:
           type: integer
           format: int32
-        term:
-          type: string
         isActive:
           type: boolean
         createdAt:
@@ -254,4 +224,3 @@ components:
         updatedAt:
           type: string
           format: date-time
-      description: ''

@@ -15,8 +15,8 @@ const sarabun = Sarabun({
 })
 
 export const metadata: Metadata = {
-  title: 'Mini Contracts',
-  description: 'Mini Contracts Management App ',
+  title: 'Mini Teacher',
+  description: 'Mini Teacher Management App ',
   authors: [{ name: 'Apisit Saithong' }],
 }
 
