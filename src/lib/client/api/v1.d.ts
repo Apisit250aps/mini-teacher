@@ -59,7 +59,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/year/{yearId}/class/year/{yearId}/class/{classId}": {
+    "/year/{yearId}/class/{classId}": {
         parameters: {
             query?: never;
             header?: never;

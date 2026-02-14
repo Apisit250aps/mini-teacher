@@ -231,7 +231,7 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateClassBody'
-  /year/{yearId}/class/year/{yearId}/class/{classId}:
+  /year/{yearId}/class/{classId}:
     put:
       operationId: Classes_update
       description: Update a class

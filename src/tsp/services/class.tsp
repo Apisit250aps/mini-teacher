@@ -3,20 +3,22 @@ using TypeSpec.Rest;
 
 namespace MiniTeacherService.ClassesApi;
 
-@route("/year/{yearId}/class")
+@route("/year/{yearId}")
 @tag("Classes")
 interface Classes {
   /** List classes in a year */
+  @route("/class")
   @get list(@path yearId: string): ApiResponse<Class[]>;
 
   /** Create a class */
+  @route("/class")
   @post create(
     @path yearId: string,
     @body body: CreateClassBody,
   ): ApiResponse<Class>;
 
   /** Update a class */
-  @route("/year/{yearId}/class/{classId}")
+  @route("/class/{classId}")
   @put
   update(
     @path yearId: string,
@@ -25,11 +27,11 @@ interface Classes {
   ): ApiResponse<Class>;
 
   /** Delete a class */
-  @route("/year/{yearId}/class/{classId}")
+  @route("/class/{classId}")
   @delete
   delete(@path yearId: string, @path classId: string): ApiResponse<EmptyData>;
 
-  @route("/year/{yearId}/class/{classId}")
+  @route("/class/{classId}")
   @get
   getById(@path yearId: string, @path classId: string): ApiResponse<Class>;
 }
