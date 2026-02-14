@@ -1,31 +1,20 @@
 'use client'
 import DataTable from '@/components/share/table/data-table'
 import { useYear } from '@/hooks/app/use-year'
+import { useClassQueries } from '@/hooks/queries/use-class'
 import { $api } from '@/lib/client'
+import { Class } from '@/models/entities'
 import React, { useMemo } from 'react'
 
 export default function ClassDataTable() {
   const { activeYear } = useYear()
 
-  const { data: rawData } = $api.useQuery('get', '/year/{yearId}/class', {
-    params: {
-      path: {
-        yearId: activeYear?.id || '',
-      },
-    },
-    enabled: !!activeYear,
-  })
+  const { list } = useClassQueries()
 
-  const classes = useMemo(() => {
-    if (rawData?.success && rawData.data) {
-      return rawData.data.map((item) => ({
-        ...item,
-        createdAt: new Date(item.createdAt),
-        updatedAt: new Date(item.updatedAt),
-      }))
-    }
-    return []
-  }, [rawData])
+  const data: Class[] = useMemo(() => {
+    if (!activeYear) return []
+    return (list.data?.data as unknown as Class[]) || ([] as Class[])
+  }, [list.data, activeYear])
 
   return (
     <DataTable
@@ -41,7 +30,7 @@ export default function ClassDataTable() {
           accessorKey: 'createdAt',
         },
       ]}
-      data={classes}
+      data={data}
     />
   )
 }
