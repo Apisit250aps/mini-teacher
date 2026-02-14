@@ -5,6 +5,7 @@ info:
 tags:
   - name: Years
   - name: Classes
+  - name: Students
 paths:
   /class:
     get:
@@ -167,6 +168,161 @@ paths:
                     type: string
       tags:
         - Classes
+  /student:
+    get:
+      operationId: Students_list
+      description: List students in a class
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Student'
+                  error:
+                    type: string
+      tags:
+        - Students
+    post:
+      operationId: Students_create
+      description: Create a student
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Student'
+                  error:
+                    type: string
+      tags:
+        - Students
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateStudentBody'
+  /student/{studentId}:
+    put:
+      operationId: Students_update
+      description: Update a student
+      parameters:
+        - name: studentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Student'
+                  error:
+                    type: string
+      tags:
+        - Students
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateStudentBody'
+    delete:
+      operationId: Students_delete
+      description: Delete a student
+      parameters:
+        - name: studentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/EmptyData'
+                  error:
+                    type: string
+      tags:
+        - Students
+    get:
+      operationId: Students_getById
+      parameters:
+        - name: studentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Student'
+                  error:
+                    type: string
+      tags:
+        - Students
   /year:
     get:
       operationId: Years_list
@@ -367,6 +523,24 @@ components:
           type: string
         isActive:
           type: boolean
+    CreateStudentBody:
+      type: object
+      required:
+        - teacher
+        - code
+        - firstName
+        - lastName
+      properties:
+        teacher:
+          type: string
+        code:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        nickname:
+          type: string
     CreateYearBody:
       type: object
       required:
@@ -383,6 +557,35 @@ components:
           type: boolean
     EmptyData:
       type: object
+    Student:
+      type: object
+      required:
+        - id
+        - teacher
+        - code
+        - firstName
+        - lastName
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        teacher:
+          type: string
+        code:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        nickname:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
     UpdateClassBody:
       type: object
       properties:
@@ -394,6 +597,22 @@ components:
           type: string
         isActive:
           type: boolean
+        updatedAt:
+          type: string
+          format: date-time
+    UpdateStudentBody:
+      type: object
+      properties:
+        teacher:
+          type: string
+        code:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        nickname:
+          type: string
         updatedAt:
           type: string
           format: date-time

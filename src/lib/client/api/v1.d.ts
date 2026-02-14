@@ -40,6 +40,42 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/student": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description List students in a class */
+        get: operations["Students_list"];
+        put?: never;
+        /** @description Create a student */
+        post: operations["Students_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/student/{studentId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["Students_getById"];
+        /** @description Update a student */
+        put: operations["Students_update"];
+        post?: never;
+        /** @description Delete a student */
+        delete: operations["Students_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/year": {
         parameters: {
             query?: never;
@@ -98,6 +134,13 @@ export interface components {
             subject: string;
             isActive?: boolean;
         };
+        CreateStudentBody: {
+            teacher: string;
+            code: string;
+            firstName: string;
+            lastName: string;
+            nickname?: string;
+        };
         CreateYearBody: {
             /** Format: int32 */
             year: number;
@@ -106,11 +149,32 @@ export interface components {
             isActive?: boolean;
         };
         EmptyData: Record<string, never>;
+        Student: {
+            id: string;
+            teacher: string;
+            code: string;
+            firstName: string;
+            lastName: string;
+            nickname?: string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
         UpdateClassBody: {
             year?: string;
             name?: string;
             subject?: string;
             isActive?: boolean;
+            /** Format: date-time */
+            updatedAt?: string;
+        };
+        UpdateStudentBody: {
+            teacher?: string;
+            code?: string;
+            firstName?: string;
+            lastName?: string;
+            nickname?: string;
             /** Format: date-time */
             updatedAt?: string;
         };
@@ -266,6 +330,145 @@ export interface operations {
             header?: never;
             path: {
                 classId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["EmptyData"];
+                        error?: string;
+                    };
+                };
+            };
+        };
+    };
+    Students_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["Student"][];
+                        error?: string;
+                    };
+                };
+            };
+        };
+    };
+    Students_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateStudentBody"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["Student"];
+                        error?: string;
+                    };
+                };
+            };
+        };
+    };
+    Students_getById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["Student"];
+                        error?: string;
+                    };
+                };
+            };
+        };
+    };
+    Students_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStudentBody"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["Student"];
+                        error?: string;
+                    };
+                };
+            };
+        };
+    };
+    Students_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                studentId: string;
             };
             cookie?: never;
         };
