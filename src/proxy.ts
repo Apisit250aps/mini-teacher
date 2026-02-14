@@ -5,7 +5,6 @@ import { NextAuthRequest } from 'next-auth'
 import { NextResponse } from 'next/server'
 
 const toDashboard = (req: NextAuthRequest) => {
-  console.log(req.auth)
   return NextResponse.redirect(new URL('/dashboard', req.nextUrl))
 }
 
