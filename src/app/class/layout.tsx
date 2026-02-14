@@ -1,5 +1,6 @@
 import { auth } from '@/auth'
 import DashboardLayout from '@/components/layouts/dashboard-layout'
+import { ClassProvider } from '@/hooks/app/use-class';
 import { YearProvider } from '@/hooks/app/use-year'
 
 import { Year } from '@/models/entities'
@@ -22,7 +23,9 @@ export default async function Layout({
 
   return (
     <YearProvider years={years ?? []}>
-      <DashboardLayout>{children}</DashboardLayout>
+      <ClassProvider>
+        <DashboardLayout>{children}</DashboardLayout>
+      </ClassProvider>
     </YearProvider>
   )
 }

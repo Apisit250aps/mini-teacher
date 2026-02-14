@@ -5,7 +5,7 @@ import { NextAuthRequest } from 'next-auth'
 import { NextResponse } from 'next/server'
 
 const toDashboard = (req: NextAuthRequest) => {
-  return NextResponse.redirect(new URL('/dashboard', req.nextUrl))
+  return NextResponse.redirect(new URL('/class', req.nextUrl))
 }
 
 export default auth((req) =>
@@ -19,7 +19,7 @@ export default auth((req) =>
       middlewares: [toDashboard],
     },
     {
-      paths: ['/dashboard/*'],
+      paths: ['/class/*'],
       middlewares: [isAuthenticated],
     },
   ]),
