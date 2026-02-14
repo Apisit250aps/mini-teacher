@@ -7,7 +7,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 
-import { DIALOG_KEY, useOverlay } from '@/hooks/contexts/use-overlay';
+import { DIALOG_KEY, useOverlay } from '@/hooks/contexts/use-overlay'
 
 import React from 'react'
 
@@ -33,9 +33,7 @@ export default function ModalDialog({
     <Dialog
       open={open[dialogKey] || false}
       onOpenChange={(v) =>
-        v
-          ? openOverlay(dialogKey)
-          : closeOverlay(dialogKey)
+        v ? openOverlay(dialogKey) : closeOverlay(dialogKey)
       }
     >
       {trigger && (

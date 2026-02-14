@@ -7,5 +7,5 @@ export const zodName = () =>
     message: 'ห้ามมีเว้นวรรค',
   })
 export const zodEmail = () => z.email('รูปแบบอีเมลไม่ถูกต้อง')
-export const zodDate = () => z.date('รูปแบบวันที่ไม่ถูกต้อง')
-export const zodTimestamp = () => z.date().default(() => new Date())
+export const zodDate = () => z.date('รูปแบบวันที่ไม่ถูกต้อง').or(z.string())
+export const zodTimestamp = () => z.date().default(() => new Date()).or(z.string())

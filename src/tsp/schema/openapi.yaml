@@ -526,10 +526,13 @@ components:
     CreateStudentBody:
       type: object
       required:
+        - prefix
         - code
         - firstName
         - lastName
       properties:
+        prefix:
+          type: string
         code:
           type: string
         firstName:
@@ -560,6 +563,7 @@ components:
         - id
         - teacher
         - code
+        - prefix
         - firstName
         - lastName
         - createdAt
@@ -570,6 +574,8 @@ components:
         teacher:
           type: string
         code:
+          type: string
+        prefix:
           type: string
         firstName:
           type: string
@@ -600,6 +606,8 @@ components:
     UpdateStudentBody:
       type: object
       properties:
+        prefix:
+          type: string
         code:
           type: string
         firstName:

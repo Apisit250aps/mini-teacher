@@ -1,13 +1,14 @@
-import { zodDate, zodTimestamp, zodUuid } from '@/lib/zod/fields'
+import { zodDate, zodName, zodTimestamp, zodUuid } from '@/lib/zod/fields'
 import z from 'zod'
 
 export const BaseStudentSchema = z.object({
   id: zodUuid(),
   teacher: z.uuid(),
   code: z.string(),
-  firstName: z.string(),
-  lastName: z.string(),
-  nickname: z.string().optional(),
+  prefix: zodName(),
+  firstName: zodName(),
+  lastName: zodName(),
+  nickname: zodName().optional(),
   createdAt: zodDate(),
   updatedAt: zodTimestamp(),
 })
@@ -23,6 +24,7 @@ export const CreateStudentSchema = BaseStudentSchema.omit({
 export const UpdateStudentSchema = CreateStudentSchema.partial()
 
 export const StudentFormSchema = CreateStudentSchema.pick({
+  prefix: true,
   code: true,
   firstName: true,
   lastName: true,

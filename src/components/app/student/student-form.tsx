@@ -22,6 +22,7 @@ export default function StudentForm({
   const methods = useForm<StudentFormValue>({
     resolver: zodResolver(StudentFormSchema),
     defaultValues: {
+      prefix: value?.prefix || '',
       firstName: value?.firstName || '',
       lastName: value?.lastName || '',
       nickname: value?.nickname || '',
@@ -44,7 +45,20 @@ export default function StudentForm({
             </FormItem>
           )}
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <FormField
+            control={methods.control}
+            name="prefix"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>คำนำหน้า</FormLabel>
+                <FormControl>
+                  <Input {...field} placeholder="กรอกคำนำหน้า" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={methods.control}
             name="firstName"

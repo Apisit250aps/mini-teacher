@@ -135,6 +135,7 @@ export interface components {
             isActive?: boolean;
         };
         CreateStudentBody: {
+            prefix: string;
             code: string;
             firstName: string;
             lastName: string;
@@ -152,6 +153,7 @@ export interface components {
             id: string;
             teacher: string;
             code: string;
+            prefix: string;
             firstName: string;
             lastName: string;
             nickname?: string;
@@ -169,6 +171,7 @@ export interface components {
             updatedAt?: string;
         };
         UpdateStudentBody: {
+            prefix?: string;
             code?: string;
             firstName?: string;
             lastName?: string;

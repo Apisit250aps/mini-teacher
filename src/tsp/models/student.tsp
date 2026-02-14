@@ -4,6 +4,7 @@ model Student {
   id: string;
   teacher: string;
   code: string;
+  prefix: string;
   firstName: string;
   lastName: string;
   nickname?: string;
@@ -12,6 +13,7 @@ model Student {
 }
 
 model CreateStudentBody {
+  prefix: string;
   code: string;
   firstName: string;
   lastName: string;
@@ -19,6 +21,7 @@ model CreateStudentBody {
 }
 
 model UpdateStudentBody {
+  prefix?: string;
   code?: string;
   firstName?: string;
   lastName?: string;
