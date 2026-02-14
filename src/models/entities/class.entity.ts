@@ -24,6 +24,14 @@ export const UpdateClassSchema = BaseClassSchema.omit({
   createdAt: true,
 }).partial()
 
+export const ClassFormSchema = CreateClassSchema.omit({
+  id: true,
+  isActive: true,
+  createdAt: true,
+  updatedAt: true,
+})
+
 export type Class = z.infer<typeof BaseClassSchema>
 export type CreateClass = z.infer<typeof CreateClassSchema>
 export type UpdateClass = z.infer<typeof UpdateClassSchema>
+export type ClassFormValue = z.infer<typeof ClassFormSchema>

@@ -1,10 +1,32 @@
+'use client'
 import ClassDataTable from '@/components/app/class/class-data-table'
+import ClassForm from '@/components/app/class/class-form'
 import PageLayout from '@/components/layouts/page-layout'
+import ModalDialog from '@/components/share/overlay/modal-dialog'
+import { Button } from '@/components/ui/button'
+import { useClass } from '@/hooks/app/use-class'
+import { useYear } from '@/hooks/app/use-year'
 import React from 'react'
 
 export default function ClassView() {
+  const { activeYear } = useYear()
+  const { onClassCreate } = useClass()
+
   return (
-    <PageLayout title={'ห้องเรียน'}>
+    <PageLayout
+      title={'ห้องเรียน'}
+      actions={
+        <>
+          <ModalDialog
+            title={`เพิ่มห้องเรียนใหม่ ในปีการศึกษา ${activeYear.term}/${activeYear?.year}`}
+            dialogKey="CREATE_CLASS"
+            trigger={<Button>สร้างห้องเรียน</Button>}
+          >
+            <ClassForm onSubmit={onClassCreate} />
+          </ModalDialog>
+        </>
+      }
+    >
       <ClassDataTable />
     </PageLayout>
   )

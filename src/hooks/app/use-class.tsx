@@ -1,20 +1,39 @@
 'use client'
 import { Class } from '@/models/entities'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useClassQueries } from '../queries/use-class'
 import { Album } from 'lucide-react'
+import { toast } from 'sonner'
+import { useOverlay } from '../contexts/use-overlay'
 
 type ClassContextValue = {
   classes: Class[]
   classRoutes: { name: string; url: string; icon: typeof Album }[]
+  onClassCreate: (data: {
+    name: string
+    subject: string
+    year: string
+  }) => Promise<void>
+  onClassUpdate: (
+    classId: string,
+    data: {
+      name: string
+      subject: string
+      year: string
+    },
+  ) => Promise<void>
 }
 
 const ClassContext = React.createContext<ClassContextValue | null>(null)
 
 export function ClassProvider({ children }: { children: React.ReactNode }) {
-  const { list: classList } = useClassQueries()
+  const {
+    list: classList,
+    create: createClass,
+    update: updateClass,
+  } = useClassQueries()
   const { data, isPending } = classList
-
+  const { closeAll } = useOverlay()
   const classes = React.useMemo(() => {
     if (isPending) return []
     return (data?.data as unknown as Class[]) || []
@@ -28,8 +47,70 @@ export function ClassProvider({ children }: { children: React.ReactNode }) {
     }))
   }, [classes])
 
+  const onClassCreate = useCallback(
+    async (data: { name: string; subject: string; year: string }) => {
+      await createClass.mutateAsync(
+        {
+          body: {
+            name: data.name,
+            subject: data.subject,
+            year: data.year,
+          },
+        },
+        {
+          onSettled(data, error) {
+            if (error) {
+              toast.error('เกิดข้อผิดพลาดในการสร้างชั้นเรียน')
+              return
+            }
+            toast.success('สร้างชั้นเรียนเรียบร้อยแล้ว')
+            classList.refetch()
+            closeAll()
+          },
+        },
+      )
+    },
+    [classList, closeAll, createClass],
+  )
+
+  const onClassUpdate = useCallback(
+    async (
+      classId: string,
+      data: { name: string; subject: string; year: string },
+    ) => {
+      await updateClass.mutateAsync(
+        {
+          params: {
+            path: {
+              classId: classId,
+            },
+          },
+          body: {
+            name: data.name,
+            subject: data.subject,
+            year: data.year,
+          },
+        },
+        {
+          onSettled(data, error) {
+            if (error) {
+              toast.error('เกิดข้อผิดพลาดในการอัปเดตชั้นเรียน')
+              return
+            }
+            toast.success('อัปเดตชั้นเรียนเรียบร้อยแล้ว')
+            classList.refetch()
+            closeAll()
+          },
+        },
+      )
+    },
+    [classList, closeAll, updateClass],
+  )
+
   return (
-    <ClassContext.Provider value={{ classes, classRoutes }}>
+    <ClassContext.Provider
+      value={{ classes, classRoutes, onClassCreate, onClassUpdate }}
+    >
       {children}
     </ClassContext.Provider>
   )

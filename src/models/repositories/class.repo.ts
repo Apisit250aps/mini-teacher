@@ -1,5 +1,6 @@
 import { classesCollection } from '@/lib/mongo'
 import { Class } from '../entities'
+import { omit } from 'lodash'
 
 export async function createClass(newClass: Class): Promise<Class> {
   try {
@@ -22,7 +23,7 @@ export async function updateClass(
     const classes = await classesCollection()
     const result = await classes.findOneAndUpdate(
       { id },
-      { $set: updatedClass },
+      { $set: omit(updatedClass, ['id']) },
       { returnDocument: 'after', projection: { _id: 0 } },
     )
     if (!result) {

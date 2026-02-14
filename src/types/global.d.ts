@@ -9,3 +9,8 @@ type ApiResponse<T = unknown> = {
   error?: string
   data?: T
 }
+
+type FormValueProps<T = unknown> = {
+  value?: T
+  onSubmit: (data: T) => void
+}

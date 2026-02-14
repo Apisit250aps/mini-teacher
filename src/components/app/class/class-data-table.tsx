@@ -1,36 +1,60 @@
 'use client'
+import { ActionDropdown } from '@/components/share/overlay/action-dropdown'
+import ModalDialog from '@/components/share/overlay/modal-dialog'
 import DataTable from '@/components/share/table/data-table'
-import { useYear } from '@/hooks/app/use-year'
-import { useClassQueries } from '@/hooks/queries/use-class'
-import { $api } from '@/lib/client'
-import { Class } from '@/models/entities'
-import React, { useMemo } from 'react'
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
+import { useClass } from '@/hooks/app/use-class'
+import { Class, ClassFormValue } from '@/models/entities'
+import { Cell, ColumnDef } from '@tanstack/react-table'
+import { Pen } from 'lucide-react'
+import ClassForm from './class-form'
 
-export default function ClassDataTable() {
-  const { activeYear } = useYear()
-
-  const { list } = useClassQueries()
-
-  const data: Class[] = useMemo(() => {
-    if (!activeYear) return []
-    return (list.data?.data as unknown as Class[]) || ([] as Class[])
-  }, [list.data, activeYear])
+const ColumnActions = ({ cell }: { cell: Cell<Class, unknown> }) => {
+  const { onClassUpdate } = useClass()
 
   return (
-    <DataTable
-      columns={[
-        {
-          id: 'name',
-          header: 'ชื่อห้องเรียน',
-          accessorKey: 'name',
-        },
-        {
-          id: 'createdAt',
-          header: 'วันที่สร้าง',
-          accessorKey: 'createdAt',
-        },
-      ]}
-      data={data}
-    />
+    <ActionDropdown id={`CLASS_ACTION_COLUMNS_${cell.row.original.id}`}>
+      <ModalDialog
+        title={'แก้ไขข้อมูลห้องเรียน'}
+        description="คุณสามารถแก้ไขข้อมูลห้องเรียนได้ที่นี่"
+        closeOutside={false}
+        dialogKey={`CLASS_EDIT_MODAL_${cell.row.original.id}`}
+        trigger={
+          <DropdownMenuItem>
+            <Pen /> แก้ไขข้อมูล
+          </DropdownMenuItem>
+        }
+      >
+        <ClassForm
+          value={cell.row.original}
+          onSubmit={function (data: ClassFormValue): void {
+            onClassUpdate(cell.row.original.id, data)
+          }}
+        />
+      </ModalDialog>
+    </ActionDropdown>
   )
+}
+
+const columns: ColumnDef<Class>[] = [
+  {
+    id: 'name',
+    header: 'ชื่อห้องเรียน',
+    accessorKey: 'name',
+  },
+  {
+    id: 'subject',
+    header: 'วิชา',
+    accessorKey: 'subject',
+  },
+  {
+    header: 'จัดการ',
+    cell: ColumnActions,
+  },
+]
+
+export default function ClassDataTable() {
+  const { classes } = useClass()
+
+  return <DataTable columns={columns} data={classes} />
 }
