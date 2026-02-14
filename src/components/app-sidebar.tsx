@@ -138,19 +138,9 @@ const data = {
   ],
   projects: [
     {
-      name: 'Design Engineering',
-      url: '#',
+      name: 'ห้องเรียน',
+      url: 'class',
       icon: Frame,
-    },
-    {
-      name: 'Sales & Marketing',
-      url: '#',
-      icon: PieChart,
-    },
-    {
-      name: 'Travel',
-      url: '#',
-      icon: Map,
     },
   ],
 }
