@@ -14,7 +14,7 @@ export async function usersCollection(): Promise<Collection<User>> {
     const db = await connect()
     _users = db.collection<User>('users')
     await _users.createIndexes([
-      { key: { name: 1 }, unique: true, name: 'uniq_name' },
+      { key: { name: 1 }, name: 'uniq_name' },
       { key: { id: 1 }, unique: true, name: 'uniq_id' },
     ])
   }

@@ -12,7 +12,7 @@ export const BaseUserSchema = z.object({
   name: zodName().min(4, 'ชื่อต้องมีความยาวอย่างน้อย 4 ตัวอักษร'),
   password: z.string().min(8, 'รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร'),
   isActive: z.boolean().default(true),
-  isTeacher: z.boolean().default(false),
+  isTeacher: z.boolean().default(true),
   firstName: zodName().optional(),
   lastName: zodName().optional(),
   email: zodEmail().optional(),
