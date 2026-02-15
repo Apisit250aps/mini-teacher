@@ -24,3 +24,7 @@ model UpdateClassBody {
   isActive?: boolean;
   updatedAt?: utcDateTime;
 }
+
+model PatchClassMemberBody {
+  studentId?: string;
+}

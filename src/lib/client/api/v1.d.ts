@@ -40,6 +40,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/class/{classId}/member": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["Classes_addOrRemoveMember"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/student": {
         parameters: {
             query?: never;
@@ -149,6 +165,9 @@ export interface components {
             isActive?: boolean;
         };
         EmptyData: Record<string, never>;
+        PatchClassMemberBody: {
+            studentId?: string;
+        };
         Student: {
             id: string;
             teacher: string;
@@ -333,6 +352,37 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["EmptyData"];
+                        error?: string;
+                    };
+                };
+            };
+        };
+    };
+    Classes_addOrRemoveMember: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                classId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PatchClassMemberBody"];
+            };
+        };
         responses: {
             /** @description The request has succeeded. */
             200: {

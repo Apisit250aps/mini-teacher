@@ -28,4 +28,11 @@ interface Classes {
   @route("{classId}")
   @get
   getById(@path classId: string): ApiResponse<Class>;
+
+  @route("{classId}/member")
+  @put
+  addOrRemoveMember(
+    @path classId: string,
+    @body body: PatchClassMemberBody,
+  ): ApiResponse<EmptyData>;
 }
