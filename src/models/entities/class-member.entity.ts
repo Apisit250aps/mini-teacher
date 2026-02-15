@@ -1,6 +1,6 @@
 import { zodDate, zodTimestamp, zodUuid } from '@/lib/zod/fields'
 import z from 'zod'
-import { BaseStudentSchema } from './student.entity'
+import { BaseStudentSchema } from '@/models/entities'
 
 export const BaseClassMemberSchema = z.object({
   id: zodUuid(),

@@ -1,6 +1,6 @@
 import { $api } from '@/lib/client'
 import { useYearContext } from '@/hooks/app/use-year'
-import { useClassContext } from '../app/use-class'
+import { useClassContext } from '@/hooks/app/use-class'
 
 export const useGetClassMembers = (classId?: string) => {
   const { activeClass } = useClassContext()

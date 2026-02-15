@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
 import { Eye, EyeClosed } from "lucide-react";
 import React from "react";
-import { Button } from "./button";
-import { Input } from "./input";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 function InputPassword({ className, ...props }: React.ComponentProps<'input'>) {
   const [showPassword, setShowPassword] = React.useState<boolean>(false)

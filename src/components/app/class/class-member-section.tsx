@@ -1,14 +1,14 @@
 'use client'
 import DataTable from '@/components/share/table/data-table'
 import { useGetClassMembers } from '@/hooks/queries/use-class'
-import { ClassMemberDetail, Student } from '@/models/entities'
+import { ClassMemberDetail } from '@/models/entities'
 import { Cell, ColumnDef } from '@tanstack/react-table'
-import MemberCreate from './member/member-create'
+import MemberCreate from '@/components/app/class/member/member-create'
 import { ActionDropdown } from '@/components/share/overlay/action-dropdown'
 import {
   MemberDeleteAction,
   StudentEditAction,
-} from '../student/student-action'
+} from '@/components/app/student/student-action'
 
 const ColumnActions = ({
   cell,

@@ -4,7 +4,7 @@ import DataTable from '@/components/share/table/data-table'
 import { useStudentQueries } from '@/hooks/queries/use-student'
 import { Student } from '@/models/entities'
 import { Cell, ColumnDef } from '@tanstack/react-table'
-import { StudentDeleteAction, StudentEditAction } from './student-action'
+import { StudentDeleteAction, StudentEditAction } from '@/components/app/student/student-action'
 
 const ColumnActions = ({ cell }: { cell: Cell<Student, unknown> }) => {
   return (
