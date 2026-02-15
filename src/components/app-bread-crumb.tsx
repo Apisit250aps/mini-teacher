@@ -12,11 +12,12 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
+import { useYearContext } from '@/hooks/app/use-year';
 
 export default function AppBreadCrumb() {
   const pathname = usePathname()
-  const segments = pathname.split('/').filter(Boolean)
-
+  const segments = pathname.split('/').filter(Boolean).slice(2)
+  const {activeYear} = useYearContext()
   const uuidSchema = z.uuid()
 
   const isUuid = (value: string) => uuidSchema.safeParse(value).success
@@ -35,7 +36,7 @@ export default function AppBreadCrumb() {
     <Breadcrumb>
       <BreadcrumbList>
         {segments.map((segment, index) => {
-          const href = `/${segments.slice(0, index + 1).join('/')}`
+          const href = `/${activeYear.year}/${activeYear.term}/${segments.slice(0, index + 1).join('/')}`
           const isLast = index === segments.length - 1
           const label = formatSegment(segment)
           return (

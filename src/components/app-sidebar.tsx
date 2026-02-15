@@ -14,12 +14,17 @@ import {
   SidebarRail,
 } from '@/components/ui/sidebar'
 import { useClassContext } from '@/hooks/app/use-class'
+import { useYearContext } from '@/hooks/app/use-year'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { classRoutes } = useClassContext()
+  const { activeYear } = useYearContext()
+
+  const basePath = `/${activeYear.year}/${activeYear.term}/class`
+
   const nav = [
-    { name: 'ห้องเรียน', url: 'manage', icon: LibraryBig },
-    { name: 'นักเรียน', url: 'student', icon: GraduationCap },
+    { name: 'ห้องเรียน', url: `${basePath}/manage`, icon: LibraryBig },
+    { name: 'นักเรียน', url: `${basePath}/student`, icon: GraduationCap },
   ]
   return (
     <Sidebar collapsible="icon" {...props}>
