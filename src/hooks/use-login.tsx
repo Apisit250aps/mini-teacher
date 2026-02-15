@@ -11,6 +11,7 @@ import { toast } from 'sonner'
 type LoginContextValue = {
   onSubmit: (data: UserLogin) => void
   form: ReturnType<typeof useForm<UserLogin>>
+  onGoogleSignIn: () => void
 }
 
 const LoginContext = createContext<LoginContextValue | null>(null)
@@ -43,8 +44,12 @@ export function LoginProvider({ children }: { children: React.ReactNode }) {
     },
   })
 
+  const onGoogleSignIn = useCallback(async () => {
+    await signIn('google')
+  }, [])
+
   return (
-    <LoginContext.Provider value={{ onSubmit, form: methods }}>
+    <LoginContext.Provider value={{ onSubmit, form: methods, onGoogleSignIn }}>
       {children}
     </LoginContext.Provider>
   )

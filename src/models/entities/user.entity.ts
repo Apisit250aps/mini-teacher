@@ -25,6 +25,19 @@ export const CreateUserSchema = BaseUserSchema.extend({
   createdAt: zodTimestamp(),
 })
 
+export const AuthUpdateUser = BaseUserSchema.pick({
+  id: true,
+  name: true,
+  isActive: true,
+  isTeacher: true,
+  email: true,
+  createdAt: true,
+  updatedAt: true,
+}).extend({
+  name: z.string(),
+  createdAt: zodTimestamp(),
+})
+
 export const UpdateUserSchema = BaseUserSchema.omit({
   id: true,
   createdAt: true,

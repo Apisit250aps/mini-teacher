@@ -2,6 +2,7 @@ import { usersCollection } from '@/lib/mongo'
 import { hash } from '@/lib/utils/encryption'
 import { User } from '@/models/entities'
 import { isNil, omit, omitBy } from 'lodash'
+import { ObjectId } from 'mongodb'
 
 export async function createUser(user: User): Promise<User | null> {
   try {
@@ -99,4 +100,28 @@ export async function findUserById(id: string): Promise<User | null> {
   } catch (error) {
     throw error
   }
+}
+
+export async function oAuthCreateUser(
+  id: string,
+  user: Partial<User>,
+): Promise<User | null> {
+  const users = await usersCollection()
+  const result = await users.findOneAndUpdate(
+    {
+      _id: new ObjectId(id),
+    },
+    {
+      $set: user,
+    },
+    {
+      upsert: true,
+      returnDocument: 'after',
+      projection: { password: 0, _id: 0 },
+    },
+  )
+  if (!result) {
+    throw new Error('Create failed')
+  }
+  return result
 }

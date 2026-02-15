@@ -1,12 +1,18 @@
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
-import { UserLogin } from '@/models/entities'
-import { updateUser } from '@/models/repositories'
+import { AuthUpdateUser, UserLogin } from '@/models/entities'
+import { oAuthCreateUser, updateUser } from '@/models/repositories'
 import { verify } from '@/lib/utils/encryption'
 import { usersCollection } from '@/lib/mongo'
+import Google from 'next-auth/providers/google'
+import { MongoDBAdapter } from '@auth/mongodb-adapter'
+import client from './lib/mongo/client'
+import { safeValidate } from './lib/utils'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  adapter: MongoDBAdapter(client),
   providers: [
+    Google,
     Credentials({
       name: 'credentials',
       credentials: {
@@ -53,6 +59,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.email = user.email
       }
       return token
+    },
+  },
+  events: {
+    createUser: async ({ user }) => {
+      const validate = await safeValidate(AuthUpdateUser, {
+        name: user.name || '',
+      })
+      await oAuthCreateUser(user.id!, validate.data!)
     },
   },
 })
