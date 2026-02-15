@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   experimental: {
     authInterrupts: true,
+    globalNotFound: true,
   },
 }
 
