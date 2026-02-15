@@ -125,3 +125,16 @@ export async function oAuthCreateUser(
   }
   return result
 }
+
+export async function findWithObjectId(id: string) {
+  const users = await usersCollection()
+  const user = await users.findOne(
+    {
+      _id: new ObjectId(id),
+    },
+    {
+      projection: { password: 0, _id: 0 },
+    },
+  )
+  return user
+}

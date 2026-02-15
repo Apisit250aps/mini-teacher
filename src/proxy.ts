@@ -4,8 +4,10 @@ import { isAuthenticated, isNoAuth } from '@/lib/middlewares/auth'
 import { NextAuthRequest } from 'next-auth'
 
 const debugMiddlewares = (req: NextAuthRequest) => {
-  console.log('Request URL:', req.auth)
-  console.log('Request Method:', req.method)
+  const debug = false
+  if (debug) {
+    console.log('auth', req.auth)
+  }
 }
 
 export default auth((req) =>

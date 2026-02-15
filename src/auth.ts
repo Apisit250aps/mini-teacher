@@ -1,13 +1,18 @@
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import { AuthUpdateUser, UserLogin } from '@/models/entities'
-import { oAuthCreateUser, updateUser } from '@/models/repositories'
+import {
+  findWithObjectId,
+  oAuthCreateUser,
+  updateUser,
+} from '@/models/repositories'
 import { verify } from '@/lib/utils/encryption'
 import { usersCollection } from '@/lib/mongo'
 import Google from 'next-auth/providers/google'
 import { MongoDBAdapter } from '@auth/mongodb-adapter'
 import client from './lib/mongo/client'
 import { safeValidate } from './lib/utils'
+import z from 'zod'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: MongoDBAdapter(client),
@@ -42,6 +47,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        if (z.uuid().safeParse(user.id).success) {
+          token.sub = user.id
+        } else {
+          const u = await findWithObjectId(user.id)
+          token.sub = u?.id
+        }
+        token.isActive = user.isActive
+        token.isTeacher = user.isTeacher
+        token.firstName = user.firstName
+        token.lastName = user.lastName
+        token.email = user.email
+      }
+      return token
+    },
     async session({ session, token }) {
       if (token) {
         session.user.id = token.sub as string
@@ -52,16 +73,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.email = token.email as string
       }
       return session
-    },
-    async jwt({ token, user }) {
-      if (user) {
-        token.isActive = user.isActive
-        token.isTeacher = user.isTeacher
-        token.firstName = user.firstName
-        token.lastName = user.lastName
-        token.email = user.email
-      }
-      return token
     },
   },
   events: {

@@ -156,7 +156,8 @@ export async function AuthGetYearById(
 }
 
 export async function AuthGetAllYears(
-  req: NextRequest,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _req: NextRequest,
 ): Promise<NextResponse<ApiResponse<Year[]>>> {
   try {
     const session = await auth()

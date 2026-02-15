@@ -29,7 +29,7 @@ export function NavMenu({
         {nav.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
-              <Link href={`/class/${item.url}`}>
+              <Link href={`${item.url}`}>
                 <item.icon />
                 <span>{item.name}</span>
               </Link>

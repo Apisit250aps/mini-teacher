@@ -57,7 +57,7 @@ export function ClassProvider({
       return [{ name: 'สร้างห้องเรียน', url: 'manage', icon: Album }]
     return classes.map((cls) => ({
       name: cls.name,
-      url: `${cls.id}`,
+      url: `class/${cls.id}`,
       icon: Album,
     }))
   }, [classes])

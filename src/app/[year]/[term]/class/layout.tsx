@@ -4,13 +4,7 @@ import EmptyPage from '@/components/share/empty/empty-page'
 import { ClassProvider } from '@/hooks/app/use-class'
 import { YearProvider } from '@/hooks/app/use-year'
 
-import { Year } from '@/models/entities'
-
-import {
-  getYearsByAuthUser,
-  getYearsByYearTerm,
-  initYear,
-} from '@/models/repositories'
+import { getYearsByAuthUser, getYearsByYearTerm } from '@/models/repositories'
 import { redirect } from 'next/navigation'
 
 export default async function Layout({
