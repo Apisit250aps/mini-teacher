@@ -7,6 +7,7 @@ import { SessionProvider } from 'next-auth/react'
 import { auth } from '@/auth'
 import { OverlayProvider } from '@/hooks/contexts/use-overlay'
 import TanstackQueryProvider from '@/hooks/contexts/tanstack-query'
+import { TabStorageProvider } from '@/hooks/contexts/tab-storage'
 
 const sarabun = Sarabun({
   variable: '--font-sarabun',
@@ -31,7 +32,9 @@ export default async function RootLayout({
       <body className={`${sarabun.className} antialiased`}>
         <TanstackQueryProvider>
           <SessionProvider session={session}>
-            <OverlayProvider>{children}</OverlayProvider>
+            <TabStorageProvider>
+              <OverlayProvider>{children}</OverlayProvider>
+            </TabStorageProvider>
           </SessionProvider>
         </TanstackQueryProvider>
         <Toaster position="top-right" />

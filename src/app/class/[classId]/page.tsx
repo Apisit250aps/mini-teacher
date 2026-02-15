@@ -1,5 +1,7 @@
 import React from 'react'
 import { getClassMembersByClassId } from '@/models/repositories/class-member.repo'
+import ClassDetailView from '@/views/class-detail-view';
+import { getClassById } from '@/models/repositories';
 
 export default async function Page({
   params,
@@ -8,16 +10,9 @@ export default async function Page({
 }) {
   const { classId } = await params
 
-  const member = await getClassMembersByClassId(classId)
-  return (
-    <div>
-      <pre>
-        {JSON.stringify(
-          member.map((m) => m),
-          null,
-          2,
-        )}
-      </pre>
-    </div>
-  )
+  const classRoom = await getClassById(classId)
+  if (!classRoom) {
+    return <div>ไม่พบห้องเรียน</div>
+  }
+  return <ClassDetailView classRoom={classRoom} />
 }
