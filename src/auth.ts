@@ -11,6 +11,9 @@ import { safeValidate } from './lib/utils'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: MongoDBAdapter(client),
+  session: {
+    strategy: 'jwt',
+  },
   providers: [
     Google,
     Credentials({
