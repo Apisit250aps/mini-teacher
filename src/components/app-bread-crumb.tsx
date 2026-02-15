@@ -11,8 +11,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from './ui/breadcrumb'
-import { Button } from './ui/button'
+} from '@/components/ui/breadcrumb'
 
 export default function AppBreadCrumb() {
   const pathname = usePathname()
@@ -39,7 +38,6 @@ export default function AppBreadCrumb() {
           const href = `/${segments.slice(0, index + 1).join('/')}`
           const isLast = index === segments.length - 1
           const label = formatSegment(segment)
-
           return (
             <React.Fragment key={`${segment}-${index}`}>
               {index > 0 ? <BreadcrumbSeparator /> : null}
