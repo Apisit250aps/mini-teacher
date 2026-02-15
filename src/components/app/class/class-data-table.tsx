@@ -3,7 +3,7 @@ import { ActionDropdown } from '@/components/share/overlay/action-dropdown'
 import ModalDialog from '@/components/share/overlay/modal-dialog'
 import DataTable from '@/components/share/table/data-table'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
-import { useClass } from '@/hooks/app/use-class'
+import { useClassContext } from '@/hooks/app/use-class'
 import { Class, ClassFormValue } from '@/models/entities'
 import { Cell, ColumnDef } from '@tanstack/react-table'
 import { Pen, Trash } from 'lucide-react'
@@ -11,7 +11,7 @@ import ClassForm from '@/components/app/class/class-form'
 import { ConfirmDialog } from '@/components/share/overlay/confirm-dialog'
 
 const ColumnActions = ({ cell }: { cell: Cell<Class, unknown> }) => {
-  const { onClassUpdate, onClassDelete } = useClass()
+  const { onClassUpdate, onClassDelete } = useClassContext()
 
   return (
     <ActionDropdown id={`CLASS_ACTION_COLUMNS_${cell.row.original.id}`}>
@@ -66,7 +66,7 @@ const columns: ColumnDef<Class>[] = [
 ]
 
 export default function ClassDataTable() {
-  const { classes } = useClass()
+  const { classes } = useClassContext()
 
   return <DataTable columns={columns} data={classes} />
 }

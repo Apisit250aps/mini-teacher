@@ -9,7 +9,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useYear } from '@/hooks/app/use-year'
+import { useYearContext } from '@/hooks/app/use-year'
 import { ClassFormSchema, type ClassFormValue } from '@/models/entities'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -19,7 +19,7 @@ export default function ClassForm({
   onSubmit,
 }: Readonly<FormValueProps<ClassFormValue>>) {
   // context
-  const { activeYear } = useYear()
+  const { activeYear } = useYearContext()
   // form
   const methods = useForm<ClassFormValue>({
     resolver: zodResolver(ClassFormSchema),

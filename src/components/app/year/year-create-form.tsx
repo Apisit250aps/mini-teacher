@@ -9,7 +9,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useYear } from '@/hooks/app/use-year'
+import { useYearContext } from '@/hooks/app/use-year'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
@@ -28,7 +28,7 @@ export default function YearCreateForm() {
     },
   })
 
-  const { onYearsCreate } = useYear()
+  const { onYearsCreate } = useYearContext()
 
   return (
     <Form {...methods}>

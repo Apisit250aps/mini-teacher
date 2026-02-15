@@ -3,7 +3,7 @@ import DataTable from '@/components/share/table/data-table'
 import { useGetClassMembers } from '@/hooks/queries/use-class'
 import { ClassMemberDetail } from '@/models/entities'
 import { ColumnDef } from '@tanstack/react-table'
-import React from 'react'
+import MemberCreate from './member/member-create'
 
 const columns: ColumnDef<ClassMemberDetail>[] = [
   {
@@ -37,14 +37,20 @@ const columns: ColumnDef<ClassMemberDetail>[] = [
       const createdAt = row.original.createdAt
       return createdAt
     },
-  }
+  },
 ]
 
-export default function ClassMemberSection({ classId }: { classId: string }) {
-  const { data } = useGetClassMembers(classId)
+export default function ClassMemberSection() {
+  const { data: members } = useGetClassMembers()
+
   return (
-    <div className="w-full">
-      <DataTable data={data?.data ?? []} columns={columns} />
+    <div className="flex flex-col items-center gap-4 w-full ">
+      <div className="flex w-full justify-end">
+        <MemberCreate />
+      </div>
+      <div className="w-full">
+        <DataTable data={members?.data ?? []} columns={columns} />
+      </div>
     </div>
   )
 }

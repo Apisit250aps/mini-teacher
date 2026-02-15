@@ -13,10 +13,10 @@ import {
   SidebarHeader,
   SidebarRail,
 } from '@/components/ui/sidebar'
-import { useClass } from '@/hooks/app/use-class'
+import { useClassContext } from '@/hooks/app/use-class'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { classRoutes } = useClass()
+  const { classRoutes } = useClassContext()
   const nav = [
     { name: 'ห้องเรียน', url: 'manage', icon: LibraryBig },
     { name: 'นักเรียน', url: 'student', icon: GraduationCap },

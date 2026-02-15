@@ -1,16 +1,18 @@
 import { $api } from '@/lib/client'
-import { useYear } from '@/hooks/app/use-year'
+import { useYearContext } from '@/hooks/app/use-year'
+import { useClassContext } from '../app/use-class'
 
-export const useGetClassMembers = (classId: string) => {
+export const useGetClassMembers = (classId?: string) => {
+  const { classActive } = useClassContext()
   return $api.useQuery('get', '/class/{classId}/member', {
     params: {
-      path: { classId },
+      path: { classId: (classActive?.id ?? classId) as string },
     },
   })
 }
 
 export const useClassQueries = () => {
-  const { activeYear } = useYear()
+  const { activeYear } = useYearContext()
   const list = $api.useQuery('get', '/class', {
     params: {
       query: {

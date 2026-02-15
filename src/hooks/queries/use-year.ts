@@ -1,6 +1,6 @@
 import { $api } from '@/lib/client'
 
-export const useYearQueries = () => {
+export const useYearContextQueries = () => {
   const list = $api.useQuery('get', '/year')
   const active = $api.useMutation('patch', '/year/{yearId}')
   const create = $api.useMutation('post', '/year')

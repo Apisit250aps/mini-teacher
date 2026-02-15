@@ -1,7 +1,7 @@
 'use client'
 import { Year } from '@/models/entities'
 import React, { useCallback } from 'react'
-import { useYearQueries } from '@/hooks/queries/use-year'
+import { useYearContextQueries } from '@/hooks/queries/use-year'
 import { toast } from 'sonner'
 import { useOverlay } from '@/hooks/contexts/use-overlay'
 
@@ -22,7 +22,7 @@ export function YearProvider({
   children: React.ReactNode
   years: Year[]
 }) {
-  const { active, list, create } = useYearQueries()
+  const { active, list, create } = useYearContextQueries()
   const { closeAll } = useOverlay()
   //
   const [yearsState, setYears] = React.useState<Year[]>(years)
@@ -116,10 +116,10 @@ export function YearProvider({
   )
 }
 
-export function useYear() {
+export function useYearContext() {
   const context = React.useContext(YearContext)
   if (!context) {
-    throw new Error('useYear must be used within a YearProvider')
+    throw new Error('useYearContext must be used within a YearProvider')
   }
   return context
 }

@@ -9,6 +9,7 @@ import { useOverlay } from '@/hooks/contexts/use-overlay'
 type ClassContextValue = {
   classes: Class[]
   classRoutes: { name: string; url: string; icon: typeof Album }[]
+  classActive?: Class
   onClassCreate: (data: {
     name: string
     subject: string
@@ -27,7 +28,13 @@ type ClassContextValue = {
 
 const ClassContext = React.createContext<ClassContextValue | null>(null)
 
-export function ClassProvider({ children }: { children: React.ReactNode }) {
+export function ClassProvider({
+  children,
+  classActive,
+}: {
+  children: React.ReactNode
+  classActive?: Class
+}) {
   const {
     list: classList,
     create: createClass,
@@ -44,7 +51,8 @@ export function ClassProvider({ children }: { children: React.ReactNode }) {
   }, [data, isPending])
 
   const classRoutes = React.useMemo(() => {
-    if (classes.length === 0) return [{ name: 'สร้างห้องเรียน', url: 'manage', icon: Album }]
+    if (classes.length === 0)
+      return [{ name: 'สร้างห้องเรียน', url: 'manage', icon: Album }]
     return classes.map((cls) => ({
       name: cls.name,
       url: `${cls.id}`,
@@ -143,6 +151,7 @@ export function ClassProvider({ children }: { children: React.ReactNode }) {
       value={{
         classes,
         classRoutes,
+        classActive,
         onClassCreate,
         onClassUpdate,
         onClassDelete,
@@ -153,7 +162,7 @@ export function ClassProvider({ children }: { children: React.ReactNode }) {
   )
 }
 
-export function useClass() {
+export function useClassContext() {
   const context = React.useContext(ClassContext)
   if (!context) {
     throw new Error('useClass must be used within a ClassProvider')

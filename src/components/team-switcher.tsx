@@ -18,13 +18,13 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
-import { useYear } from '@/hooks/app/use-year'
+import { useYearContext } from '@/hooks/app/use-year'
 import ModalDialog from '@/components/share/overlay/modal-dialog'
 import YearCreateForm from '@/components/app/year/year-create-form'
 
 export function TeamSwitcher() {
   const { isMobile } = useSidebar()
-  const { activeYear, years, onSetyearActive } = useYear()
+  const { activeYear, years, onSetyearActive } = useYearContext()
 
   if (!activeYear) {
     return null

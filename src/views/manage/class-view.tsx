@@ -4,13 +4,13 @@ import ClassForm from '@/components/app/class/class-form'
 import PageLayout from '@/components/layouts/page-layout'
 import ModalDialog from '@/components/share/overlay/modal-dialog'
 import { Button } from '@/components/ui/button'
-import { useClass } from '@/hooks/app/use-class'
-import { useYear } from '@/hooks/app/use-year'
+import { useClassContext } from '@/hooks/app/use-class'
+import { useYearContext } from '@/hooks/app/use-year'
 import React from 'react'
 
 export default function ClassView() {
-  const { activeYear } = useYear()
-  const { onClassCreate } = useClass()
+  const { activeYear } = useYearContext()
+  const { onClassCreate } = useClassContext()
 
   return (
     <PageLayout

@@ -27,7 +27,7 @@ export default function ClassDetailView({ classRoom }: { classRoom: Class }) {
           <pre>{JSON.stringify(classRoom, null, 2)}</pre>
         </TabsContent>
         <TabsContent value="member">
-          <ClassMemberSection classId={classRoom.id} />
+          <ClassMemberSection />
         </TabsContent>
       </Tabs>
     </PageLayout>
