@@ -8,8 +8,10 @@ type UseStoredTabOptions = {
   allowedValues?: string[]
 }
 
+type TabStateMap = Record<string, string>
+
 type TabStorageContextValue = {
-  getTabValue: (id: string) => string | null
+  tabValues: TabStateMap
   setTabValue: (id: string, value: string) => void
 }
 
@@ -22,25 +24,24 @@ export function TabStorageProvider({
 }: {
   children: React.ReactNode
 }) {
-  const getTabValue = React.useCallback((id: string) => {
-    if (typeof window === 'undefined') {
-      return null
-    }
-
-    return window.localStorage.getItem(id)
-  }, [])
+  const [tabValues, setTabValues] = React.useState<TabStateMap>({})
 
   const setTabValue = React.useCallback((id: string, value: string) => {
-    if (typeof window === 'undefined') {
-      return
-    }
+    setTabValues((prev) => {
+      if (prev[id] === value) {
+        return prev
+      }
 
-    window.localStorage.setItem(id, value)
+      return {
+        ...prev,
+        [id]: value,
+      }
+    })
   }, [])
 
   const contextValue = React.useMemo(
-    () => ({ getTabValue, setTabValue }),
-    [getTabValue, setTabValue],
+    () => ({ tabValues, setTabValue }),
+    [tabValues, setTabValue],
   )
 
   return (
@@ -61,41 +62,45 @@ export function useStoredTab({
     throw new Error('useStoredTab must be used within TabStorageProvider')
   }
 
-  const { getTabValue, setTabValue } = context
+  const { tabValues, setTabValue } = context
   const allowedSet = React.useMemo(
     () => (allowedValues ? new Set(allowedValues) : null),
     [allowedValues],
   )
 
-  const [value, setValue] = React.useState(defaultValue)
+  const currentValue = tabValues[id]
+
+  const value = React.useMemo(() => {
+    if (!currentValue) {
+      return defaultValue
+    }
+
+    if (!allowedSet) {
+      return currentValue
+    }
+
+    return allowedSet.has(currentValue) ? currentValue : defaultValue
+  }, [allowedSet, currentValue, defaultValue])
 
   React.useEffect(() => {
-    const storedValue = getTabValue(id)
-    if (!storedValue) {
+    if (!currentValue) {
       setTabValue(id, defaultValue)
-      setValue(defaultValue)
       return
     }
 
-    if (allowedSet && !allowedSet.has(storedValue)) {
+    if (allowedSet && !allowedSet.has(currentValue)) {
       setTabValue(id, defaultValue)
-      setValue(defaultValue)
-      return
     }
-
-    setValue(storedValue)
-  }, [allowedSet, defaultValue, getTabValue, id, setTabValue])
+  }, [allowedSet, currentValue, defaultValue, id, setTabValue])
 
   const onValueChange = React.useCallback(
     (nextValue: string) => {
       if (allowedSet && !allowedSet.has(nextValue)) {
         setTabValue(id, defaultValue)
-        setValue(defaultValue)
         return
       }
 
       setTabValue(id, nextValue)
-      setValue(nextValue)
     },
     [allowedSet, defaultValue, id, setTabValue],
   )

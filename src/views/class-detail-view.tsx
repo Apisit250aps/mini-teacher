@@ -18,7 +18,7 @@ export default function ClassDetailView({ classRoom }: { classRoom: Class }) {
 
   return (
     <PageLayout title={'รายละเอียดห้องเรียน'}>
-      <Tabs value={activeTab} onValueChange={onValueChange} className="w-100">
+      <Tabs value={activeTab} onValueChange={onValueChange} className="w-auto">
         <TabsList>
           <TabsTrigger value="account">Account</TabsTrigger>
           <TabsTrigger value="member">สมาชิก</TabsTrigger>
