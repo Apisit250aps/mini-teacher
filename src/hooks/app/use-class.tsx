@@ -54,13 +54,19 @@ export function ClassProvider({
 
   const classRoutes = React.useMemo(() => {
     if (classes.length === 0)
-      return [{ name: 'สร้างห้องเรียน', url: 'manage', icon: Album }]
+      return [
+        {
+          name: 'สร้างห้องเรียน',
+          url: `/${activeYear.year}/${activeYear.term}/class/manage`,
+          icon: Album,
+        },
+      ]
     return classes.map((cls) => ({
       name: cls.name,
-      url: `class/${cls.id}`,
+      url: `/${activeYear.year}/${activeYear.term}/class/${cls.id}`,
       icon: Album,
     }))
-  }, [classes])
+  }, [classes, activeYear])
 
   const onClassCreate = useCallback(
     async (data: { name: string; subject: string; year: string }) => {
