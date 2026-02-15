@@ -1,3 +1,4 @@
+import { auth } from '@/auth'
 import { Button } from '@/components/ui/button'
 import {
   Empty,
@@ -7,10 +8,18 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty'
+import { initYear } from '@/models/repositories'
 import { GraduationCap, School } from 'lucide-react'
 import Link from 'next/link'
+import { forbidden } from 'next/navigation'
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth()
+  if (!session) {
+    forbidden()
+  }
+  await initYear(session.user.id)
+
   return (
     <div className="h-full">
       <Empty className="bg-muted/30 h-dvh">
