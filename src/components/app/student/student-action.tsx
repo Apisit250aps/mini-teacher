@@ -11,7 +11,8 @@ import { useOverlay } from '@/hooks/contexts/use-overlay'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 import { Pen, Trash } from 'lucide-react'
 import { ConfirmDialog } from '@/components/share/overlay/confirm-dialog'
-import { useGetClassMembers } from '@/hooks/queries/use-class'
+import { useClassQueries, useGetClassMembers } from '@/hooks/queries/use-class'
+import { useClassContext } from '@/hooks/app/use-class'
 
 export function StudentCreateAction() {
   const { create, list } = useStudentQueries()
@@ -150,6 +151,53 @@ export function StudentDeleteAction({ studentId }: { studentId: string }) {
       },
     )
   }, [closeAll, list, remove, studentId])
+
+  return (
+    <ConfirmDialog
+      trigger={
+        <DropdownMenuItem variant="destructive" className="text-destructive">
+          <Trash />
+          ลบนักเรียน
+        </DropdownMenuItem>
+      }
+      title="ยืนยันการลบนักเรียน"
+      description="คุณแน่ใจหรือไม่ว่าต้องการลบนักเรียนนี้? การกระทำนี้ไม่สามารถย้อนกลับได้"
+      onConfirm={() => onStudentDelete()}
+    />
+  )
+}
+
+export function MemberDeleteAction({ studentId }: { studentId: string }) {
+  const { addOrRemoveMember } = useClassQueries()
+  const member = useGetClassMembers()
+  const { activeClass } = useClassContext()
+  const { closeAll } = useOverlay()
+
+  const onStudentDelete = useCallback(async () => {
+    await addOrRemoveMember.mutateAsync(
+      {
+        params: {
+          path: {
+            classId: activeClass!.id!,
+          },
+        },
+        body: {
+          studentId: studentId,
+        },
+      },
+      {
+        onSettled(data, error) {
+          if (error) {
+            toast.error('เกิดข้อผิดพลาดในการลบนักเรียน')
+            return
+          }
+          toast.success('ลบนักเรียนสำเร็จ')
+          member.refetch()
+          closeAll()
+        },
+      },
+    )
+  }, [activeClass, addOrRemoveMember, closeAll, member, studentId])
 
   return (
     <ConfirmDialog

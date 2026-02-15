@@ -5,12 +5,20 @@ import { ClassMemberDetail, Student } from '@/models/entities'
 import { Cell, ColumnDef } from '@tanstack/react-table'
 import MemberCreate from './member/member-create'
 import { ActionDropdown } from '@/components/share/overlay/action-dropdown'
-import { StudentEditAction } from '../student/student-action'
+import {
+  MemberDeleteAction,
+  StudentEditAction,
+} from '../student/student-action'
 
-const ColumnActions = ({ cell }: { cell: Cell<ClassMemberDetail, unknown> }) => {
+const ColumnActions = ({
+  cell,
+}: {
+  cell: Cell<ClassMemberDetail, unknown>
+}) => {
   return (
     <ActionDropdown id={'MEMBER_ACTION_COLUMN_' + cell.row.original.id}>
       <StudentEditAction student={cell.row.original.student} />
+      <MemberDeleteAction studentId={cell.row.original.student.id} />
     </ActionDropdown>
   )
 }
