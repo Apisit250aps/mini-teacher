@@ -7,7 +7,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/ui/sidebar'
-import AppBreadCrumb from '../app-bread-crumb'
+import AppBreadCrumb from '@/components/app-bread-crumb'
 
 export default function DashboardLayout({
   children,
