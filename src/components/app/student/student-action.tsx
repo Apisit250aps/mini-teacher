@@ -13,6 +13,7 @@ import { Pen, Trash } from 'lucide-react'
 import { ConfirmDialog } from '@/components/share/overlay/confirm-dialog'
 import { useClassQueries, useGetClassMembers } from '@/hooks/queries/use-class'
 import { useClassContext } from '@/hooks/app/use-class'
+import { useYearContext } from '@/hooks/app/use-year'
 
 export function StudentCreateAction() {
   const { create, list } = useStudentQueries()
@@ -171,6 +172,7 @@ export function MemberDeleteAction({ studentId }: { studentId: string }) {
   const { addOrRemoveMember } = useClassQueries()
   const member = useGetClassMembers()
   const { activeClass } = useClassContext()
+  const { activeYear } = useYearContext()
   const { closeAll } = useOverlay()
 
   const onStudentDelete = useCallback(async () => {
@@ -178,6 +180,7 @@ export function MemberDeleteAction({ studentId }: { studentId: string }) {
       {
         params: {
           path: {
+            yearId: activeYear!.id!,
             classId: activeClass!.id!,
           },
         },
@@ -197,7 +200,7 @@ export function MemberDeleteAction({ studentId }: { studentId: string }) {
         },
       },
     )
-  }, [activeClass, addOrRemoveMember, closeAll, member, studentId])
+  }, [activeClass, activeYear, addOrRemoveMember, closeAll, member, studentId])
 
   return (
     <ConfirmDialog

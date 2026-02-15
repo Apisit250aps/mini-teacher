@@ -4,58 +4,6 @@
  */
 
 export interface paths {
-    "/class": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description List classes in a year */
-        get: operations["Classes_list"];
-        put?: never;
-        /** @description Create a class */
-        post: operations["Classes_create"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/class/{classId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["Classes_getById"];
-        /** @description Update a class */
-        put: operations["Classes_update"];
-        post?: never;
-        /** @description Delete a class */
-        delete: operations["Classes_delete"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/class/{classId}/member": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["Classes_getMembers"];
-        put: operations["Classes_addOrRemoveMember"];
-        post: operations["Classes_addMember"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/student": {
         parameters: {
             query?: never;
@@ -127,6 +75,58 @@ export interface paths {
         head?: never;
         /** @description Set active year */
         patch: operations["Years_setActive"];
+        trace?: never;
+    };
+    "/year/{yearId}/class": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description List classes in a year */
+        get: operations["Classes_list"];
+        put?: never;
+        /** @description Create a class */
+        post: operations["Classes_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/year/{yearId}/class/{classId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["Classes_getById"];
+        /** @description Update a class */
+        put: operations["Classes_update"];
+        post?: never;
+        /** @description Delete a class */
+        delete: operations["Classes_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/year/{yearId}/class/{classId}/member": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["Classes_getMembers"];
+        put: operations["Classes_addOrRemoveMember"];
+        post: operations["Classes_addMember"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
 }
@@ -250,236 +250,6 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    Classes_list: {
-        parameters: {
-            query: {
-                yearId: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The request has succeeded. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        success: boolean;
-                        message: string;
-                        data?: components["schemas"]["Class"][];
-                        error?: string;
-                    };
-                };
-            };
-        };
-    };
-    Classes_create: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateClassBody"];
-            };
-        };
-        responses: {
-            /** @description The request has succeeded. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        success: boolean;
-                        message: string;
-                        data?: components["schemas"]["Class"];
-                        error?: string;
-                    };
-                };
-            };
-        };
-    };
-    Classes_getById: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                classId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The request has succeeded. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        success: boolean;
-                        message: string;
-                        data?: components["schemas"]["Class"];
-                        error?: string;
-                    };
-                };
-            };
-        };
-    };
-    Classes_update: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                classId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateClassBody"];
-            };
-        };
-        responses: {
-            /** @description The request has succeeded. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        success: boolean;
-                        message: string;
-                        data?: components["schemas"]["Class"];
-                        error?: string;
-                    };
-                };
-            };
-        };
-    };
-    Classes_delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                classId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The request has succeeded. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        success: boolean;
-                        message: string;
-                        data?: components["schemas"]["EmptyData"];
-                        error?: string;
-                    };
-                };
-            };
-        };
-    };
-    Classes_getMembers: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                classId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The request has succeeded. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        success: boolean;
-                        message: string;
-                        data?: components["schemas"]["ClassMemberDetail"][];
-                        error?: string;
-                    };
-                };
-            };
-        };
-    };
-    Classes_addOrRemoveMember: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                classId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PatchClassMemberBody"];
-            };
-        };
-        responses: {
-            /** @description The request has succeeded. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        success: boolean;
-                        message: string;
-                        data?: components["schemas"]["EmptyData"];
-                        error?: string;
-                    };
-                };
-            };
-        };
-    };
-    Classes_addMember: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                classId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateStudentBody"];
-            };
-        };
-        responses: {
-            /** @description The request has succeeded. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        success: boolean;
-                        message: string;
-                        data?: components["schemas"]["EmptyData"];
-                        error?: string;
-                    };
-                };
-            };
-        };
-    };
     Students_list: {
         parameters: {
             query?: never;
@@ -741,6 +511,244 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["EmptyData"];
+                        error?: string;
+                    };
+                };
+            };
+        };
+    };
+    Classes_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                yearId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["Class"][];
+                        error?: string;
+                    };
+                };
+            };
+        };
+    };
+    Classes_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                yearId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateClassBody"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["Class"];
+                        error?: string;
+                    };
+                };
+            };
+        };
+    };
+    Classes_getById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                yearId: string;
+                classId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["Class"];
+                        error?: string;
+                    };
+                };
+            };
+        };
+    };
+    Classes_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                yearId: string;
+                classId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateClassBody"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["Class"];
+                        error?: string;
+                    };
+                };
+            };
+        };
+    };
+    Classes_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                yearId: string;
+                classId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["EmptyData"];
+                        error?: string;
+                    };
+                };
+            };
+        };
+    };
+    Classes_getMembers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                yearId: string;
+                classId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["ClassMemberDetail"][];
+                        error?: string;
+                    };
+                };
+            };
+        };
+    };
+    Classes_addOrRemoveMember: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                yearId: string;
+                classId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PatchClassMemberBody"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["EmptyData"];
+                        error?: string;
+                    };
+                };
+            };
+        };
+    };
+    Classes_addMember: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                yearId: string;
+                classId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateStudentBody"];
+            };
+        };
         responses: {
             /** @description The request has succeeded. */
             200: {

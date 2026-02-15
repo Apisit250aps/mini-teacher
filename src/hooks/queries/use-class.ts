@@ -4,30 +4,40 @@ import { useClassContext } from '@/hooks/app/use-class'
 
 export const useGetClassMembers = (classId?: string) => {
   const { activeClass } = useClassContext()
-  return $api.useQuery('get', '/class/{classId}/member', {
+  const { activeYear } = useYearContext()
+  return $api.useQuery('get', '/year/{yearId}/class/{classId}/member', {
     params: {
-      path: { classId: (activeClass?.id ?? classId) as string },
+      path: {
+        yearId: activeYear?.id as string,
+        classId: (activeClass?.id ?? classId) as string,
+      },
     },
-    enabled: !!activeClass?.id || !!classId,
+    enabled: (!!activeClass?.id || !!classId) && !!activeYear?.id,
   })
 }
 
 export const useClassQueries = () => {
   const { activeYear } = useYearContext()
-  const list = $api.useQuery('get', '/class', {
+  const list = $api.useQuery('get', '/year/{yearId}/class', {
     params: {
-      query: {
+      path: {
         yearId: activeYear?.id,
       },
     },
-    enabled: !!activeYear,
+    enabled: !!activeYear?.id,
   })
 
-  const create = $api.useMutation('post', '/class')
-  const update = $api.useMutation('put', '/class/{classId}')
-  const remove = $api.useMutation('delete', '/class/{classId}')
-  const addOrRemoveMember = $api.useMutation('put', '/class/{classId}/member')
-  const addMember = $api.useMutation('post', '/class/{classId}/member')
+  const create = $api.useMutation('post', '/year/{yearId}/class')
+  const update = $api.useMutation('put', '/year/{yearId}/class/{classId}')
+  const remove = $api.useMutation('delete', '/year/{yearId}/class/{classId}')
+  const addOrRemoveMember = $api.useMutation(
+    'put',
+    '/year/{yearId}/class/{classId}/member',
+  )
+  const addMember = $api.useMutation(
+    'post',
+    '/year/{yearId}/class/{classId}/member',
+  )
 
   return {
     list,

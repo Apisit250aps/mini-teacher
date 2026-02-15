@@ -3,19 +3,23 @@ using TypeSpec.Rest;
 
 namespace MiniTeacherService.ClassesApi;
 
-@route("/class")
+@route("/year/{yearId}/class")
 @tag("Classes")
 interface Classes {
   /** List classes in a year */
-  @get list(@query yearId: string): ApiResponse<Class[]>;
+  @get list(@path yearId: string): ApiResponse<Class[]>;
 
   /** Create a class */
-  @post create(@body body: CreateClassBody): ApiResponse<Class>;
+  @post create(
+    @path yearId: string,
+    @body body: CreateClassBody,
+  ): ApiResponse<Class>;
 
   /** Update a class */
   @route("{classId}")
   @put
   update(
+    @path yearId: string,
     @path classId: string,
     @body body: UpdateClassBody,
   ): ApiResponse<Class>;
@@ -23,15 +27,16 @@ interface Classes {
   /** Delete a class */
   @route("{classId}")
   @delete
-  delete(@path classId: string): ApiResponse<EmptyData>;
+  delete(@path yearId: string, @path classId: string): ApiResponse<EmptyData>;
 
   @route("{classId}")
   @get
-  getById(@path classId: string): ApiResponse<Class>;
+  getById(@path yearId: string, @path classId: string): ApiResponse<Class>;
 
   @route("{classId}/member")
   @put
   addOrRemoveMember(
+    @path yearId: string,
     @path classId: string,
     @body body: PatchClassMemberBody,
   ): ApiResponse<EmptyData>;
@@ -39,11 +44,15 @@ interface Classes {
   @route("{classId}/member")
   @post
   addMember(
+    @path yearId: string,
     @path classId: string,
     @body body: CreateStudentBody,
   ): ApiResponse<EmptyData>;
 
   @route("{classId}/member")
   @get
-  getMembers(@path classId: string): ApiResponse<ClassMemberDetail[]>;
+  getMembers(
+    @path yearId: string,
+    @path classId: string,
+  ): ApiResponse<ClassMemberDetail[]>;
 }

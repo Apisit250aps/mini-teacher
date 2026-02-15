@@ -7,269 +7,6 @@ tags:
   - name: Classes
   - name: Students
 paths:
-  /class:
-    get:
-      operationId: Classes_list
-      description: List classes in a year
-      parameters:
-        - name: yearId
-          in: query
-          required: true
-          schema:
-            type: string
-          explode: false
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Class'
-                  error:
-                    type: string
-      tags:
-        - Classes
-    post:
-      operationId: Classes_create
-      description: Create a class
-      parameters: []
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/Class'
-                  error:
-                    type: string
-      tags:
-        - Classes
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateClassBody'
-  /class/{classId}:
-    put:
-      operationId: Classes_update
-      description: Update a class
-      parameters:
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/Class'
-                  error:
-                    type: string
-      tags:
-        - Classes
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateClassBody'
-    delete:
-      operationId: Classes_delete
-      description: Delete a class
-      parameters:
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/EmptyData'
-                  error:
-                    type: string
-      tags:
-        - Classes
-    get:
-      operationId: Classes_getById
-      parameters:
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/Class'
-                  error:
-                    type: string
-      tags:
-        - Classes
-  /class/{classId}/member:
-    put:
-      operationId: Classes_addOrRemoveMember
-      parameters:
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/EmptyData'
-                  error:
-                    type: string
-      tags:
-        - Classes
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchClassMemberBody'
-    post:
-      operationId: Classes_addMember
-      parameters:
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/EmptyData'
-                  error:
-                    type: string
-      tags:
-        - Classes
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateStudentBody'
-    get:
-      operationId: Classes_getMembers
-      parameters:
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ClassMemberDetail'
-                  error:
-                    type: string
-      tags:
-        - Classes
   /student:
     get:
       operationId: Students_list
@@ -581,6 +318,303 @@ paths:
                     type: string
       tags:
         - Years
+  /year/{yearId}/class:
+    get:
+      operationId: Classes_list
+      description: List classes in a year
+      parameters:
+        - name: yearId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Class'
+                  error:
+                    type: string
+      tags:
+        - Classes
+    post:
+      operationId: Classes_create
+      description: Create a class
+      parameters:
+        - name: yearId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Class'
+                  error:
+                    type: string
+      tags:
+        - Classes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateClassBody'
+  /year/{yearId}/class/{classId}:
+    put:
+      operationId: Classes_update
+      description: Update a class
+      parameters:
+        - name: yearId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Class'
+                  error:
+                    type: string
+      tags:
+        - Classes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateClassBody'
+    delete:
+      operationId: Classes_delete
+      description: Delete a class
+      parameters:
+        - name: yearId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/EmptyData'
+                  error:
+                    type: string
+      tags:
+        - Classes
+    get:
+      operationId: Classes_getById
+      parameters:
+        - name: yearId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/Class'
+                  error:
+                    type: string
+      tags:
+        - Classes
+  /year/{yearId}/class/{classId}/member:
+    put:
+      operationId: Classes_addOrRemoveMember
+      parameters:
+        - name: yearId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/EmptyData'
+                  error:
+                    type: string
+      tags:
+        - Classes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchClassMemberBody'
+    post:
+      operationId: Classes_addMember
+      parameters:
+        - name: yearId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/EmptyData'
+                  error:
+                    type: string
+      tags:
+        - Classes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateStudentBody'
+    get:
+      operationId: Classes_getMembers
+      parameters:
+        - name: yearId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ClassMemberDetail'
+                  error:
+                    type: string
+      tags:
+        - Classes
 components:
   schemas:
     Class:
