@@ -9,7 +9,7 @@ import { useOverlay } from '@/hooks/contexts/use-overlay'
 type ClassContextValue = {
   classes: Class[]
   classRoutes: { name: string; url: string; icon: typeof Album }[]
-  classActive?: Class
+  activeClass?: Class
   onClassCreate: (data: {
     name: string
     subject: string
@@ -30,10 +30,10 @@ const ClassContext = React.createContext<ClassContextValue | null>(null)
 
 export function ClassProvider({
   children,
-  classActive,
+  activeClass,
 }: {
   children: React.ReactNode
-  classActive?: Class
+  activeClass?: Class
 }) {
   const {
     list: classList,
@@ -151,7 +151,7 @@ export function ClassProvider({
       value={{
         classes,
         classRoutes,
-        classActive,
+        activeClass,
         onClassCreate,
         onClassUpdate,
         onClassDelete,

@@ -1,5 +1,6 @@
 import { studentsCollection } from '@/lib/mongo'
 import { Student } from '@/models/entities'
+import { omit } from 'lodash';
 
 export async function createStudent(data: Student): Promise<Student> {
   const collection = await studentsCollection()
@@ -33,7 +34,7 @@ export async function teacherUpdateStudent(
   const collection = await studentsCollection()
   const result = await collection.findOneAndUpdate(
     { id },
-    { $set: data },
+    { $set: omit(data, ['id', 'teacher']) },
     { returnDocument: 'after', projection: { _id: 0 } },
   )
   return result

@@ -16,7 +16,7 @@ export default async function Page({
     return <div>ไม่พบห้องเรียน</div>
   }
   return (
-    <ClassProvider classActive={classRoom}>
+    <ClassProvider activeClass={classRoom}>
       <ClassDetailView classRoom={classRoom} />
     </ClassProvider>
   )

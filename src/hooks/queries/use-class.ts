@@ -3,11 +3,12 @@ import { useYearContext } from '@/hooks/app/use-year'
 import { useClassContext } from '../app/use-class'
 
 export const useGetClassMembers = (classId?: string) => {
-  const { classActive } = useClassContext()
+  const { activeClass } = useClassContext()
   return $api.useQuery('get', '/class/{classId}/member', {
     params: {
-      path: { classId: (classActive?.id ?? classId) as string },
+      path: { classId: (activeClass?.id ?? classId) as string },
     },
+    enabled: !!activeClass?.id || !!classId,
   })
 }
 

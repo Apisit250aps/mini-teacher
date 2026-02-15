@@ -11,6 +11,7 @@ import { useOverlay } from '@/hooks/contexts/use-overlay'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 import { Pen, Trash } from 'lucide-react'
 import { ConfirmDialog } from '@/components/share/overlay/confirm-dialog'
+import { useGetClassMembers } from '@/hooks/queries/use-class'
 
 export function StudentCreateAction() {
   const { create, list } = useStudentQueries()
@@ -59,6 +60,7 @@ export function StudentCreateAction() {
 
 export function StudentEditAction({ student }: { student: Student }) {
   const { update, list } = useStudentQueries()
+  const member = useGetClassMembers()
   const { closeAll } = useOverlay()
 
   const onStudentUpdate = useCallback(
@@ -86,12 +88,13 @@ export function StudentEditAction({ student }: { student: Student }) {
             }
             toast.success('แก้ไขนักเรียนสำเร็จ')
             list.refetch()
+            member.refetch()
             closeAll()
           },
         },
       )
     },
-    [closeAll, list, student.id, update],
+    [closeAll, list, member, student.id, update],
   )
 
   return (

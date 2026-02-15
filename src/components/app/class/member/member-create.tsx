@@ -4,13 +4,47 @@ import ModalDialog from '@/components/share/overlay/modal-dialog'
 import { Button } from '@/components/ui/button'
 import StudentForm from '@/components/app/student/student-form'
 import { StudentFormValue } from '@/models/entities/student.entity'
-import { useClassQueries } from '@/hooks/queries/use-class'
+import { useClassQueries, useGetClassMembers } from '@/hooks/queries/use-class'
+import { useClassContext } from '@/hooks/app/use-class'
+import { toast } from 'sonner'
+import { useOverlay } from '@/hooks/contexts/use-overlay'
 
 export default function MemberCreate() {
-  const {} = useClassQueries()
-  const onStudentCreate = useCallback(async (studentData: StudentFormValue) => {
-    // Handle student creation logic here
-  }, [])
+  const { addMember } = useClassQueries()
+  const { activeClass } = useClassContext()
+  const { closeAll } = useOverlay()
+  const member = useGetClassMembers()
+  const onStudentCreate = useCallback(
+    async (studentData: StudentFormValue) => {
+      await addMember.mutateAsync(
+        {
+          params: {
+            path: {
+              classId: activeClass!.id!,
+            },
+          },
+          body: {
+            code: studentData.code,
+            prefix: studentData.prefix,
+            firstName: studentData.firstName,
+            lastName: studentData.lastName,
+          },
+        },
+        {
+          onSettled(data, error) {
+            member.refetch()
+            if (error) {
+              toast.error('เกิดข้อผิดพลาดในการเพิ่มนักเรียน')
+              return
+            }
+            toast.success('เพิ่มนักเรียนเรียบร้อยแล้ว')
+            closeAll()
+          },
+        },
+      )
+    },
+    [activeClass, addMember, member, closeAll],
+  )
 
   return (
     <ModalDialog
