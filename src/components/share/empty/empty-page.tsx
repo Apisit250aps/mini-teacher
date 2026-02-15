@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button'
 import {
   Empty,
   EmptyContent,
@@ -8,7 +7,6 @@ import {
   EmptyTitle,
 } from '@/components/ui/empty'
 import { IconBell } from '@tabler/icons-react'
-import { RefreshCcwIcon } from 'lucide-react'
 type EmptyPageProps = {
   title: string
   description?: string
