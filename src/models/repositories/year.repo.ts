@@ -51,6 +51,15 @@ export async function getYearsByAuthUser(userId: string): Promise<Year[]> {
   return yearsCol.find({ user: userId }, { projection: { _id: 0 } }).toArray()
 }
 
+export async function getYearsByYearTerm(
+  year: number,
+  term: number,
+  user: string,
+): Promise<Year | null> {
+  const yearsCol = await yearsCollection()
+  return yearsCol.findOne({ year, term, user }, { projection: { _id: 0 } })
+}
+
 export async function deleteYear(id: string): Promise<boolean> {
   const yearsCol = await yearsCollection()
   const result = await yearsCol.deleteOne({ id })

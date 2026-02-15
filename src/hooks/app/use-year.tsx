@@ -12,6 +12,7 @@ type YearContextValue = {
   setYears?: (years: Year[]) => void
   onSetyearActive: (year: Year) => Promise<void>
   onYearsCreate: (data: { year: string; term: string }) => Promise<void>
+  setActiveYear?: (year: Year) => void
 }
 
 const YearContext = React.createContext<YearContextValue | null>(null)
@@ -19,55 +20,27 @@ const YearContext = React.createContext<YearContextValue | null>(null)
 export function YearProvider({
   children,
   years,
+  activeYear,
 }: {
   children: React.ReactNode
-  years: Year[]
+  years?: Year[]
+  activeYear?: Year
 }) {
   const router = useRouter()
-  const { active, list, create } = useYearContextQueries()
+  const { list, create } = useYearContextQueries()
   const { closeAll } = useOverlay()
   //
-  const [yearsState, setYears] = React.useState<Year[]>(years)
-  const [activeYear, setActiveYear] = React.useState<Year>(
-    years.find((y) => y.isActive) || years[0],
+  const [yearsState, setYears] = React.useState<Year[]>(years || [])
+  const [activeYearState, setActiveYear] = React.useState<Year>(
+    activeYear || years![0],
   )
 
   const onSetyearActive = useCallback(
     async (year: Year) => {
       setActiveYear(year)
-      await active.mutateAsync(
-        {
-          params: {
-            path: {
-              yearId: year.id,
-            },
-          },
-        },
-        {
-          onSettled(data, error) {
-            if (error) {
-              toast.error('เกิดข้อผิดพลาดในการตั้งค่าปีการศึกษา')
-              return
-            }
-            toast.success('ตั้งค่าปีการศึกษาเรียบร้อยแล้ว')
-            list.refetch().then((res) => {
-              if (res.data?.success && res.data?.data) {
-                setYears(
-                  res.data.data.map((item) => ({
-                    ...item,
-                    createdAt: new Date(item.createdAt),
-                    updatedAt: new Date(item.updatedAt),
-                  })),
-                )
-              }
-            })
-            router.refresh()
-            closeAll()
-          },
-        },
-      )
+      router.push(`/${year.year}/${year.term}/class`)
     },
-    [active, closeAll, list, router],
+    [router],
   )
 
   const onYearsCreate = useCallback(
@@ -108,11 +81,12 @@ export function YearProvider({
   return (
     <YearContext.Provider
       value={{
-        activeYear,
+        activeYear: activeYearState,
         years: yearsState,
         setYears,
         onSetyearActive,
         onYearsCreate,
+        setActiveYear,
       }}
     >
       {children}
