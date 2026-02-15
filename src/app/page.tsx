@@ -36,7 +36,7 @@ export default async function Home() {
         </EmptyHeader>
         <EmptyContent>
           <Button variant="outline" asChild>
-            <Link href={`/${years[0].year}/${years[0].term}/class`}>
+            <Link href={`/${years[years.length - 1].year}/${years[years.length - 1].term}/class`}>
               <GraduationCap />
               ไปที่หน้าห้องเรียน
             </Link>

@@ -38,7 +38,7 @@ export function YearProvider({
   const onSetyearActive = useCallback(
     async (year: Year) => {
       setActiveYear(year)
-      router.push(`/${year.year}/${year.term}/class`)
+      router.replace(`/${year.year}/${year.term}/class`)
     },
     [router],
   )
