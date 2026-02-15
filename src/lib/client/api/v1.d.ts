@@ -47,9 +47,9 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        get: operations["Classes_getMembers"];
         put: operations["Classes_addOrRemoveMember"];
-        post?: never;
+        post: operations["Classes_addMember"];
         delete?: never;
         options?: never;
         head?: never;
@@ -143,6 +143,28 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
+        };
+        ClassMemberDetail: {
+            id: string;
+            classId: string;
+            studentId: string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+            student: {
+                id: string;
+                teacher: string;
+                code: string;
+                prefix: string;
+                firstName: string;
+                lastName: string;
+                /** Format: date-time */
+                createdAt: string;
+                /** Format: date-time */
+                updatedAt: string;
+                nickname?: string;
+            };
         };
         CreateClassBody: {
             year: string;
@@ -369,6 +391,33 @@ export interface operations {
             };
         };
     };
+    Classes_getMembers: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                classId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["ClassMemberDetail"][];
+                        error?: string;
+                    };
+                };
+            };
+        };
+    };
     Classes_addOrRemoveMember: {
         parameters: {
             query?: never;
@@ -381,6 +430,37 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["PatchClassMemberBody"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["EmptyData"];
+                        error?: string;
+                    };
+                };
+            };
+        };
+    };
+    Classes_addMember: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                classId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateStudentBody"];
             };
         };
         responses: {

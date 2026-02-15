@@ -35,4 +35,15 @@ interface Classes {
     @path classId: string,
     @body body: PatchClassMemberBody,
   ): ApiResponse<EmptyData>;
+
+  @route("{classId}/member")
+  @post
+  addMember(
+    @path classId: string,
+    @body body: CreateStudentBody,
+  ): ApiResponse<EmptyData>;
+
+  @route("{classId}/member")
+  @get
+  getMembers(@path classId: string): ApiResponse<ClassMemberDetail[]>;
 }

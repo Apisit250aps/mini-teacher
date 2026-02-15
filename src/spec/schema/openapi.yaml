@@ -204,6 +204,72 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/PatchClassMemberBody'
+    post:
+      operationId: Classes_addMember
+      parameters:
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/EmptyData'
+                  error:
+                    type: string
+      tags:
+        - Classes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateStudentBody'
+    get:
+      operationId: Classes_getMembers
+      parameters:
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ClassMemberDetail'
+                  error:
+                    type: string
+      tags:
+        - Classes
   /student:
     get:
       operationId: Students_list
@@ -544,6 +610,60 @@ components:
         updatedAt:
           type: string
           format: date-time
+    ClassMemberDetail:
+      type: object
+      required:
+        - id
+        - classId
+        - studentId
+        - createdAt
+        - updatedAt
+        - student
+      properties:
+        id:
+          type: string
+        classId:
+          type: string
+        studentId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        student:
+          type: object
+          properties:
+            id:
+              type: string
+            teacher:
+              type: string
+            code:
+              type: string
+            prefix:
+              type: string
+            firstName:
+              type: string
+            lastName:
+              type: string
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+            nickname:
+              type: string
+          required:
+            - id
+            - teacher
+            - code
+            - prefix
+            - firstName
+            - lastName
+            - createdAt
+            - updatedAt
     CreateClassBody:
       type: object
       required:

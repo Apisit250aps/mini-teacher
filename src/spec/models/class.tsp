@@ -28,3 +28,22 @@ model UpdateClassBody {
 model PatchClassMemberBody {
   studentId?: string;
 }
+
+model ClassMemberDetail {
+  id: string;
+  classId: string;
+  studentId: string;
+  createdAt: utcDateTime;
+  updatedAt: utcDateTime;
+  student: {
+    id: string;
+    teacher: string;
+    code: string;
+    prefix: string;
+    firstName: string;
+    lastName: string;
+    createdAt: utcDateTime;
+    updatedAt: utcDateTime;
+    nickname?: string;
+  };
+}
