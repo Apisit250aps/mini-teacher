@@ -68,3 +68,19 @@ export async function getClassesByYear(yearId: string): Promise<Class[]> {
     throw error
   }
 }
+
+export async function getClassByYearAndClassId(
+  yearId: string,
+  classId: string,
+): Promise<Class | null> {
+  try {
+    const classes = await classesCollection()
+    const result = await classes.findOne(
+      { year: yearId, id: classId },
+      { projection: { _id: 0 } },
+    )
+    return result as Class | null
+  } catch (error) {
+    throw error
+  }
+}

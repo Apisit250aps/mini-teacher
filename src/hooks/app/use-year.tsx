@@ -4,6 +4,7 @@ import React, { useCallback } from 'react'
 import { useYearContextQueries } from '@/hooks/queries/use-year'
 import { toast } from 'sonner'
 import { useOverlay } from '@/hooks/contexts/use-overlay'
+import { useRouter } from 'next/navigation'
 
 type YearContextValue = {
   activeYear: Year
@@ -22,6 +23,7 @@ export function YearProvider({
   children: React.ReactNode
   years: Year[]
 }) {
+  const router = useRouter()
   const { active, list, create } = useYearContextQueries()
   const { closeAll } = useOverlay()
   //
@@ -59,11 +61,13 @@ export function YearProvider({
                 )
               }
             })
+            router.refresh()
+            closeAll()
           },
         },
       )
     },
-    [active, list],
+    [active, closeAll, list, router],
   )
 
   const onYearsCreate = useCallback(

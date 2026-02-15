@@ -41,6 +41,11 @@ export async function getYearById(id: string): Promise<Year | null> {
   return yearsCol.findOne({ id }, { projection: { _id: 0 } })
 }
 
+export async function getYearActive(): Promise<Year | null> {
+  const yearsCol = await yearsCollection()
+  return yearsCol.findOne({ isActive: true }, { projection: { _id: 0 } })
+}
+
 export async function getYearsByAuthUser(userId: string): Promise<Year[]> {
   const yearsCol = await yearsCollection()
   return yearsCol.find({ user: userId }, { projection: { _id: 0 } }).toArray()
