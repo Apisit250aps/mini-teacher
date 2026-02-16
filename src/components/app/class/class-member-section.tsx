@@ -72,7 +72,7 @@ const columns: ColumnDef<ClassMemberDetail>[] = [
   },
   {
     id: 'actions',
-    header: 'การกระทำ',
+    header: 'จัดการ',
     cell: ColumnActions,
   },
 ]

@@ -38,7 +38,7 @@ const columns: ColumnDef<Student>[] = [
   },
   {
     id: 'actions',
-    header: 'การกระทำ',
+    header: 'จัดการ',
     cell: ColumnActions,
   },
 ]
