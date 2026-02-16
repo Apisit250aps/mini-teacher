@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
+import { useGetClassMembers } from '@/hooks/queries/use-class'
 
 const columns: ColumnDef<Student>[] = [
   {
@@ -78,7 +79,14 @@ const columns: ColumnDef<Student>[] = [
   },
 ]
 
-export default function StudentSelectTable() {
+export default function StudentSelectTable({
+  onSubmit,
+}: {
+  onSubmit: (studentIds: string[]) => void
+}) {
+  const membersQuery = useGetClassMembers()
+  const { data: members } = membersQuery
+
   const { list } = useStudentQueries()
   const { data } = list
   const methods = useForm({
@@ -90,11 +98,16 @@ export default function StudentSelectTable() {
       }),
     ),
   })
+
+  const excludeStudent = data?.data?.filter((student) => {
+    return !members?.data?.some((member) => member.student.id === student.id)
+  })
+
   return (
     <Form {...methods}>
       <form
         className="flex flex-col items-center gap-4 w-full"
-        onSubmit={methods.handleSubmit((data) => console.log(data))}
+        onSubmit={methods.handleSubmit((data) => onSubmit(data.students))}
       >
         <FormField
           control={methods.control}
@@ -104,7 +117,7 @@ export default function StudentSelectTable() {
               <FormControl>
                 <DataTable
                   columns={columns}
-                  data={data?.data ?? []}
+                  data={excludeStudent ?? []}
                   value={field.value}
                   onChange={field.onChange}
                 />

@@ -1,6 +1,6 @@
 'use client'
 import DataTable from '@/components/share/table/data-table'
-import { useGetClassMembers } from '@/hooks/queries/use-class'
+import { useClassQueries, useGetClassMembers } from '@/hooks/queries/use-class'
 import { ClassMemberDetail } from '@/models/entities'
 import { Cell, ColumnDef } from '@tanstack/react-table'
 import MemberCreate from '@/components/app/class/member/member-create'
@@ -12,6 +12,9 @@ import {
 import ModalDialog from '@/components/share/overlay/modal-dialog'
 import StudentSelectTable from '@/components/app/student/student-select-table'
 import { Button } from '@/components/ui/button'
+import { useClassContext } from '@/hooks/app/use-class'
+import { useYearContext } from '@/hooks/app/use-year'
+import { useOverlay } from '@/hooks/contexts/use-overlay'
 
 const ColumnActions = ({
   cell,
@@ -75,13 +78,47 @@ const columns: ColumnDef<ClassMemberDetail>[] = [
 ]
 
 const MemberAdd = () => {
+  const membersQuery = useGetClassMembers()
+  const { addOrRemoveMember } = useClassQueries()
+  const { activeClass } = useClassContext()
+  const { activeYear } = useYearContext()
+  const { closeAll } = useOverlay()
+
+  const { data: members } = membersQuery
+
+  const existingStudentIds =
+    members?.data?.map((member) => member.student.id) ?? []
+
+  const onSubmit = async (studentIds: string[]) => {
+    const excludedIds = existingStudentIds
+    const filteredIds = studentIds.filter((id) => !excludedIds.includes(id))
+    if (filteredIds.length > 0) {
+      const promises = filteredIds.map((studentId) => {
+        return addOrRemoveMember.mutateAsync({
+          params: {
+            path: {
+              yearId: activeYear?.id,
+              classId: activeClass?.id || '',
+            },
+          },
+          body: {
+            studentId,
+          },
+        })
+      })
+      await Promise.all(promises)
+      membersQuery.refetch()
+      closeAll()
+    }
+  }
+
   return (
     <ModalDialog
       trigger={<Button>เพิ่มสมาชิก</Button>}
       title={'เพิ่มสมาชิกจากรายชื่อนักเรียน'}
       description={'เลือกนักเรียนที่ต้องการเพิ่มลงในคลาส'}
     >
-      <StudentSelectTable />
+      <StudentSelectTable onSubmit={onSubmit} />
     </ModalDialog>
   )
 }

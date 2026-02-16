@@ -222,7 +222,8 @@ export async function DeleteStudent(
 }
 
 export async function GetAllStudent(
-  req: NextRequest,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _: NextRequest,
 ): Promise<NextResponse<ApiResponse<Student[]>>> {
   try {
     const session = await auth()

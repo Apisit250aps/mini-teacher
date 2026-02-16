@@ -3,7 +3,6 @@ import Credentials from 'next-auth/providers/credentials'
 import { AuthUpdateUser, UserLogin } from '@/models/entities'
 import {
   findWithObjectId,
-  initYear,
   oAuthCreateUser,
   updateUser,
 } from '@/models/repositories'
@@ -82,7 +81,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         name: user.name || '',
       })
       await oAuthCreateUser(user.id!, validate.data!)
-      
     },
   },
 })
