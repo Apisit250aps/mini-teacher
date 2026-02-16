@@ -8,7 +8,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty'
-import { getYearsByAuthUser, initYear } from '@/models/repositories'
+import { getYearsByAuthUser, } from '@/models/repositories'
 import { GraduationCap, School } from 'lucide-react'
 import Link from 'next/link'
 import { forbidden } from 'next/navigation'
@@ -18,7 +18,7 @@ export default async function Home() {
   if (!session) {
     forbidden()
   }
-  await initYear(session.user.id)
+  
   const years = await getYearsByAuthUser(session.user.id)
 
   return (

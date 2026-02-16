@@ -3,6 +3,7 @@ import { hash } from '@/lib/utils/encryption'
 import { User } from '@/models/entities'
 import { isNil, omit, omitBy } from 'lodash'
 import { ObjectId } from 'mongodb'
+import { initYear } from './year.repo'
 
 export async function createUser(user: User): Promise<User | null> {
   try {
@@ -15,6 +16,7 @@ export async function createUser(user: User): Promise<User | null> {
     if (result.insertedId) {
       return omit(user, 'password') as User
     }
+    await initYear(user.id)
     return null
   } catch (error) {
     throw error
@@ -123,6 +125,7 @@ export async function oAuthCreateUser(
   if (!result) {
     throw new Error('Create failed')
   }
+  await initYear(result.id!)
   return result
 }
 
