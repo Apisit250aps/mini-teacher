@@ -9,6 +9,9 @@ import {
   MemberDeleteAction,
   StudentEditAction,
 } from '@/components/app/student/student-action'
+import ModalDialog from '@/components/share/overlay/modal-dialog'
+import StudentSelectTable from '@/components/app/student/student-select-table'
+import { Button } from '@/components/ui/button'
 
 const ColumnActions = ({
   cell,
@@ -71,12 +74,25 @@ const columns: ColumnDef<ClassMemberDetail>[] = [
   },
 ]
 
+const MemberAdd = () => {
+  return (
+    <ModalDialog
+      trigger={<Button>เพิ่มสมาชิก</Button>}
+      title={'เพิ่มสมาชิกจากรายชื่อนักเรียน'}
+      description={'เลือกนักเรียนที่ต้องการเพิ่มลงในคลาส'}
+    >
+      <StudentSelectTable />
+    </ModalDialog>
+  )
+}
+
 export default function ClassMemberSection() {
   const { data: members } = useGetClassMembers()
 
   return (
     <div className="flex flex-col items-center gap-4 w-full ">
-      <div className="flex w-full justify-end">
+      <div className="flex w-full justify-end gap-2">
+        <MemberAdd />
         <MemberCreate />
       </div>
       <div className="w-full">
