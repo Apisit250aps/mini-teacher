@@ -1,12 +1,65 @@
 import { $api } from '@/lib/client'
+import { toast } from 'sonner'
 
 export const useYearQueries = () => {
-  const list = $api.useQuery('get', '/year')
-  const active = $api.useMutation('patch', '/year/{yearId}')
-  const create = $api.useMutation('post', '/year')
-  const update = $api.useMutation('put', '/year/{yearId}')
-  const deleted = $api.useMutation('delete', '/year/{yearId}')
-
+  const list = $api.useQuery('get', '/year', undefined, {
+    select(res) {
+      if (res.success) {
+        return res.data
+      }
+      toast.error(res.message, { description: res.error })
+      return []
+    },
+  })
+  const active = $api.useMutation('patch', '/year/{yearId}', {
+    onSettled(data) {
+      if (data?.success) {
+        toast.success(data.message)
+      } else {
+        toast.error(data?.message ?? 'Failed to set active year', {
+          description: data?.error,
+        })
+      }
+      list.refetch()
+    },
+  })
+  const create = $api.useMutation('post', '/year', {
+    onSettled(data) {
+      if (data?.success) {
+        toast.success(data.message)
+      } else {
+        toast.error(data?.message ?? 'Failed to create year', {
+          description: data?.error,
+        })
+      }
+      list.refetch()
+    },
+  })
+  const update = $api.useMutation('put', '/year/{yearId}', {
+    onSettled(data) {
+      if (data?.success) {
+        toast.success(data.message)
+      } else {
+        toast.error(data?.message ?? 'Failed to update year', {
+          description: data?.error,
+        })
+      }
+      list.refetch()
+    },
+  })
+  const deleted = $api.useMutation('delete', '/year/{yearId}', {
+    onSettled(data) {
+      if (data?.success) {
+        toast.success(data.message)
+        return data.data
+      } else {
+        toast.error(data?.message ?? 'Failed to delete year', {
+          description: data?.error,
+        })
+      }
+      list.refetch()
+    },
+  })
   return {
     list,
     create,

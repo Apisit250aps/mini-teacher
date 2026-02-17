@@ -34,7 +34,7 @@ export function YearProvider({
   const [activeYearState, setActiveYear] = React.useState<Year>(
     activeYear || years![0],
   )
-
+  
   const onSetyearActive = useCallback(
     async (year: Year) => {
       setActiveYear(year)
@@ -60,14 +60,8 @@ export function YearProvider({
             }
             toast.success('สร้างปีการศึกษาเรียบร้อยแล้ว')
             list.refetch().then((res) => {
-              if (res.data?.success && res.data?.data && setYears) {
-                setYears(
-                  res.data.data.map((item) => ({
-                    ...item,
-                    createdAt: new Date(item.createdAt),
-                    updatedAt: new Date(item.updatedAt),
-                  })),
-                )
+              if (res.data) {
+                setYears(res.data)
               }
             })
             closeAll()
