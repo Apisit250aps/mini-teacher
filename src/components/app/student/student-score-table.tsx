@@ -45,7 +45,7 @@ export default function StudentScoreTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {memberQuery.data?.data?.map((member) => (
+          {memberQuery.data?.map((member) => (
             <TableRow key={member.id}>
               <TableCell className="w-10">{member.student.code}</TableCell>
               <TableCell>
