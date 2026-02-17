@@ -1,5 +1,12 @@
 import type { Collection } from 'mongodb'
-import type { Class, User, Student, ClassMember } from '@/models/entities'
+import type {
+  Class,
+  User,
+  Student,
+  ClassMember,
+  CheckStudent,
+  CheckDate,
+} from '@/models/entities'
 import { connect } from '@/lib/mongo/client'
 import { Year } from '@/models/entities/year.entity'
 
@@ -8,6 +15,8 @@ let _years: Collection<Year> | null = null
 let _classes: Collection<Class> | null = null
 let _students: Collection<Student> | null = null
 let _class_members: Collection<ClassMember> | null = null
+let _check_dates: Collection<CheckDate> | null = null
+let _check_students: Collection<CheckStudent> | null = null
 
 export async function usersCollection(): Promise<Collection<User>> {
   if (!_users) {
@@ -82,4 +91,34 @@ export async function classMembersCollection(): Promise<
     ])
   }
   return _class_members
+}
+
+export async function checkDatesCollection(): Promise<Collection<CheckDate>> {
+  if (!_check_dates) {
+    const db = await connect()
+    _check_dates = db.collection<CheckDate>('check_dates')
+    await _check_dates.createIndexes([
+      { key: { classId: 1, date: 1 }, unique: true, name: 'uniq_class_date' },
+      { key: { id: 1 }, unique: true, name: 'uniq_id' },
+    ])
+  }
+  return _check_dates
+}
+
+export async function checkStudentsCollection(): Promise<
+  Collection<CheckStudent>
+> {
+  if (!_check_students) {
+    const db = await connect()
+    _check_students = db.collection<CheckStudent>('check_students')
+    await _check_students.createIndexes([
+      {
+        key: { checkDateId: 1, studentId: 1 },
+        unique: true,
+        name: 'uniq_check_date_student',
+      },
+      { key: { id: 1 }, unique: true, name: 'uniq_id' },
+    ])
+  }
+  return _check_students
 }

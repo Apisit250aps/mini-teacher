@@ -4,11 +4,11 @@ import {
   zodEmail,
   zodName,
   zodTimestamp,
-  zodUuid,
+  zodAutoUuid,
 } from '@/lib/zod/fields'
 
 export const BaseUserSchema = z.object({
-  id: zodUuid(),
+  id: zodAutoUuid(),
   name: zodName().min(4, 'ชื่อต้องมีความยาวอย่างน้อย 4 ตัวอักษร'),
   password: z.string().min(8, 'รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร'),
   isActive: z.boolean().default(true),

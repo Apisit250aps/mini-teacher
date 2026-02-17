@@ -1,9 +1,9 @@
-import { zodDate, zodTimestamp, zodUuid } from '@/lib/zod/fields'
+import { zodDate, zodTimestamp, zodAutoUuid, zodUuid } from '@/lib/zod/fields'
 import z from 'zod'
 
 export const BaseClassSchema = z.object({
-  id: zodUuid(),
-  year: z.uuid(),
+  id: zodAutoUuid(),
+  year: zodUuid(),
   name: z.string().min(1, 'ชื่อห้องเรียนต้องไม่ว่าง'),
   subject: z.string().min(1, 'วิชาต้องไม่ว่าง'),
   isActive: z.boolean().default(true),
