@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 
 type YearContextValue = {
   activeYear: Year
-  years?: Year[]
+  years: Year[]
   setYears?: (years: Year[]) => void
   onSetyearActive: (year: Year) => Promise<void>
   onYearsCreate: (data: { year: string; term: string }) => Promise<void>
@@ -23,17 +23,15 @@ export function YearProvider({
   activeYear,
 }: {
   children: React.ReactNode
-  years?: Year[]
-  activeYear?: Year
+  years: Year[]
+  activeYear: Year
 }) {
   const router = useRouter()
   const { list, create } = useYearQueries()
   const { closeAll } = useOverlay()
   //
-  const [yearsState, setYears] = React.useState<Year[]>(years || [])
-  const [activeYearState, setActiveYear] = React.useState<Year>(
-    activeYear || years![0],
-  )
+  const [yearsState, setYears] = React.useState<Year[]>(years)
+  const [activeYearState, setActiveYear] = React.useState<Year>(activeYear)
   
   const onSetyearActive = useCallback(
     async (year: Year) => {

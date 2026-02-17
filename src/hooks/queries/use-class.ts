@@ -8,11 +8,11 @@ export const useGetClassMembers = (classId?: string) => {
   return $api.useQuery('get', '/year/{yearId}/class/{classId}/member', {
     params: {
       path: {
-        yearId: activeYear?.id as string,
+        yearId: activeYear.id,
         classId: (activeClass?.id ?? classId) as string,
       },
     },
-    enabled: (!!activeClass?.id || !!classId) && !!activeYear?.id,
+    enabled: (!!activeClass?.id || !!classId) && !!activeYear.id,
   })
 }
 
@@ -21,10 +21,10 @@ export const useClassQueries = () => {
   const list = $api.useQuery('get', '/year/{yearId}/class', {
     params: {
       path: {
-        yearId: activeYear?.id,
+        yearId: activeYear.id,
       },
     },
-    enabled: !!activeYear?.id,
+    enabled: !!activeYear.id,
   })
 
   const create = $api.useMutation('post', '/year/{yearId}/class')
