@@ -14,3 +14,9 @@ export const zodTimestamp = () =>
     .date()
     .default(() => new Date())
     .or(z.string())
+
+export const zodLocaleDateString = () =>
+  z.date().transform((date) => {
+    const onlyDate = new Date(date)
+    return onlyDate.toLocaleDateString()
+  })

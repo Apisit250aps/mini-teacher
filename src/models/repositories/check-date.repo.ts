@@ -1,7 +1,6 @@
 import { checkDatesCollection } from '@/lib/mongo'
 import { CheckDate } from '@/models/entities'
 import { omit } from 'lodash'
-import { pipe } from 'zod'
 
 export async function createCheckDate(
   checkDate: CheckDate,

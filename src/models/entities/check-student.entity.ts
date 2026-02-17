@@ -14,4 +14,12 @@ export const BaseCheckStudent = z.object({
   updatedAt: zodTimestamp(),
 })
 
+export const CreateCheckStudentSchema = BaseCheckStudent.omit({
+  createdAt: true,
+  updatedAt: true,
+}).extend({
+  createdAt: zodTimestamp(),
+  updatedAt: zodTimestamp(),
+})
+
 export type CheckStudent = z.infer<typeof BaseCheckStudent>
