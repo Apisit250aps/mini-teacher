@@ -49,7 +49,7 @@ export function ClassProvider({
   // memo
   const classes = React.useMemo(() => {
     if (isPending) return []
-    return (data?.data as unknown as Class[]) || []
+    return (data as unknown as Class[]) || []
   }, [data, isPending])
 
   const classRoutes = React.useMemo(() => {
@@ -84,19 +84,13 @@ export function ClassProvider({
           },
         },
         {
-          onSettled(data, error) {
-            if (error) {
-              toast.error('เกิดข้อผิดพลาดในการสร้างชั้นเรียน')
-              return
-            }
-            toast.success('สร้างชั้นเรียนเรียบร้อยแล้ว')
-            classList.refetch()
+          onSuccess: () => {
             closeAll()
           },
         },
       )
     },
-    [activeYear.id, classList, closeAll, createClass],
+    [activeYear.id, closeAll, createClass],
   )
 
   const onClassUpdate = useCallback(
