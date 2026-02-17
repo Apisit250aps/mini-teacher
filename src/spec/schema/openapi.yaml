@@ -8,138 +8,6 @@ tags:
   - name: Students
   - name: Check
 paths:
-  /check:
-    post:
-      operationId: Check_create
-      description: Create a check date
-      parameters: []
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/CheckDate'
-                  error:
-                    type: string
-      tags:
-        - Check
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateCheckDateBody'
-    get:
-      operationId: Check_listByClassId
-      description: Get check dates by class id
-      parameters:
-        - name: classId
-          in: query
-          required: true
-          schema:
-            type: string
-          explode: false
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/CheckDate'
-                  error:
-                    type: string
-      tags:
-        - Check
-  /check/{checkDateId}:
-    put:
-      operationId: Check_update
-      description: Update a check date
-      parameters:
-        - name: checkDateId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/CheckDate'
-                  error:
-                    type: string
-      tags:
-        - Check
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateCheckDateBody'
-    delete:
-      operationId: Check_delete
-      description: Delete a check date
-      parameters:
-        - name: checkDateId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/EmptyData'
-                  error:
-                    type: string
-      tags:
-        - Check
   /student:
     get:
       operationId: Students_list
@@ -631,6 +499,172 @@ paths:
                     type: string
       tags:
         - Classes
+  /year/{yearId}/class/{classId}/check:
+    post:
+      operationId: Check_create
+      description: Create a check date
+      parameters:
+        - name: yearId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/CheckDate'
+                  error:
+                    type: string
+      tags:
+        - Check
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCheckDateBody'
+    get:
+      operationId: Check_listByClassId
+      description: Get check dates by class id
+      parameters:
+        - name: yearId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CheckDate'
+                  error:
+                    type: string
+      tags:
+        - Check
+  /year/{yearId}/class/{classId}/check/{checkDateId}:
+    put:
+      operationId: Check_update
+      description: Update a check date
+      parameters:
+        - name: yearId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: checkDateId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/CheckDate'
+                  error:
+                    type: string
+      tags:
+        - Check
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCheckDateBody'
+    delete:
+      operationId: Check_delete
+      description: Delete a check date
+      parameters:
+        - name: yearId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: checkDateId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/EmptyData'
+                  error:
+                    type: string
+      tags:
+        - Check
   /year/{yearId}/class/{classId}/member:
     put:
       operationId: Classes_addOrRemoveMember
@@ -859,11 +893,8 @@ components:
       type: object
       required:
         - date
-        - classId
       properties:
         date:
-          type: string
-        classId:
           type: string
     CreateClassBody:
       type: object
@@ -958,9 +989,6 @@ components:
           type: string
         isEditable:
           type: boolean
-        updatedAt:
-          type: string
-          format: date-time
     UpdateClassBody:
       type: object
       properties:

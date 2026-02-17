@@ -11,11 +11,9 @@ model CheckDate {
 
 model CreateCheckDateBody {
   date: string;
-  classId: string;
 }
 
 model UpdateCheckDateBody {
   date?: string;
   isEditable?: boolean;
-  updatedAt?: utcDateTime;
 }
