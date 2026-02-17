@@ -86,8 +86,7 @@ const MemberAdd = () => {
 
   const { data: members } = membersQuery
 
-  const existingStudentIds =
-    members?.data?.map((member) => member.student.id) ?? []
+  const existingStudentIds = members?.map((member) => member.student.id) ?? []
 
   const onSubmit = async (studentIds: string[]) => {
     const excludedIds = existingStudentIds
@@ -133,7 +132,7 @@ export default function ClassMemberSection() {
         <MemberCreate />
       </div>
       <div className="w-full">
-        <DataTable data={members?.data ?? []} columns={columns} />
+        <DataTable data={members ?? []} columns={columns} />
       </div>
     </div>
   )

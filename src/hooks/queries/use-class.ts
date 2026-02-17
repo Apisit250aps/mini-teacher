@@ -2,7 +2,6 @@ import { $api } from '@/lib/client'
 import { useYearContext } from '@/hooks/app/use-year'
 import { useClassContext } from '@/hooks/app/use-class'
 import { toast } from 'sonner'
-import { selectArray } from '@/lib/utils/hooks'
 
 export const useGetClassMembers = (classId?: string) => {
   const { activeClass } = useClassContext()
@@ -21,7 +20,16 @@ export const useGetClassMembers = (classId?: string) => {
       enabled: (!!activeClass?.id || !!classId) && !!activeYear.id,
     },
     {
-      select: selectArray,
+      select: (res) => {
+        if (!res) return []
+        if (!res.success) {
+          toast.error(res.message, {
+            description: res.error,
+          })
+          return []
+        }
+        return res.data
+      },
     },
   )
   return query
@@ -41,7 +49,16 @@ export const useClassQueries = () => {
       enabled: !!activeYear.id,
     },
     {
-      select: selectArray,
+      select: (res) => {
+        if (!res) return []
+        if (!res.success) {
+          toast.error(res.message, {
+            description: res.error,
+          })
+          return []
+        }
+        return res.data
+      },
     },
   )
 
@@ -118,7 +135,6 @@ export const useClassQueries = () => {
       },
     },
   )
-
   return {
     list,
     create,
