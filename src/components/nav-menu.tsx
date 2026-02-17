@@ -26,8 +26,8 @@ export function NavMenu({
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>{label}</SidebarGroupLabel>
       <SidebarMenu>
-        {nav.map((item) => (
-          <SidebarMenuItem key={item.name}>
+        {nav.map((item, index) => (
+          <SidebarMenuItem key={index}>
             <SidebarMenuButton asChild>
               <Link href={`${item.url}`}>
                 <item.icon />
