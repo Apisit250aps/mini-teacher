@@ -1,6 +1,5 @@
 import { auth } from '@/auth'
 import { useMiddlewares } from '@/lib/middlewares'
-import { isNoAuth } from '@/lib/middlewares/auth'
 import { NextAuthRequest } from 'next-auth'
 
 const debugMiddlewares = (req: NextAuthRequest) => {
@@ -15,10 +14,6 @@ export default auth((req) =>
     {
       prefix: '/',
       middlewares: [debugMiddlewares],
-    },
-    {
-      paths: ['/login'],
-      middlewares: [isNoAuth],
     },
   ]),
 )
