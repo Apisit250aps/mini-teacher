@@ -1,7 +1,7 @@
 'use client'
 import { Year } from '@/models/entities'
 import React, { useCallback } from 'react'
-import { useYearContextQueries } from '@/hooks/queries/use-year'
+import { useYearQueries } from '@/hooks/queries/use-year'
 import { toast } from 'sonner'
 import { useOverlay } from '@/hooks/contexts/use-overlay'
 import { useRouter } from 'next/navigation'
@@ -27,7 +27,7 @@ export function YearProvider({
   activeYear?: Year
 }) {
   const router = useRouter()
-  const { list, create } = useYearContextQueries()
+  const { list, create } = useYearQueries()
   const { closeAll } = useOverlay()
   //
   const [yearsState, setYears] = React.useState<Year[]>(years || [])
