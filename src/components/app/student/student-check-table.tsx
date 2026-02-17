@@ -17,9 +17,14 @@ import {
 import { useGetClassMembers } from '@/hooks/queries/use-class'
 import React, { useState } from 'react'
 import { Input } from '@/components/ui/input'
+import { useCheckQueries } from '@/hooks/queries/use-check'
+import { Button } from '@/components/ui/button'
+import { CheckDateCreateAction } from '../class/check/action-modal'
 
 export default function StudentCheckTable() {
   const memberQuery = useGetClassMembers()
+  const checkDateQuery = useCheckQueries().list
+  //
   const [attendanceStatus, setAttendanceStatus] = useState<
     Record<string, string>
   >({})
@@ -30,19 +35,6 @@ export default function StudentCheckTable() {
       [memberId]: status,
     }))
   }
-
-  const date = [
-    '1 กพ.',
-    '2 กพ.',
-    '3 กพ.',
-    '4 กพ.',
-    '5 กพ.',
-    '6 กพ.',
-    '7 กพ.',
-    '8 กพ.',
-    '9 กพ.',
-    '10 กพ.',
-  ]
 
   const mapValueToStatus = (value: string) => {
     switch (value) {
@@ -61,13 +53,16 @@ export default function StudentCheckTable() {
 
   return (
     <div>
+      <div className="flex items-center justify-end">
+        <CheckDateCreateAction />
+      </div>
       <Table className="w-auto">
         <TableHeader>
           <TableRow>
             <TableHead>รหัสนักเรียน</TableHead>
             <TableHead>ชื่อนักเรียน</TableHead>
-            {date.map((d, index) => (
-              <TableHead key={index}>{d}</TableHead>
+            {checkDateQuery.data?.map((d, index) => (
+              <TableHead key={index}>{d.date}</TableHead>
             ))}
           </TableRow>
         </TableHeader>
@@ -79,26 +74,31 @@ export default function StudentCheckTable() {
                 {member.student.prefix}
                 {member.student.firstName} {member.student.lastName}
               </TableCell>
-              {Array.from(date).map((_, index) => (
+              {Array.from(checkDateQuery.data ?? []).map((check, index) => (
                 <TableCell className="max-w-17" key={index}>
                   <ContextMenu>
                     <ContextMenuTrigger>
                       <Input
                         className={
                           'cursor-pointer text-center' +
-                          (attendanceStatus[`${member.id}${_}`] === 'PRESENT'
+                          (attendanceStatus[`${member.id}${check.date}`] ===
+                          'PRESENT'
                             ? ' text-green-500'
-                            : attendanceStatus[`${member.id}${_}`] === 'ABSENT'
+                            : attendanceStatus[`${member.id}${check.date}`] ===
+                                'ABSENT'
                               ? ' text-red-500'
-                              : attendanceStatus[`${member.id}${_}`] === 'LEAVE'
+                              : attendanceStatus[
+                                    `${member.id}${check.date}`
+                                  ] === 'LEAVE'
                                 ? ' text-yellow-500'
-                                : attendanceStatus[`${member.id}${_}`] ===
-                                    'LATE'
+                                : attendanceStatus[
+                                      `${member.id}${check.date}`
+                                    ] === 'LATE'
                                   ? ' text-orange-500'
                                   : '')
                         }
                         value={mapValueToStatus(
-                          attendanceStatus[`${member.id}${_}`],
+                          attendanceStatus[`${member.id}${check.date}`],
                         )}
                         readOnly
                       />
@@ -106,28 +106,40 @@ export default function StudentCheckTable() {
                     <ContextMenuContent>
                       <ContextMenuItem
                         onClick={() =>
-                          handleAttendanceChange(`${member.id}${_}`, 'PRESENT')
+                          handleAttendanceChange(
+                            `${member.id}${check.date}`,
+                            'PRESENT',
+                          )
                         }
                       >
                         มา
                       </ContextMenuItem>
                       <ContextMenuItem
                         onClick={() =>
-                          handleAttendanceChange(`${member.id}${_}`, 'ABSENT')
+                          handleAttendanceChange(
+                            `${member.id}${check.date}`,
+                            'ABSENT',
+                          )
                         }
                       >
                         ขาด
                       </ContextMenuItem>
                       <ContextMenuItem
                         onClick={() =>
-                          handleAttendanceChange(`${member.id}${_}`, 'LEAVE')
+                          handleAttendanceChange(
+                            `${member.id}${check.date}`,
+                            'LEAVE',
+                          )
                         }
                       >
                         ลา
                       </ContextMenuItem>
                       <ContextMenuItem
                         onClick={() =>
-                          handleAttendanceChange(`${member.id}${_}`, 'LATE')
+                          handleAttendanceChange(
+                            `${member.id}${check.date}`,
+                            'LATE',
+                          )
                         }
                       >
                         สาย
