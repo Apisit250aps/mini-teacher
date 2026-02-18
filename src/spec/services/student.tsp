@@ -28,4 +28,6 @@ interface Students {
   @route("{studentId}")
   @get
   getById(@path studentId: string): ApiResponse<Student> | ApiError;
+
+  
 }

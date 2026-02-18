@@ -141,7 +141,8 @@ export interface paths {
         get?: never;
         /** @description Update a check date */
         put: operations["Check_update"];
-        post?: never;
+        /** @description Create a check student */
+        post: operations["Check_createCheckStudent"];
         /** @description Delete a check date */
         delete: operations["Check_delete"];
         options?: never;
@@ -174,6 +175,16 @@ export interface components {
             classId: string;
             date: string;
             isEditable: boolean;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        CheckStudent: {
+            id: string;
+            checkDateId: string;
+            studentId: string;
+            status: string;
             /** Format: date-time */
             createdAt: string;
             /** Format: date-time */
@@ -214,6 +225,10 @@ export interface components {
         };
         CreateCheckDateBody: {
             date: string;
+        };
+        CreateCheckStudentBody: {
+            studentId: string;
+            status: string;
         };
         CreateClassBody: {
             year: string;
@@ -1125,6 +1140,57 @@ export interface operations {
                         success: boolean;
                         message: string;
                         data?: components["schemas"]["CheckDate"];
+                        error?: string;
+                    };
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    Check_createCheckStudent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                yearId: string;
+                classId: string;
+                checkDateId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCheckStudentBody"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["CheckStudent"];
                         error?: string;
                     };
                 };

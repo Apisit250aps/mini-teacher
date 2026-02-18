@@ -37,4 +37,14 @@ interface Check {
     @path yearId: string,
     @path classId: string,
   ): ApiResponse<CheckDate[]> | ApiError;
+
+  /** Create a check student */
+  @route("{checkDateId}")
+  @post
+  createCheckStudent(
+    @path yearId: string,
+    @path classId: string,
+    @path checkDateId: string,
+    @body body: CreateCheckStudentBody,
+  ): ApiResponse<CheckStudent> | ApiError;
 }
