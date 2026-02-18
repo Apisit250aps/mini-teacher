@@ -14,6 +14,7 @@ import { useClassContext } from '@/hooks/app/use-class'
 import { useYearContext } from '@/hooks/app/use-year'
 import { useOverlay } from '@/hooks/contexts/use-overlay'
 import { useCheckQueries } from '@/hooks/queries/use-check'
+import { onSettledToast } from '@/lib/utils/hooks'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Calendar } from 'lucide-react'
 import { useCallback } from 'react'
@@ -58,7 +59,9 @@ export function CheckDateCreateAction() {
             },
           },
           {
-            onSuccess() {
+            onSettled(data, error, _variables, _, context) {
+              onSettledToast(data, error)
+              context.client.refetchQueries({})
               methods.reset()
               closeAll()
             },

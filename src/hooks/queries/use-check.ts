@@ -2,6 +2,7 @@ import { $api } from '@/lib/client'
 import { toast } from 'sonner'
 import { useClassContext } from '@/hooks/app/use-class'
 import { useYearContext } from '@/hooks/app/use-year'
+import { onSettledToast } from '@/lib/utils/hooks'
 
 export const useGetClassCheckDates = (classId?: string) => {
   const { activeClass } = useClassContext()
@@ -68,22 +69,21 @@ export const useCheckQueries = () => {
     'post',
     '/year/{yearId}/class/{classId}/check',
     {
-      onSettled(data, _error, _variables, _onMutateResult, context) {
-        if (!data) return
-        if (!data.success) {
-          toast.error(data.message, {
-            description: data.error,
-          })
-          return
-        }
-        toast.success(data.message)
-        context.client.refetchQueries({})
-      },
+      onSettled: onSettledToast,
+    },
+  )
+
+  const studentCheck = $api.useMutation(
+    'put',
+    '/year/{yearId}/class/{classId}/check/{checkDateId}/student',
+    {
+      onSettled: onSettledToast,
     },
   )
 
   return {
     list,
     create,
+    studentCheck,
   }
 }

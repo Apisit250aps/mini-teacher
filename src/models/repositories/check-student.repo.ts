@@ -37,24 +37,50 @@ export async function deleteCheckStudent(id: string): Promise<void> {
   }
 }
 
+export async function getUniqueCheckStudent(
+  checkDateId: string,
+  studentId: string,
+): Promise<CheckStudent | null> {
+  const check_students = await checkStudentsCollection()
+  const [result] = await check_students
+    .aggregate<CheckStudent>([
+      { $match: { checkDateId, studentId } },
+      {
+        $lookup: {
+          from: 'students',
+          localField: 'studentId',
+          foreignField: 'id',
+          as: 'student',
+          pipeline: [{ $project: { _id: 0 } }],
+        },
+      },
+      { $unwind: '$student' },
+      { $project: { _id: 0 } },
+    ])
+    .toArray()
+  return result || null
+}
+
 export async function getCheckStudentById(
   id: string,
 ): Promise<CheckStudent | null> {
   const check_students = await checkStudentsCollection()
-  const [result] = await check_students.aggregate<CheckStudent>([
-    { $match: { id } },
-    {
-      $lookup: {
-        from: 'students',
-        localField: 'studentId',
-        foreignField: 'id',
-        as: 'student',
-        pipeline: [{ $project: { _id: 0 } }],
+  const [result] = await check_students
+    .aggregate<CheckStudent>([
+      { $match: { id } },
+      {
+        $lookup: {
+          from: 'students',
+          localField: 'studentId',
+          foreignField: 'id',
+          as: 'student',
+          pipeline: [{ $project: { _id: 0 } }],
+        },
       },
-    },
-    { $unwind: '$student' },
-    { $project: { _id: 0 } },
-  ]).toArray()
+      { $unwind: '$student' },
+      { $project: { _id: 0 } },
+    ])
+    .toArray()
 
   return result || null
 }

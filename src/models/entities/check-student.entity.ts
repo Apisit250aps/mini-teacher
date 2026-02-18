@@ -23,3 +23,4 @@ export const CreateCheckStudentSchema = BaseCheckStudent.omit({
 })
 
 export type CheckStudent = z.infer<typeof BaseCheckStudent>
+export type CHECK_STATUS = z.infer<typeof checkEnumSchema>

@@ -893,9 +893,10 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Check
-    post:
-      operationId: Check_createCheckStudent
-      description: Create a check student
+  /year/{yearId}/class/{classId}/check/{checkDateId}/student:
+    put:
+      operationId: Check_checkStudent
+      description: Update a check student
       parameters:
         - name: yearId
           in: path

@@ -141,10 +141,26 @@ export interface paths {
         get?: never;
         /** @description Update a check date */
         put: operations["Check_update"];
-        /** @description Create a check student */
-        post: operations["Check_createCheckStudent"];
+        post?: never;
         /** @description Delete a check date */
         delete: operations["Check_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/year/{yearId}/class/{classId}/check/{checkDateId}/student": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** @description Update a check student */
+        put: operations["Check_checkStudent"];
+        post?: never;
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -1164,7 +1180,54 @@ export interface operations {
             };
         };
     };
-    Check_createCheckStudent: {
+    Check_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                yearId: string;
+                classId: string;
+                checkDateId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["EmptyData"];
+                        error?: string;
+                    };
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    Check_checkStudent: {
         parameters: {
             query?: never;
             header?: never;
@@ -1191,53 +1254,6 @@ export interface operations {
                         success: boolean;
                         message: string;
                         data?: components["schemas"]["CheckStudent"];
-                        error?: string;
-                    };
-                };
-            };
-            /** @description The server could not understand the request due to invalid syntax. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Server error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
-    };
-    Check_delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                yearId: string;
-                classId: string;
-                checkDateId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The request has succeeded. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        success: boolean;
-                        message: string;
-                        data?: components["schemas"]["EmptyData"];
                         error?: string;
                     };
                 };

@@ -1,5 +1,5 @@
 using TypeSpec.Http;
-using TypeSpec.Rest;
+
 
 namespace MiniTeacherService.ChecksApi;
 
@@ -38,10 +38,12 @@ interface Check {
     @path classId: string,
   ): ApiResponse<CheckDate[]> | ApiError;
 
-  /** Create a check student */
-  @route("{checkDateId}")
-  @post
-  createCheckStudent(
+  
+  #suppress "@typespec/http/patch-implicit-optional" ""
+  /** Update a check student */
+  @route("{checkDateId}/student")
+  @put
+  checkStudent(
     @path yearId: string,
     @path classId: string,
     @path checkDateId: string,

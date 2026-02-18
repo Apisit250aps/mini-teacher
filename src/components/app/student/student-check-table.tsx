@@ -15,28 +15,99 @@ import {
 } from '@/components/ui/context-menu'
 
 import { useGetClassMembers } from '@/hooks/queries/use-class'
-import React, { useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { useCheckQueries } from '@/hooks/queries/use-check'
-import { Button } from '@/components/ui/button'
 import { CheckDateCreateAction } from '../class/check/action-modal'
+import { useClassContext } from '@/hooks/app/use-class'
+import { useYearContext } from '@/hooks/app/use-year'
+import { CHECK_STATUS } from '@/models/entities'
 
 export default function StudentCheckTable() {
   const memberQuery = useGetClassMembers()
-  const checkDateQuery = useCheckQueries().list
-  //
-  const [attendanceStatus, setAttendanceStatus] = useState<
+  const checkQueries = useCheckQueries()
+  const checkDateQuery = checkQueries.list
+  const { activeClass } = useClassContext()
+  const { activeYear } = useYearContext()
+  const { studentCheck } = checkQueries
+  const [attendanceOverride, setAttendanceOverride] = useState<
     Record<string, string>
   >({})
 
-  const handleAttendanceChange = (memberId: string, status: string) => {
-    setAttendanceStatus((prev) => ({
-      ...prev,
-      [memberId]: status,
-    }))
-  }
+  const getAttendanceKey = useCallback(
+    (studentId: string, checkDateId: string) => `${studentId}-${checkDateId}`,
+    [],
+  )
 
-  const mapValueToStatus = (value: string) => {
+  const onCheckChange = useCallback(
+    async (
+      studentId: string,
+      checkDateId: string,
+      status: CHECK_STATUS | string,
+    ) => {
+      if (!activeYear || !activeClass) return
+      await studentCheck.mutateAsync({
+        params: {
+          path: {
+            yearId: activeYear.id,
+            classId: activeClass.id,
+            checkDateId,
+          },
+        },
+        body: {
+          studentId,
+          status: status as string,
+        },
+      })
+    },
+    [activeYear, activeClass, studentCheck],
+  )
+
+  const attendanceStatus = useMemo(() => {
+    const initialStatus: Record<string, string> = {}
+    for (const checkDate of checkDateQuery.data ?? []) {
+      const checkStudents = (
+        checkDate as typeof checkDate & {
+          checkStudents?: Array<{ studentId: string; status: string | null }>
+        }
+      ).checkStudents
+
+      for (const studentCheckItem of checkStudents ?? []) {
+        initialStatus[
+          getAttendanceKey(studentCheckItem.studentId, checkDate.id)
+        ] = studentCheckItem.status ?? ''
+      }
+    }
+
+    return {
+      ...initialStatus,
+      ...attendanceOverride,
+    }
+  }, [checkDateQuery.data, attendanceOverride, getAttendanceKey])
+
+  const handleAttendanceChange = useCallback(
+    async (studentId: string, checkDateId: string, status: CHECK_STATUS | string) => {
+      const key = getAttendanceKey(studentId, checkDateId)
+      const previousStatus = attendanceStatus[key]
+
+      setAttendanceOverride((prev) => ({
+        ...prev,
+        [key]: status as string,
+      }))
+
+      try {
+        await onCheckChange(studentId, checkDateId, status)
+      } catch {
+        setAttendanceOverride((prev) => ({
+          ...prev,
+          [key]: previousStatus ?? '',
+        }))
+      }
+    },
+    [attendanceStatus, getAttendanceKey, onCheckChange],
+  )
+
+  const mapValueToStatus = (value?: string) => {
     switch (value) {
       case 'PRESENT':
         return 'มา'
@@ -74,31 +145,37 @@ export default function StudentCheckTable() {
                 {member.student.prefix}
                 {member.student.firstName} {member.student.lastName}
               </TableCell>
-              {Array.from(checkDateQuery.data ?? []).map((check, index) => (
+              {(checkDateQuery.data ?? []).map((check, index) => (
                 <TableCell className="max-w-17" key={index}>
                   <ContextMenu>
                     <ContextMenuTrigger>
                       <Input
                         className={
                           'cursor-pointer text-center' +
-                          (attendanceStatus[`${member.id}${check.date}`] ===
+                          (attendanceStatus[
+                            getAttendanceKey(member.studentId, check.id)
+                          ] ===
                           'PRESENT'
                             ? ' text-green-500'
-                            : attendanceStatus[`${member.id}${check.date}`] ===
+                            : attendanceStatus[
+                                  getAttendanceKey(member.studentId, check.id)
+                                ] ===
                                 'ABSENT'
                               ? ' text-red-500'
                               : attendanceStatus[
-                                    `${member.id}${check.date}`
+                                    getAttendanceKey(member.studentId, check.id)
                                   ] === 'LEAVE'
                                 ? ' text-yellow-500'
                                 : attendanceStatus[
-                                      `${member.id}${check.date}`
+                                      getAttendanceKey(member.studentId, check.id)
                                     ] === 'LATE'
                                   ? ' text-orange-500'
                                   : '')
                         }
                         value={mapValueToStatus(
-                          attendanceStatus[`${member.id}${check.date}`],
+                          attendanceStatus[
+                            getAttendanceKey(member.studentId, check.id)
+                          ],
                         )}
                         readOnly
                       />
@@ -107,7 +184,8 @@ export default function StudentCheckTable() {
                       <ContextMenuItem
                         onClick={() =>
                           handleAttendanceChange(
-                            `${member.id}${check.date}`,
+                            member.studentId,
+                            check.id,
                             'PRESENT',
                           )
                         }
@@ -117,7 +195,8 @@ export default function StudentCheckTable() {
                       <ContextMenuItem
                         onClick={() =>
                           handleAttendanceChange(
-                            `${member.id}${check.date}`,
+                            member.studentId,
+                            check.id,
                             'ABSENT',
                           )
                         }
@@ -127,7 +206,8 @@ export default function StudentCheckTable() {
                       <ContextMenuItem
                         onClick={() =>
                           handleAttendanceChange(
-                            `${member.id}${check.date}`,
+                            member.studentId,
+                            check.id,
                             'LEAVE',
                           )
                         }
@@ -137,7 +217,8 @@ export default function StudentCheckTable() {
                       <ContextMenuItem
                         onClick={() =>
                           handleAttendanceChange(
-                            `${member.id}${check.date}`,
+                            member.studentId,
+                            check.id,
                             'LATE',
                           )
                         }

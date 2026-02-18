@@ -49,27 +49,16 @@ export async function getCheckDatesByClassId(
   const checked = await check_dates
     .aggregate<CheckDate>([
       { $match: { classId } },
+      { $project: { _id: 0 } },
       {
         $lookup: {
           from: 'check_students',
           localField: 'id',
           foreignField: 'checkDateId',
           as: 'checkStudents',
-          pipeline: [
-            { $project: { _id: 0 } },
-            {
-              $lookup: {
-                from: 'students',
-                localField: 'studentId',
-                foreignField: 'id',
-                as: 'student',
-                pipeline: [{ $project: { _id: 0 } }],
-              },
-            },
-          ],
+          pipeline: [{ $project: { _id: 0 } }],
         },
       },
-      { $project: { _id: 0 } },
     ])
     .toArray()
   return checked

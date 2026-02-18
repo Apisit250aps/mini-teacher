@@ -9,6 +9,8 @@ import {
   createCheckDate,
   createCheckStudent,
   getCheckDatesByClassId,
+  getUniqueCheckStudent,
+  updateCheckStudent,
 } from '@/models/repositories'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -120,15 +122,27 @@ export async function CreateCheckStudent(
         },
       )
     }
-    const check = await createCheckStudent(validate.data)
+    const existing = await getUniqueCheckStudent(
+      validate.data.checkDateId,
+      validate.data.studentId,
+    )
+    let check: CheckStudent
+    if (existing) {
+      check = await updateCheckStudent(existing.id, validate.data)
+    } else {
+      check = await createCheckStudent(validate.data)
+    }
+
     return NextResponse.json(
       {
         success: true,
-        message: 'Check student created successfully',
+        message: existing
+          ? 'Check student updated successfully'
+          : 'Check student created successfully',
         data: check,
       },
       {
-        status: 201,
+        status: existing ? 200 : 201,
       },
     )
   } catch (error) {
