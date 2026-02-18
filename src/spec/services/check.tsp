@@ -36,7 +36,7 @@ interface Check {
   @get listByClassId(
     @path yearId: string,
     @path classId: string,
-  ): ApiResponse<CheckDate[]> | ApiError;
+  ): ApiResponse<CheckDateWithStudents[]> | ApiError;
 
   
   #suppress "@typespec/http/patch-implicit-optional" ""

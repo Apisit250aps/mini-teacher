@@ -196,6 +196,9 @@ export interface components {
             /** Format: date-time */
             updatedAt: string;
         };
+        CheckDateWithStudents: {
+            checkStudents: components["schemas"]["CheckStudent"][];
+        } & components["schemas"]["CheckDate"];
         CheckStudent: {
             id: string;
             checkDateId: string;
@@ -1054,7 +1057,7 @@ export interface operations {
                     "application/json": {
                         success: boolean;
                         message: string;
-                        data?: components["schemas"]["CheckDate"][];
+                        data?: components["schemas"]["CheckDateWithStudents"][];
                         error?: string;
                     };
                 };

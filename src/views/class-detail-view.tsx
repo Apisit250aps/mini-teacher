@@ -26,19 +26,32 @@ export default function ClassDetailView({ classRoom }: { classRoom: Class }) {
       title={`ห้องเรียน: ${activeClass?.name || '...'}`}
       description={`วิชา: ${activeClass?.subject || '...'}`}
     >
-      <Tabs value={activeTab} onValueChange={onValueChange} className="w-auto">
-        <TabsList>
+      <Tabs
+        value={activeTab}
+        onValueChange={onValueChange}
+        className="w-full max-w-full min-w-0"
+      >
+        <TabsList className="max-w-full overflow-x-auto">
           <TabsTrigger value="check">เช็คชื่อ</TabsTrigger>
           <TabsTrigger value="score">คะแนน</TabsTrigger>
           <TabsTrigger value="member">รายชื่อนักเรียน</TabsTrigger>
         </TabsList>
-        <TabsContent value="check">
+        <TabsContent
+          value="check"
+          className="w-full max-w-full min-w-0 overflow-x-auto"
+        >
           <StudentCheckTable />
         </TabsContent>
-        <TabsContent value="score">
+        <TabsContent
+          value="score"
+          className="w-full max-w-full min-w-0 overflow-x-auto"
+        >
           <StudentScoreTable />
         </TabsContent>
-        <TabsContent value="member">
+        <TabsContent
+          value="member"
+          className="w-full max-w-full min-w-0 overflow-x-auto"
+        >
           <ClassMemberSection />
         </TabsContent>
       </Tabs>

@@ -15,8 +15,7 @@ import {
 } from '@/components/ui/context-menu'
 
 import { useGetClassMembers } from '@/hooks/queries/use-class'
-import React, { useCallback, useMemo, useState } from 'react'
-import { Input } from '@/components/ui/input'
+import React, { useCallback } from 'react'
 import { useCheckQueries } from '@/hooks/queries/use-check'
 import { CheckDateCreateAction } from '../class/check/action-modal'
 import { useClassContext } from '@/hooks/app/use-class'
@@ -30,13 +29,21 @@ export default function StudentCheckTable() {
   const { activeClass } = useClassContext()
   const { activeYear } = useYearContext()
   const { studentCheck } = checkQueries
-  const [attendanceOverride, setAttendanceOverride] = useState<
-    Record<string, string>
-  >({})
 
-  const getAttendanceKey = useCallback(
-    (studentId: string, checkDateId: string) => `${studentId}-${checkDateId}`,
-    [],
+  const getAttendanceStatus = useCallback(
+    (studentId: string, checkDateId: string) => {
+      const checkDate = checkDateQuery.data?.find(
+        (item) => item.id === checkDateId,
+      )
+      const checkStudent = (
+        checkDate as typeof checkDate & {
+          checkStudents?: Array<{ studentId: string; status: string | null }>
+        }
+      )?.checkStudents?.find((item) => item.studentId === studentId)
+
+      return checkStudent?.status ?? ''
+    },
+    [checkDateQuery.data],
   )
 
   const onCheckChange = useCallback(
@@ -63,48 +70,18 @@ export default function StudentCheckTable() {
     [activeYear, activeClass, studentCheck],
   )
 
-  const attendanceStatus = useMemo(() => {
-    const initialStatus: Record<string, string> = {}
-    for (const checkDate of checkDateQuery.data ?? []) {
-      const checkStudents = (
-        checkDate as typeof checkDate & {
-          checkStudents?: Array<{ studentId: string; status: string | null }>
-        }
-      ).checkStudents
-
-      for (const studentCheckItem of checkStudents ?? []) {
-        initialStatus[
-          getAttendanceKey(studentCheckItem.studentId, checkDate.id)
-        ] = studentCheckItem.status ?? ''
-      }
-    }
-
-    return {
-      ...initialStatus,
-      ...attendanceOverride,
-    }
-  }, [checkDateQuery.data, attendanceOverride, getAttendanceKey])
-
   const handleAttendanceChange = useCallback(
-    async (studentId: string, checkDateId: string, status: CHECK_STATUS | string) => {
-      const key = getAttendanceKey(studentId, checkDateId)
-      const previousStatus = attendanceStatus[key]
-
-      setAttendanceOverride((prev) => ({
-        ...prev,
-        [key]: status as string,
-      }))
-
+    async (
+      studentId: string,
+      checkDateId: string,
+      status: CHECK_STATUS | string,
+    ) => {
       try {
         await onCheckChange(studentId, checkDateId, status)
-      } catch {
-        setAttendanceOverride((prev) => ({
-          ...prev,
-          [key]: previousStatus ?? '',
-        }))
-      }
+        await checkDateQuery.refetch()
+      } catch {}
     },
-    [attendanceStatus, getAttendanceKey, onCheckChange],
+    [onCheckChange, checkDateQuery],
   )
 
   const mapValueToStatus = (value?: string) => {
@@ -122,117 +99,111 @@ export default function StudentCheckTable() {
     }
   }
 
+  const getStatusColor = (value?: string) => {
+    switch (value) {
+      case 'PRESENT':
+        return 'text-green-500'
+      case 'ABSENT':
+        return 'text-red-500'
+      case 'LEAVE':
+        return 'text-yellow-500'
+      case 'LATE':
+        return 'text-orange-500'
+      default:
+        return ''
+    }
+  }
+
   return (
-    <div>
+    <div className="w-full max-w-full min-w-0">
       <div className="flex items-center justify-end">
         <CheckDateCreateAction />
       </div>
-      <Table className="w-auto">
-        <TableHeader>
-          <TableRow>
-            <TableHead>รหัสนักเรียน</TableHead>
-            <TableHead>ชื่อนักเรียน</TableHead>
-            {checkDateQuery.data?.map((d, index) => (
-              <TableHead key={index}>{d.date}</TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {memberQuery.data?.map((member) => (
-            <TableRow key={member.id}>
-              <TableCell className="w-10">{member.student.code}</TableCell>
-              <TableCell>
-                {member.student.prefix}
-                {member.student.firstName} {member.student.lastName}
-              </TableCell>
-              {(checkDateQuery.data ?? []).map((check, index) => (
-                <TableCell className="max-w-17" key={index}>
-                  <ContextMenu>
-                    <ContextMenuTrigger>
-                      <Input
-                        className={
-                          'cursor-pointer text-center' +
-                          (attendanceStatus[
-                            getAttendanceKey(member.studentId, check.id)
-                          ] ===
-                          'PRESENT'
-                            ? ' text-green-500'
-                            : attendanceStatus[
-                                  getAttendanceKey(member.studentId, check.id)
-                                ] ===
-                                'ABSENT'
-                              ? ' text-red-500'
-                              : attendanceStatus[
-                                    getAttendanceKey(member.studentId, check.id)
-                                  ] === 'LEAVE'
-                                ? ' text-yellow-500'
-                                : attendanceStatus[
-                                      getAttendanceKey(member.studentId, check.id)
-                                    ] === 'LATE'
-                                  ? ' text-orange-500'
-                                  : '')
-                        }
-                        value={mapValueToStatus(
-                          attendanceStatus[
-                            getAttendanceKey(member.studentId, check.id)
-                          ],
-                        )}
-                        readOnly
-                      />
-                    </ContextMenuTrigger>
-                    <ContextMenuContent>
-                      <ContextMenuItem
-                        onClick={() =>
-                          handleAttendanceChange(
-                            member.studentId,
-                            check.id,
-                            'PRESENT',
-                          )
-                        }
-                      >
-                        มา
-                      </ContextMenuItem>
-                      <ContextMenuItem
-                        onClick={() =>
-                          handleAttendanceChange(
-                            member.studentId,
-                            check.id,
-                            'ABSENT',
-                          )
-                        }
-                      >
-                        ขาด
-                      </ContextMenuItem>
-                      <ContextMenuItem
-                        onClick={() =>
-                          handleAttendanceChange(
-                            member.studentId,
-                            check.id,
-                            'LEAVE',
-                          )
-                        }
-                      >
-                        ลา
-                      </ContextMenuItem>
-                      <ContextMenuItem
-                        onClick={() =>
-                          handleAttendanceChange(
-                            member.studentId,
-                            check.id,
-                            'LATE',
-                          )
-                        }
-                      >
-                        สาย
-                      </ContextMenuItem>
-                    </ContextMenuContent>
-                  </ContextMenu>
-                </TableCell>
+      <div className="w-full max-w-full min-w-0 overflow-x-auto overflow-hidden">
+        <Table className="min-w-max w-full">
+          <TableHeader>
+            <TableRow>
+              <TableHead>รหัสนักเรียน</TableHead>
+              <TableHead>ชื่อนักเรียน</TableHead>
+              {checkDateQuery.data?.map((d, index) => (
+                <TableHead key={index}>{d.date}</TableHead>
               ))}
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {memberQuery.data?.map((member) => (
+              <TableRow key={member.id}>
+                <TableCell className="w-10">{member.student.code}</TableCell>
+                <TableCell>
+                  {member.student.prefix}
+                  {member.student.firstName} {member.student.lastName}
+                </TableCell>
+                {(checkDateQuery.data ?? []).map((check, index) => (
+                  <TableCell className="max-w-17" key={index}>
+                    <ContextMenu>
+                      <ContextMenuTrigger>
+                        <div
+                          className={`cursor-pointer h-7 text-center text-sm leading-7 ${getStatusColor(getAttendanceStatus(member.studentId, check.id))}`}
+                        >
+                          {mapValueToStatus(
+                            getAttendanceStatus(member.studentId, check.id),
+                          )}
+                        </div>
+                      </ContextMenuTrigger>
+                      <ContextMenuContent>
+                        <ContextMenuItem
+                          onClick={() =>
+                            handleAttendanceChange(
+                              member.studentId,
+                              check.id,
+                              'PRESENT',
+                            )
+                          }
+                        >
+                          มา
+                        </ContextMenuItem>
+                        <ContextMenuItem
+                          onClick={() =>
+                            handleAttendanceChange(
+                              member.studentId,
+                              check.id,
+                              'ABSENT',
+                            )
+                          }
+                        >
+                          ขาด
+                        </ContextMenuItem>
+                        <ContextMenuItem
+                          onClick={() =>
+                            handleAttendanceChange(
+                              member.studentId,
+                              check.id,
+                              'LEAVE',
+                            )
+                          }
+                        >
+                          ลา
+                        </ContextMenuItem>
+                        <ContextMenuItem
+                          onClick={() =>
+                            handleAttendanceChange(
+                              member.studentId,
+                              check.id,
+                              'LATE',
+                            )
+                          }
+                        >
+                          สาย
+                        </ContextMenuItem>
+                      </ContextMenuContent>
+                    </ContextMenu>
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   )
 }

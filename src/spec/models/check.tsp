@@ -9,15 +9,6 @@ model CheckDate {
   updatedAt: utcDateTime;
 }
 
-model CreateCheckDateBody {
-  date: string;
-}
-
-model UpdateCheckDateBody {
-  date?: string;
-  isEditable?: boolean;
-}
-
 model CheckStudent {
   id: string;
   checkDateId: string;
@@ -25,6 +16,19 @@ model CheckStudent {
   status: string;
   createdAt: utcDateTime;
   updatedAt: utcDateTime;
+}
+
+model CheckDateWithStudents extends CheckDate {
+  checkStudents: CheckStudent[];
+}
+
+model CreateCheckDateBody {
+  date: string;
+}
+
+model UpdateCheckDateBody {
+  date?: string;
+  isEditable?: boolean;
 }
 
 model CreateCheckStudentBody {
