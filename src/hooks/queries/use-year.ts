@@ -16,7 +16,7 @@ export const useYearQueries = () => {
       if (data?.success) {
         toast.success(data.message)
       } else {
-        toast.error(data?.message ?? 'Failed to set active year', {
+        toast(data?.message ?? 'Failed to set active year', {
           description: data?.error,
         })
       }
@@ -24,15 +24,19 @@ export const useYearQueries = () => {
     },
   })
   const create = $api.useMutation('post', '/year', {
-    onSettled(data) {
-      if (data?.success) {
-        toast.success(data.message)
-      } else {
-        toast.error(data?.message ?? 'Failed to create year', {
-          description: data?.error,
+    onSettled(data, error) {
+      console.log(data, error)
+      if (error) {
+        toast.error(error!.message ?? 'Failed to create year', {
+          description: error!.error,
         })
+        return
       }
-      list.refetch()
+      if (data) {
+        toast.success(data.message)
+        list.refetch()
+        return
+      }
     },
   })
   const update = $api.useMutation('put', '/year/{yearId}', {

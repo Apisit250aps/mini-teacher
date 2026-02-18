@@ -11,7 +11,7 @@ interface Check {
     @path yearId: string,
     @path classId: string,
     @body body: CreateCheckDateBody,
-  ): ApiResponse<CheckDate>;
+  ): ApiResponse<CheckDate> | ApiError;
 
   /** Update a check date */
   @route("{checkDateId}")
@@ -21,7 +21,7 @@ interface Check {
     @path classId: string,
     @path checkDateId: string,
     @body body: UpdateCheckDateBody,
-  ): ApiResponse<CheckDate>;
+  ): ApiResponse<CheckDate> | ApiError;
 
   /** Delete a check date */
   @route("{checkDateId}")
@@ -30,11 +30,11 @@ interface Check {
     @path yearId: string,
     @path classId: string,
     @path checkDateId: string,
-  ): ApiResponse<EmptyData>;
+  ): ApiResponse<EmptyData> | ApiError;
 
   /** Get check dates by class id */
   @get listByClassId(
     @path yearId: string,
     @path classId: string,
-  ): ApiResponse<CheckDate[]>;
+  ): ApiResponse<CheckDate[]> | ApiError;
 }

@@ -34,6 +34,18 @@ paths:
                       $ref: '#/components/schemas/Student'
                   error:
                     type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Students
     post:
@@ -59,6 +71,18 @@ paths:
                     $ref: '#/components/schemas/Student'
                   error:
                     type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Students
       requestBody:
@@ -96,6 +120,18 @@ paths:
                     $ref: '#/components/schemas/Student'
                   error:
                     type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Students
       requestBody:
@@ -132,6 +168,18 @@ paths:
                     $ref: '#/components/schemas/EmptyData'
                   error:
                     type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Students
     get:
@@ -161,6 +209,18 @@ paths:
                     $ref: '#/components/schemas/Student'
                   error:
                     type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Students
   /year:
@@ -189,6 +249,18 @@ paths:
                       $ref: '#/components/schemas/Year'
                   error:
                     type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Years
     post:
@@ -214,6 +286,18 @@ paths:
                     $ref: '#/components/schemas/Year'
                   error:
                     type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Years
       requestBody:
@@ -251,6 +335,18 @@ paths:
                     $ref: '#/components/schemas/Year'
                   error:
                     type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Years
       requestBody:
@@ -287,6 +383,18 @@ paths:
                     $ref: '#/components/schemas/EmptyData'
                   error:
                     type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Years
     delete:
@@ -317,6 +425,18 @@ paths:
                     $ref: '#/components/schemas/EmptyData'
                   error:
                     type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Years
   /year/{yearId}/class:
@@ -350,6 +470,18 @@ paths:
                       $ref: '#/components/schemas/Class'
                   error:
                     type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Classes
     post:
@@ -380,6 +512,18 @@ paths:
                     $ref: '#/components/schemas/Class'
                   error:
                     type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Classes
       requestBody:
@@ -422,6 +566,18 @@ paths:
                     $ref: '#/components/schemas/Class'
                   error:
                     type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Classes
       requestBody:
@@ -463,6 +619,18 @@ paths:
                     $ref: '#/components/schemas/EmptyData'
                   error:
                     type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Classes
     get:
@@ -497,6 +665,18 @@ paths:
                     $ref: '#/components/schemas/Class'
                   error:
                     type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Classes
   /year/{yearId}/class/{classId}/check:
@@ -533,6 +713,18 @@ paths:
                     $ref: '#/components/schemas/CheckDate'
                   error:
                     type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Check
       requestBody:
@@ -576,6 +768,18 @@ paths:
                       $ref: '#/components/schemas/CheckDate'
                   error:
                     type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Check
   /year/{yearId}/class/{classId}/check/{checkDateId}:
@@ -617,6 +821,18 @@ paths:
                     $ref: '#/components/schemas/CheckDate'
                   error:
                     type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Check
       requestBody:
@@ -663,6 +879,18 @@ paths:
                     $ref: '#/components/schemas/EmptyData'
                   error:
                     type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Check
   /year/{yearId}/class/{classId}/member:
@@ -698,6 +926,18 @@ paths:
                     $ref: '#/components/schemas/EmptyData'
                   error:
                     type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Classes
       requestBody:
@@ -738,6 +978,18 @@ paths:
                     $ref: '#/components/schemas/EmptyData'
                   error:
                     type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Classes
       requestBody:
@@ -780,6 +1032,18 @@ paths:
                       $ref: '#/components/schemas/ClassMemberDetail'
                   error:
                     type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Classes
 components:
@@ -945,6 +1209,19 @@ components:
           type: boolean
     EmptyData:
       type: object
+    ErrorResponse:
+      type: object
+      required:
+        - success
+        - message
+        - error
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        error:
+          type: string
     PatchClassMemberBody:
       type: object
       properties:

@@ -51,6 +51,7 @@ export async function AuthCreateYear(
         {
           success: false,
           message: 'Year with the same year and term already exists',
+          error: 'Duplicate year and term',
         },
         { status: 400 },
       )

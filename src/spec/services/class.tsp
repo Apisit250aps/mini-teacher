@@ -7,13 +7,13 @@ namespace MiniTeacherService.ClassesApi;
 @tag("Classes")
 interface Classes {
   /** List classes in a year */
-  @get list(@path yearId: string): ApiResponse<Class[]>;
+  @get list(@path yearId: string): ApiResponse<Class[]> | ApiError;
 
   /** Create a class */
   @post create(
     @path yearId: string,
     @body body: CreateClassBody,
-  ): ApiResponse<Class>;
+  ): ApiResponse<Class> | ApiError;
 
   /** Update a class */
   @route("{classId}")
@@ -22,16 +22,16 @@ interface Classes {
     @path yearId: string,
     @path classId: string,
     @body body: UpdateClassBody,
-  ): ApiResponse<Class>;
+  ): ApiResponse<Class> | ApiError;
 
   /** Delete a class */
   @route("{classId}")
   @delete
-  delete(@path yearId: string, @path classId: string): ApiResponse<EmptyData>;
+  delete(@path yearId: string, @path classId: string): ApiResponse<EmptyData> | ApiError;
 
   @route("{classId}")
   @get
-  getById(@path yearId: string, @path classId: string): ApiResponse<Class>;
+  getById(@path yearId: string, @path classId: string): ApiResponse<Class> | ApiError;
 
   @route("{classId}/member")
   @put
@@ -39,7 +39,7 @@ interface Classes {
     @path yearId: string,
     @path classId: string,
     @body body: PatchClassMemberBody,
-  ): ApiResponse<EmptyData>;
+  ): ApiResponse<EmptyData> | ApiError;
 
   @route("{classId}/member")
   @post
@@ -47,12 +47,12 @@ interface Classes {
     @path yearId: string,
     @path classId: string,
     @body body: CreateStudentBody,
-  ): ApiResponse<EmptyData>;
+  ): ApiResponse<EmptyData> | ApiError;
 
   @route("{classId}/member")
   @get
   getMembers(
     @path yearId: string,
     @path classId: string,
-  ): ApiResponse<ClassMemberDetail[]>;
+  ): ApiResponse<ClassMemberDetail[]> | ApiError;
 }

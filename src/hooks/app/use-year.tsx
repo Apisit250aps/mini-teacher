@@ -32,7 +32,7 @@ export function YearProvider({
   //
   const [yearsState, setYears] = React.useState<Year[]>(years)
   const [activeYearState, setActiveYear] = React.useState<Year>(activeYear)
-  
+
   const onSetyearActive = useCallback(
     async (year: Year) => {
       setActiveYear(year)
@@ -43,29 +43,16 @@ export function YearProvider({
 
   const onYearsCreate = useCallback(
     async (data: { year: string; term: string }) => {
-      await create.mutateAsync(
-        {
+      await create
+        .mutateAsync({
           body: {
             year: Number(data.year),
             term: Number(data.term),
           },
-        },
-        {
-          onSettled(data, error) {
-            if (error) {
-              toast.error('เกิดข้อผิดพลาดในการสร้างปีการศึกษา')
-              return
-            }
-            toast.success('สร้างปีการศึกษาเรียบร้อยแล้ว')
-            list.refetch().then((res) => {
-              if (res.data) {
-                setYears(res.data)
-              }
-            })
-            closeAll()
-          },
-        },
-      )
+        })
+        .then((res) => {
+          closeAll()
+        })
     },
     [create, list, closeAll, setYears],
   )

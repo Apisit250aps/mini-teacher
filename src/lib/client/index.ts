@@ -5,6 +5,7 @@ import type { paths } from '@/lib/client/api/v1'
 const fetchClient = createFetchClient<paths>({
   baseUrl: '/api',
 })
+
 const $api = createClient(fetchClient)
 
 export { $api }
