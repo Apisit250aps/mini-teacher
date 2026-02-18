@@ -1,0 +1,1 @@
+export { CreateCheckStudent as PUT } from '@/controllers'
