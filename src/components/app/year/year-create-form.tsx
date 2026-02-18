@@ -28,13 +28,13 @@ export default function YearCreateForm() {
     },
   })
 
-  const { onYearsCreate } = useYearContext()
+  const { onCreate } = useYearContext()
 
   return (
     <Form {...methods}>
       <form
         className="grid gap-4"
-        onSubmit={methods.handleSubmit(onYearsCreate)}
+        onSubmit={methods.handleSubmit(onCreate)}
       >
         <FormField
           control={methods.control}
