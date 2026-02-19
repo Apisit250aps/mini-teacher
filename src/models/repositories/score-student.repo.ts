@@ -12,12 +12,24 @@ export async function createScoreStudent(
 export async function updateScoreStudent(
   id: string,
   score: number,
-): Promise<ScoreStudent | null> {
+): Promise<ScoreStudent> {
   const collection = await scoreStudentsCollection()
   const result = await collection.findOneAndUpdate(
     { id },
     { $set: { score, updatedAt: new Date() } },
     { returnDocument: 'after', projection: { _id: 0 } },
+  )
+  return result!
+}
+
+export async function getUniqueScoreStudent(
+  assignId: string,
+  studentId: string,
+): Promise<ScoreStudent | null> {
+  const collection = await scoreStudentsCollection()
+  const result = await collection.findOne(
+    { assignId, studentId },
+    { projection: { _id: 0 } },
   )
   return result
 }

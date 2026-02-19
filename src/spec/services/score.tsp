@@ -46,4 +46,14 @@ interface Scores {
     @path classId: string,
     @path scoreAssignId: string,
   ): ApiResponse<ScoreAssignDetail> | ApiError;
+
+  /** Create or update a score for a student */
+  @route("{scoreAssignId}/student")
+  @put
+  upsertScoreStudent(
+    @path yearId: string,
+    @path classId: string,
+    @path scoreAssignId: string,
+    @body body: CreateScoreStudentBody | UpdateScoreStudentBody,
+  ): ApiResponse<ScoreStudent> | ApiError;
 }

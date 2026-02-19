@@ -1,15 +1,24 @@
 import { onErrorMessage, safeValidate } from '@/lib/utils'
-import { CreateScoreAssignSchema, ScoreAssign } from '@/models'
+import {
+  CreateScoreAssignSchema,
+  CreateScoreStudentSchema,
+  ScoreAssign,
+  ScoreStudent,
+} from '@/models'
 
 import {
   createScoreAssign,
+  createScoreStudent,
   getScoreAssignsByClassId,
+  getUniqueScoreStudent,
+  updateScoreStudent,
 } from '@/models/repositories'
 import { NextRequest, NextResponse } from 'next/server'
 
 type Params = {
   yearId: string
   classId: string
+  scoreAssignId: string
 }
 
 export async function CreateScoreAssign(
@@ -83,6 +92,70 @@ export async function GetScoreAssignsByClassId(
         success: false,
         error: onErrorMessage(error),
         message: 'Failed to retrieve score assigns',
+      },
+      {
+        status: 500,
+      },
+    )
+  }
+}
+
+export async function PatchScoreStudent(
+  req: NextRequest,
+  { params }: { params: Promise<Params> },
+): Promise<NextResponse<ApiResponse<ScoreStudent>>> {
+  try {
+    const { scoreAssignId } = await params
+    const body = await req.json()
+    const validate = await safeValidate(CreateScoreStudentSchema, {
+      ...body,
+      scoreAssignId,
+    })
+    if (!validate.data) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: validate.error!,
+          message: 'Invalid request data',
+        },
+        {
+          status: 400,
+        },
+      )
+    }
+    let result: ScoreStudent
+    let message: string
+    let status: number
+    const uniq = await getUniqueScoreStudent(
+      validate.data.scoreAssignId,
+      validate.data.studentId,
+    )
+    if (uniq) {
+      result = await updateScoreStudent(uniq.id, validate.data.score)
+      message = 'Score student updated successfully'
+      status = 200
+    } else {
+      result = await createScoreStudent(validate.data)
+      message = 'Score student created successfully'
+      status = 201
+    }
+
+    return NextResponse.json(
+      {
+        success: true,
+        data: result,
+        message,
+      },
+      {
+        status,
+      },
+    )
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: onErrorMessage(error),
+        message: 'Failed to create score student',
       },
       {
         status: 500,
