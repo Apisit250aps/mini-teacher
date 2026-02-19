@@ -1,7 +1,8 @@
-import { onErrorMessage, safeValidate } from '@/lib/utils'
-import type { CheckDate, CheckStudent } from '@/models/entities'
 
+import { onErrorMessage, safeValidate } from '@/lib/utils';
 import {
+  CheckDate,
+  CheckStudent,
   CreateCheckDateSchema,
   CreateCheckStudentSchema,
 } from '@/models/entities'
@@ -158,3 +159,4 @@ export async function CreateCheckStudent(
     )
   }
 }
+

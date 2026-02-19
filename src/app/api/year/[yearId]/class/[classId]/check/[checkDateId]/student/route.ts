@@ -1,1 +1,1 @@
-export { CreateCheckStudent as PUT } from '@/controllers/check-date.controller'
+export { CreateCheckStudent as PUT } from '@/controllers/check.controller'
