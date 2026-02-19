@@ -7,7 +7,10 @@ namespace MiniTeacherService.ScoresApi;
 @tag("Scores")
 interface Scores {
   /** List score assignments in a class */
-  @get list(@path yearId: string, @path classId: string): ApiResponse<ScoreAssignDetail[]> | ApiError;
+  @get list(
+    @path yearId: string,
+    @path classId: string,
+  ): ApiResponse<ScoreAssignDetail[]> | ApiError;
 
   /** Create a score assignment */
   @post create(
@@ -23,7 +26,7 @@ interface Scores {
     @path yearId: string,
     @path classId: string,
     @path scoreAssignId: string,
-    @body body: CreateScoreAssignBody,
+    @body body: UpdateScoreAssignBody,
   ): ApiResponse<ScoreAssign> | ApiError;
 
   /** Delete a score assignment */
