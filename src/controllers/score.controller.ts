@@ -1,5 +1,6 @@
 import { onErrorMessage, safeValidate } from '@/lib/utils'
-import { CreateScoreAssignSchema, ScoreAssign } from '@/models/entities'
+import { CreateScoreAssignSchema, ScoreAssign } from '@/models'
+
 import {
   createScoreAssign,
   getScoreAssignsByClassId,

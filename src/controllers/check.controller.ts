@@ -1,18 +1,14 @@
-
-import { onErrorMessage, safeValidate } from '@/lib/utils';
+import { onErrorMessage, safeValidate } from '@/lib/utils'
+import type { CheckDate, CheckStudent } from '@/models'
 import {
-  CheckDate,
-  CheckStudent,
   CreateCheckDateSchema,
   CreateCheckStudentSchema,
-} from '@/models/entities'
-import {
   createCheckDate,
   createCheckStudent,
   getCheckDatesByClassId,
   getUniqueCheckStudent,
   updateCheckStudent,
-} from '@/models/repositories'
+} from '@/models'
 import { NextRequest, NextResponse } from 'next/server'
 
 type Params = {
@@ -159,4 +155,3 @@ export async function CreateCheckStudent(
     )
   }
 }
-

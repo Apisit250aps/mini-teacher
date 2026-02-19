@@ -1,6 +1,13 @@
 import { onErrorMessage, safeValidate } from '@/lib/utils'
-import { CreateUserSchema, UpdateUserSchema, type User } from '@/models/entities'
-import { createUser, findUserById, findUserByName, updateUser } from '@/models/repositories'
+import {
+  CreateUserSchema,
+  findUserByName,
+  createUser,
+  UpdateUserSchema,
+  findUserById,
+  updateUser,
+} from '@/models'
+import { User } from 'next-auth'
 import { NextRequest, NextResponse } from 'next/server'
 
 type UserParams = {

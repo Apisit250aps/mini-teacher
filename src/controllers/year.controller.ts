@@ -1,15 +1,17 @@
 import { auth } from '@/auth'
 import { onErrorMessage, safeValidate } from '@/lib/utils'
-import { CreateYearSchema, UpdateYearSchema, Year } from '@/models/entities'
 import {
-  authCreateYear,
-  authDeleteYear,
-  authGetAllYears,
-  authGetYearById,
-  authSetActiveYear,
-  authUpdateYear,
+  Year,
+  CreateYearSchema,
   getUniqYear,
-} from '@/models/repositories'
+  authCreateYear,
+  UpdateYearSchema,
+  authUpdateYear,
+  authGetYearById,
+  authGetAllYears,
+  authDeleteYear,
+  authSetActiveYear,
+} from '@/models'
 import { NextRequest, NextResponse } from 'next/server'
 
 type YearParams = {

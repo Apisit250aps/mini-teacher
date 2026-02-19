@@ -1,17 +1,15 @@
 import { auth } from '@/auth'
 import { onErrorMessage, safeValidate } from '@/lib/utils'
 import {
-  CreateStudentSchema,
   Student,
-  UpdateStudentSchema,
-} from '@/models/entities'
-import {
-  getStudentById,
+  CreateStudentSchema,
   teacherCreateStudent,
+  getStudentById,
+  UpdateStudentSchema,
+  teacherUpdateStudent,
   teacherDeleteStudent,
   teacherGetAllStudent,
-  teacherUpdateStudent,
-} from '@/models/repositories'
+} from '@/models'
 import { NextResponse } from 'next/server'
 import { type NextRequest } from 'next/server'
 

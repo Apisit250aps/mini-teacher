@@ -1,12 +1,14 @@
 import { onErrorMessage, safeValidate } from '@/lib/utils'
-import { Class, CreateClassSchema, UpdateClassSchema } from '@/models/entities'
 import {
+  Class,
+  CreateClassSchema,
   createClass,
-  deleteClass,
-  getClassById,
-  getClassesByYear,
+  UpdateClassSchema,
   updateClass,
-} from '@/models/repositories'
+  deleteClass,
+  getClassesByYear,
+  getClassById,
+} from '@/models'
 import { NextRequest, NextResponse } from 'next/server'
 
 type ClassParams = {
