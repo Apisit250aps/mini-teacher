@@ -6,6 +6,8 @@ import type {
   ClassMember,
   CheckStudent,
   CheckDate,
+  ScoreAssign,
+  ScoreStudent,
 } from '@/models/entities'
 import { connect } from '@/lib/mongo/client'
 import { Year } from '@/models/entities/year.entity'
@@ -17,6 +19,8 @@ let _students: Collection<Student> | null = null
 let _class_members: Collection<ClassMember> | null = null
 let _check_dates: Collection<CheckDate> | null = null
 let _check_students: Collection<CheckStudent> | null = null
+let _score_assigns: Collection<ScoreAssign> | null = null
+let _score_students: Collection<ScoreStudent> | null = null
 
 export async function usersCollection(): Promise<Collection<User>> {
   if (!_users) {
@@ -121,4 +125,40 @@ export async function checkStudentsCollection(): Promise<
     ])
   }
   return _check_students
+}
+
+export async function scoreAssignsCollection(): Promise<
+  Collection<ScoreAssign>
+> {
+  if (!_score_assigns) {
+    const db = await connect()
+    _score_assigns = db.collection<ScoreAssign>('score_assigns')
+    await _score_assigns.createIndexes([
+      {
+        key: { classId: 1, name: 1 },
+        unique: true,
+        name: 'uniq_class_score_assign',
+      },
+      { key: { id: 1 }, unique: true, name: 'uniq_id' },
+    ])
+  }
+  return _score_assigns
+}
+
+export async function scoreStudentsCollection(): Promise<
+  Collection<ScoreStudent>
+> {
+  if (!_score_students) {
+    const db = await connect()
+    _score_students = db.collection<ScoreStudent>('score_students')
+    await _score_students.createIndexes([
+      {
+        key: { scoreAssignId: 1, studentId: 1 },
+        unique: true,
+        name: 'uniq_score_assign_student',
+      },
+      { key: { id: 1 }, unique: true, name: 'uniq_id' },
+    ])
+  }
+  return _score_students
 }
