@@ -190,7 +190,7 @@ export function MemberDeleteAction({ studentId }: { studentId: string }) {
         },
       },
       {
-        onSettled(data, error) {
+        onSuccess() {
           member.refetch()
           closeAll()
         },
