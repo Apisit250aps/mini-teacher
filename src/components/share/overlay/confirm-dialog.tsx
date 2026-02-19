@@ -1,3 +1,4 @@
+'use client'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -9,8 +10,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { DIALOG_KEY, useOverlay } from '@/hooks/contexts/use-overlay';
-
+import { useOverlay } from '@/hooks/contexts/use-overlay'
 
 type ConfirmDialogProps = {
   title: string
@@ -19,6 +19,7 @@ type ConfirmDialogProps = {
   cancelText?: string
   confirmText?: string
   onConfirm?: () => void
+  dialogKey: string
 }
 
 export function ConfirmDialog({
@@ -28,15 +29,14 @@ export function ConfirmDialog({
   onConfirm,
   cancelText = 'ยกเลิก',
   confirmText = 'ดำเนินการต่อ',
+  dialogKey,
 }: ConfirmDialogProps) {
   const { openOverlay, open, closeOverlay } = useOverlay()
   return (
     <AlertDialog
-      open={open[DIALOG_KEY.CONFIRM_DIALOG] || false}
+      open={open[dialogKey] || false}
       onOpenChange={(v) =>
-        v
-          ? openOverlay(DIALOG_KEY.CONFIRM_DIALOG)
-          : closeOverlay(DIALOG_KEY.CONFIRM_DIALOG)
+        v ? openOverlay(dialogKey) : closeOverlay(dialogKey)
       }
     >
       {trigger && (
@@ -44,7 +44,7 @@ export function ConfirmDialog({
           asChild
           onClick={(e) => {
             e.preventDefault()
-            openOverlay(DIALOG_KEY.CONFIRM_DIALOG)
+            openOverlay(dialogKey)
           }}
         >
           {trigger}
@@ -56,9 +56,7 @@ export function ConfirmDialog({
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel
-            onClick={() => closeOverlay(DIALOG_KEY.CONFIRM_DIALOG)}
-          >
+          <AlertDialogCancel onClick={() => closeOverlay(dialogKey)}>
             {cancelText}
           </AlertDialogCancel>
           <AlertDialogAction onClick={onConfirm}>

@@ -104,13 +104,13 @@ export default function StudentCheckTable() {
   const getStatusColor = useCallback((value?: string) => {
     switch (value) {
       case 'PRESENT':
-        return 'text-green-500'
+        return 'text-green-500 bg-green-500/10'
       case 'ABSENT':
-        return 'text-red-500'
+        return 'text-red-500 bg-red-500/10'
       case 'LEAVE':
-        return 'text-yellow-500'
+        return 'text-yellow-500 bg-yellow-500/10'
       case 'LATE':
-        return 'text-orange-500'
+        return 'text-orange-500 bg-orange-500/10'
       default:
         return ''
     }

@@ -155,6 +155,7 @@ export function StudentDeleteAction({ studentId }: { studentId: string }) {
 
   return (
     <ConfirmDialog
+      dialogKey={`DELETE_STUDENT_${studentId}`}
       trigger={
         <DropdownMenuItem variant="destructive" className="text-destructive">
           <Trash />
@@ -190,11 +191,6 @@ export function MemberDeleteAction({ studentId }: { studentId: string }) {
       },
       {
         onSettled(data, error) {
-          if (error) {
-            toast.error('เกิดข้อผิดพลาดในการลบนักเรียน')
-            return
-          }
-          toast.success('ลบนักเรียนสำเร็จ')
           member.refetch()
           closeAll()
         },
@@ -204,6 +200,7 @@ export function MemberDeleteAction({ studentId }: { studentId: string }) {
 
   return (
     <ConfirmDialog
+      dialogKey={`REMOVE_MEMBER_${studentId}`}
       trigger={
         <DropdownMenuItem variant="destructive" className="text-destructive">
           <Trash />

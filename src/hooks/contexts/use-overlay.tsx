@@ -1,6 +1,12 @@
 'use client'
 
-import { createContext, useContext, useState, useCallback } from 'react'
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from 'react'
 
 type OverlayContextValue = {
   open: Record<string, boolean>
@@ -32,6 +38,19 @@ export function OverlayProvider({ children }: { children: React.ReactNode }) {
   const closeAll = useCallback(() => {
     setOpen({})
   }, [])
+
+  useEffect(() => {
+    const isAnyOpen = Object.values(open).some((v) => v === true)
+
+    if (!isAnyOpen) {
+      const timer = setTimeout(() => {
+        document.body.style.pointerEvents = ''
+
+        document.body.style.overflow = ''
+      }, 0)
+      return () => clearTimeout(timer)
+    }
+  }, [open])
 
   return (
     <OverlayContext.Provider
