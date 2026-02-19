@@ -7,6 +7,7 @@ tags:
   - name: Classes
   - name: Students
   - name: Check
+  - name: Scores
 paths:
   /student:
     get:
@@ -1105,6 +1106,272 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Classes
+  /year/{yearId}/class/{classId}/score:
+    get:
+      operationId: Scores_list
+      description: List score assignments in a class
+      parameters:
+        - name: yearId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ScoreAssignDetail'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Scores
+    post:
+      operationId: Scores_create
+      description: Create a score assignment
+      parameters:
+        - name: yearId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/ScoreAssign'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Scores
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateScoreAssignBody'
+  /year/{yearId}/class/{classId}/score/{scoreAssignId}:
+    put:
+      operationId: Scores_update
+      description: Update a score assignment
+      parameters:
+        - name: yearId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: scoreAssignId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/ScoreAssign'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Scores
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateScoreAssignBody'
+    delete:
+      operationId: Scores_delete
+      description: Delete a score assignment
+      parameters:
+        - name: yearId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: scoreAssignId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/EmptyData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Scores
+    get:
+      operationId: Scores_getById
+      description: Get a score assignment by id
+      parameters:
+        - name: yearId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: scoreAssignId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/ScoreAssignDetail'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Scores
 components:
   schemas:
     CheckDate:
@@ -1279,6 +1546,50 @@ components:
           type: string
         isActive:
           type: boolean
+    CreateScoreAssignBody:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
+        minScore:
+          type: integer
+          format: int32
+        maxScore:
+          type: integer
+          format: int32
+        type:
+          type: string
+          enum:
+            - ASSIGNMENT
+            - QUIZ
+            - EXAM
+        assignDate:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        finalDate:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+    CreateScoreStudentBody:
+      type: object
+      required:
+        - studentId
+        - score
+      properties:
+        studentId:
+          type: string
+        score:
+          type: integer
+          format: int32
     CreateStudentBody:
       type: object
       required:
@@ -1331,6 +1642,170 @@ components:
       properties:
         studentId:
           type: string
+    ScoreAssign:
+      type: object
+      required:
+        - id
+        - classId
+        - name
+        - minScore
+        - maxScore
+        - type
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        classId:
+          type: string
+        name:
+          type: string
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
+        minScore:
+          type: integer
+          format: int32
+          default: 0
+        maxScore:
+          type: integer
+          format: int32
+          default: 100
+        type:
+          type: string
+          enum:
+            - ASSIGNMENT
+            - QUIZ
+            - EXAM
+          default: ASSIGNMENT
+        assignDate:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        finalDate:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    ScoreAssignDetail:
+      type: object
+      required:
+        - id
+        - classId
+        - name
+        - minScore
+        - maxScore
+        - type
+        - createdAt
+        - updatedAt
+        - students
+      properties:
+        id:
+          type: string
+        classId:
+          type: string
+        name:
+          type: string
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
+        minScore:
+          type: integer
+          format: int32
+          default: 0
+        maxScore:
+          type: integer
+          format: int32
+          default: 100
+        type:
+          type: string
+          enum:
+            - ASSIGNMENT
+            - QUIZ
+            - EXAM
+          default: ASSIGNMENT
+        assignDate:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        finalDate:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        students:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScoreStudentDetail'
+    ScoreStudent:
+      type: object
+      required:
+        - id
+        - scoreAssignId
+        - studentId
+        - score
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        scoreAssignId:
+          type: string
+        studentId:
+          type: string
+        score:
+          type: integer
+          format: int32
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    ScoreStudentDetail:
+      type: object
+      required:
+        - id
+        - scoreAssignId
+        - studentId
+        - score
+        - createdAt
+        - updatedAt
+        - student
+      properties:
+        id:
+          type: string
+        scoreAssignId:
+          type: string
+        studentId:
+          type: string
+        score:
+          type: integer
+          format: int32
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        student:
+          $ref: '#/components/schemas/Student'
     Student:
       type: object
       required:
@@ -1384,6 +1859,50 @@ components:
         updatedAt:
           type: string
           format: date-time
+    UpdateScoreAssignBody:
+      type: object
+      required:
+        - updatedAt
+      properties:
+        name:
+          type: string
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
+        minScore:
+          type: integer
+          format: int32
+        maxScore:
+          type: integer
+          format: int32
+        type:
+          type: string
+          enum:
+            - ASSIGNMENT
+            - QUIZ
+            - EXAM
+        assignDate:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        finalDate:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        updatedAt:
+          type: string
+          format: date-time
+    UpdateScoreStudentBody:
+      type: object
+      required:
+        - score
+      properties:
+        score:
+          type: integer
+          format: int32
     UpdateStudentBody:
       type: object
       properties:
