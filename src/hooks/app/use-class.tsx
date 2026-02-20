@@ -38,20 +38,19 @@ export function ClassProvider({
   activeClass?: Class
 }) {
   const {
-    list: classList,
     create: createClass,
     update: updateClass,
     remove: deleteClass,
   } = useClassQueries()
   // state
   const { activeYear } = useYearContext()
-  const { data, isPending } = useClassesInYear()
+  const classList = useClassesInYear()
   const { closeAll } = useOverlay()
   // memo
   const classes = React.useMemo(() => {
-    if (isPending) return []
-    return (data as unknown as Class[]) || []
-  }, [data, isPending])
+    if (classList.isPending) return []
+    return (classList.data as Class[]) || []
+  }, [classList])
 
   const classRoutes = React.useMemo(() => {
     if (classes.length === 0)
