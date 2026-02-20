@@ -9,8 +9,10 @@ import {
 import {
   createScoreAssign,
   createScoreStudent,
+  deleteScoreAssign,
   getScoreAssignsByClassId,
   getUniqueScoreStudent,
+  updateScoreAssign,
   updateScoreStudent,
 } from '@/models/repositories'
 import { NextRequest, NextResponse } from 'next/server'
@@ -56,6 +58,94 @@ export async function CreateScoreAssign(
       },
       {
         status: 201,
+      },
+    )
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: onErrorMessage(error),
+        message: 'Failed to process request',
+      },
+      {
+        status: 500,
+      },
+    )
+  }
+}
+
+export async function UpdateScoreAssign(
+  req: NextRequest,
+  { params }: { params: Promise<ScoreAssignParams> },
+): Promise<NextResponse<ApiResponse<ScoreAssign>>> {
+  try {
+    const { scoreAssignId } = await params
+    const body = await req.json()
+    const validate = await safeValidate(CreateScoreAssignSchema, {
+      ...body,
+    })
+    if (!validate.data) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: validate.error!,
+          message: 'Invalid request data',
+        },
+        {
+          status: 400,
+        },
+      )
+    }
+    const scoreAssign = await updateScoreAssign(scoreAssignId, validate.data)
+    if (!scoreAssign) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Score assign not found',
+        },
+        {
+          status: 404,
+        },
+      )
+    }
+    return NextResponse.json(
+      {
+        success: true,
+        data: scoreAssign,
+        message: 'Score assign updated successfully',
+      },
+      {
+        status: 200,
+      },
+    )
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: onErrorMessage(error),
+        message: 'Failed to process request',
+      },
+      {
+        status: 500,
+      },
+    )
+  }
+}
+
+export async function DeleteScoreAssign(
+  req: NextRequest,
+  { params }: { params: Promise<ScoreAssignParams> },
+): Promise<NextResponse<ApiResponse<null>>> {
+  try {
+    const { scoreAssignId } = await params
+    await deleteScoreAssign(scoreAssignId)
+    return NextResponse.json(
+      {
+        success: true,
+        message: 'Score assign deleted successfully',
+      },
+      {
+        status: 200,
       },
     )
   } catch (error) {
