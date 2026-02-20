@@ -1,5 +1,26 @@
 import { $api } from '@/lib/client'
 import { onSelectItem, onSettledToast } from '@/lib/utils/hooks'
+import { useYearContext } from '../app/use-year'
+
+export const useClassesInYear = () => {
+  const { activeYear } = useYearContext()
+  const classes = $api.useQuery(
+    'get',
+    '/year/{yearId}/class',
+    {
+      params: {
+        path: {
+          yearId: activeYear.id as string,
+        },
+      },
+    },
+    {
+      enabled: !!activeYear.id,
+      select: onSelectItem,
+    },
+  )
+  return classes
+}
 
 export const useYearQueries = () => {
   const list = $api.useQuery('get', '/year', undefined, {

@@ -23,4 +23,12 @@ interface Years {
 
   /** Delete a year */
   @delete delete(@path yearId: string): ApiResponse<EmptyData> | ApiError;
+
+  /** Get a year by id */
+  @route("{yearId}")
+  @get getById(@path yearId: string): ApiResponse<Year> | ApiError;
+
+  /** Get classes in a year */
+  @route("{yearId}/class")
+  @get getClasses(@path yearId: string): ApiResponse<Class[]> | ApiError;
 }

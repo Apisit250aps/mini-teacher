@@ -1,23 +1,20 @@
 import { $api } from '@/lib/client'
-import { useYearContext } from '@/hooks/app/use-year'
 import { useClassContext } from '@/hooks/app/use-class'
 import { toast } from 'sonner'
 
 export const useGetClassMembers = (classId?: string) => {
   const { activeClass } = useClassContext()
-  const { activeYear } = useYearContext()
 
   const query = $api.useQuery(
     'get',
-    '/year/{yearId}/class/{classId}/member',
+    '/class/{classId}/member',
     {
       params: {
         path: {
-          yearId: activeYear.id,
           classId: (activeClass?.id ?? classId) as string,
         },
       },
-      enabled: (!!activeClass?.id || !!classId) && !!activeYear.id,
+      enabled: !!activeClass?.id || !!classId,
     },
     {
       select: (res) => {
@@ -36,33 +33,20 @@ export const useGetClassMembers = (classId?: string) => {
 }
 
 export const useClassQueries = () => {
-  const { activeYear } = useYearContext()
-  const list = $api.useQuery(
-    'get',
-    '/year/{yearId}/class',
-    {
-      params: {
-        path: {
-          yearId: activeYear.id,
-        },
-      },
-      enabled: !!activeYear.id,
+  const list = $api.useQuery('get', '/class', undefined, {
+    select: (res) => {
+      if (!res) return []
+      if (!res.success) {
+        toast.error(res.message, {
+          description: res.error,
+        })
+        return []
+      }
+      return res.data
     },
-    {
-      select: (res) => {
-        if (!res) return []
-        if (!res.success) {
-          toast.error(res.message, {
-            description: res.error,
-          })
-          return []
-        }
-        return res.data
-      },
-    },
-  )
+  })
 
-  const create = $api.useMutation('post', '/year/{yearId}/class', {
+  const create = $api.useMutation('post', '/class', {
     onSettled(data, _error, _variables, _onMutateResult, context) {
       if (!data) return
       if (!data.success) {
@@ -75,7 +59,7 @@ export const useClassQueries = () => {
       context.client.refetchQueries({})
     },
   })
-  const update = $api.useMutation('put', '/year/{yearId}/class/{classId}', {
+  const update = $api.useMutation('put', '/class/{classId}', {
     onSettled(data, _error, _variables, _onMutateResult, context) {
       if (!data) return
       if (!data.success) {
@@ -88,7 +72,7 @@ export const useClassQueries = () => {
       context.client.refetchQueries({})
     },
   })
-  const remove = $api.useMutation('delete', '/year/{yearId}/class/{classId}', {
+  const remove = $api.useMutation('delete', '/class/{classId}', {
     onSettled(data, _error, _variables, _onMutateResult, context) {
       if (!data) return
       if (!data.success) {
@@ -101,40 +85,32 @@ export const useClassQueries = () => {
       context.client.refetchQueries({})
     },
   })
-  const addOrRemoveMember = $api.useMutation(
-    'put',
-    '/year/{yearId}/class/{classId}/member',
-    {
-      onSettled(data, _error, _variables, _onMutateResult, context) {
-        if (!data) return
-        if (!data.success) {
-          toast.error(data.message, {
-            description: data.error,
-          })
-          return
-        }
-        toast.success(data.message)
-        context.client.refetchQueries({})
-      },
+  const addOrRemoveMember = $api.useMutation('put', '/class/{classId}/member', {
+    onSettled(data, _error, _variables, _onMutateResult, context) {
+      if (!data) return
+      if (!data.success) {
+        toast.error(data.message, {
+          description: data.error,
+        })
+        return
+      }
+      toast.success(data.message)
+      context.client.refetchQueries({})
     },
-  )
-  const addMember = $api.useMutation(
-    'post',
-    '/year/{yearId}/class/{classId}/member',
-    {
-      onSettled(data, _error, _variables, _onMutateResult, context) {
-        if (!data) return
-        if (!data.success) {
-          toast.error(data.message, {
-            description: data.error,
-          })
-          return
-        }
-        toast.success(data.message)
-        context.client.refetchQueries({})
-      },
+  })
+  const addMember = $api.useMutation('post', '/class/{classId}/member', {
+    onSettled(data, _error, _variables, _onMutateResult, context) {
+      if (!data) return
+      if (!data.success) {
+        toast.error(data.message, {
+          description: data.error,
+        })
+        return
+      }
+      toast.success(data.message)
+      context.client.refetchQueries({})
     },
-  )
+  })
   return {
     list,
     create,
