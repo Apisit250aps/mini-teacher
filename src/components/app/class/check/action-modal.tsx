@@ -22,7 +22,6 @@ import { useForm } from 'react-hook-form'
 import z from 'zod'
 
 export function CheckDateCreateAction() {
-  const { activeYear } = useYearContext()
   const { activeClass } = useClassContext()
   const { create } = useCheckQueries()
   const { closeAll } = useOverlay()
@@ -53,7 +52,6 @@ export function CheckDateCreateAction() {
             },
             params: {
               path: {
-                yearId: activeYear?.id ?? '',
                 classId: activeClass?.id ?? '',
               },
             },
@@ -69,7 +67,7 @@ export function CheckDateCreateAction() {
         )
         .then((res) => console.log(res))
     },
-    [create, activeYear?.id, activeClass?.id, methods, closeAll],
+    [create, activeClass?.id, methods, closeAll],
   )
   return (
     <ModalDialog

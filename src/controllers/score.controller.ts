@@ -15,15 +15,18 @@ import {
 } from '@/models/repositories'
 import { NextRequest, NextResponse } from 'next/server'
 
-type Params = {
-  yearId: string
+type ClassParams = {
+  classId: string
+}
+
+type ScoreAssignParams = {
   classId: string
   scoreAssignId: string
 }
 
 export async function CreateScoreAssign(
   req: NextRequest,
-  { params }: { params: Promise<Params> },
+  { params }: { params: Promise<ClassParams> },
 ): Promise<NextResponse<ApiResponse<ScoreAssign>>> {
   try {
     const { classId } = await params
@@ -71,7 +74,7 @@ export async function CreateScoreAssign(
 
 export async function GetScoreAssignsByClassId(
   req: NextRequest,
-  { params }: { params: Promise<Params> },
+  { params }: { params: Promise<ClassParams> },
 ): Promise<NextResponse<ApiResponse<ScoreAssign[]>>> {
   try {
     const { classId } = await params
@@ -102,7 +105,7 @@ export async function GetScoreAssignsByClassId(
 
 export async function PatchScoreStudent(
   req: NextRequest,
-  { params }: { params: Promise<Params> },
+  { params }: { params: Promise<ScoreAssignParams> },
 ): Promise<NextResponse<ApiResponse<ScoreStudent>>> {
   try {
     const { scoreAssignId } = await params

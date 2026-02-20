@@ -81,7 +81,6 @@ const MemberAdd = () => {
   const membersQuery = useGetClassMembers()
   const { addOrRemoveMember } = useClassQueries()
   const { activeClass } = useClassContext()
-  const { activeYear } = useYearContext()
   const { closeAll } = useOverlay()
 
   const { data: members } = membersQuery
@@ -96,8 +95,7 @@ const MemberAdd = () => {
         return addOrRemoveMember.mutateAsync({
           params: {
             path: {
-              yearId: activeYear?.id,
-              classId: activeClass?.id || '',
+                classId: activeClass?.id || '',
             },
           },
           body: {

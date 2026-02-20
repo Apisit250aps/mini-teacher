@@ -12,7 +12,6 @@ import React, { useCallback, useMemo } from 'react'
 import { useCheckQueries } from '@/hooks/queries/use-check'
 import { CheckDateCreateAction } from '../class/check/action-modal'
 import { useClassContext } from '@/hooks/app/use-class'
-import { useYearContext } from '@/hooks/app/use-year'
 import { CHECK_STATUS } from '@/models/entities'
 import { ColumnDef } from '@tanstack/react-table'
 
@@ -29,7 +28,6 @@ export default function StudentCheckTable() {
   const checkQueries = useCheckQueries()
   const checkDateQuery = checkQueries.list
   const { activeClass } = useClassContext()
-  const { activeYear } = useYearContext()
   const { studentCheck } = checkQueries
 
   const getAttendanceStatus = useCallback(
@@ -54,11 +52,10 @@ export default function StudentCheckTable() {
       checkDateId: string,
       status: CHECK_STATUS | string,
     ) => {
-      if (!activeYear || !activeClass) return
+      if (!activeClass) return
       await studentCheck.mutateAsync({
         params: {
           path: {
-            yearId: activeYear.id,
             classId: activeClass.id,
             checkDateId,
           },
@@ -69,7 +66,7 @@ export default function StudentCheckTable() {
         },
       })
     },
-    [activeYear, activeClass, studentCheck],
+    [activeClass, studentCheck],
   )
 
   const handleAttendanceChange = useCallback(
@@ -222,7 +219,12 @@ export default function StudentCheckTable() {
     }))
 
     return [...baseColumns, ...checkDateColumns]
-  }, [checkDateQuery.data, getStatusColor, handleAttendanceChange, mapValueToStatus])
+  }, [
+    checkDateQuery.data,
+    getStatusColor,
+    handleAttendanceChange,
+    mapValueToStatus,
+  ])
 
   return (
     <div className="w-full max-w-full min-w-0">

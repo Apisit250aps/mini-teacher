@@ -34,6 +34,7 @@ const ColumnActions = ({ cell }: { cell: Cell<Class, unknown> }) => {
         />
       </ModalDialog>
       <ConfirmDialog
+        dialogKey="DELETE_CLASS_CONFIRM"
         trigger={
           <DropdownMenuItem variant="destructive" className="text-destructive">
             <Trash />

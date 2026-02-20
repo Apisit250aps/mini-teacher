@@ -8,12 +8,10 @@ import { useClassQueries, useGetClassMembers } from '@/hooks/queries/use-class'
 import { useClassContext } from '@/hooks/app/use-class'
 import { toast } from 'sonner'
 import { useOverlay } from '@/hooks/contexts/use-overlay'
-import { useYearContext } from '@/hooks/app/use-year'
 
 export default function MemberCreate() {
   const { addMember } = useClassQueries()
   const { activeClass } = useClassContext()
-  const { activeYear } = useYearContext()
   const { closeAll } = useOverlay()
   const member = useGetClassMembers()
   const onStudentCreate = useCallback(
@@ -22,7 +20,6 @@ export default function MemberCreate() {
         {
           params: {
             path: {
-              yearId: activeYear!.id!,
               classId: activeClass!.id!,
             },
           },
@@ -46,7 +43,7 @@ export default function MemberCreate() {
         },
       )
     },
-    [addMember, activeYear, activeClass, member, closeAll],
+    [addMember, activeClass, member, closeAll],
   )
 
   return (

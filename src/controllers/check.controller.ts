@@ -11,15 +11,17 @@ import {
 } from '@/models'
 import { NextRequest, NextResponse } from 'next/server'
 
-type Params = {
-  yearId: string
+type ClassParams = {
   classId: string
+}
+
+type CheckDateParams = {
   checkDateId: string
 }
 
 export async function CreateCheckDate(
   req: NextRequest,
-  { params }: { params: Promise<Params> },
+  { params }: { params: Promise<ClassParams> },
 ): Promise<NextResponse<ApiResponse<CheckDate>>> {
   try {
     const { classId } = await params
@@ -67,7 +69,7 @@ export async function CreateCheckDate(
 
 export async function GetCheckDates(
   req: NextRequest,
-  { params }: { params: Promise<Params> },
+  { params }: { params: Promise<ClassParams> },
 ): Promise<NextResponse<ApiResponse<CheckDate[]>>> {
   try {
     const { classId } = await params
@@ -98,7 +100,7 @@ export async function GetCheckDates(
 
 export async function CreateCheckStudent(
   req: NextRequest,
-  { params }: { params: Promise<Params> },
+  { params }: { params: Promise<CheckDateParams> },
 ): Promise<NextResponse<ApiResponse<CheckStudent>>> {
   try {
     const { checkDateId } = await params

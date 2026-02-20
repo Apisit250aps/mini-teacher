@@ -100,7 +100,7 @@ export default function StudentSelectTable({
   })
 
   const excludeStudent = data?.data?.filter((student) => {
-    return !members?.data?.some((member) => member.student.id === student.id)
+    return !members?.some((member) => member.student.id === student.id)
   })
 
   return (
