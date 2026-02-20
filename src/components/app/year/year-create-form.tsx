@@ -9,33 +9,45 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useYearContext } from '@/hooks/app/use-year'
+import { useOverlay } from '@/hooks/contexts/use-overlay'
+import { useYearQueries } from '@/hooks/queries/use-year'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
 
+const schema = z.object({
+  year: z.number().min(4, 'กรุณากรอกปีการศึกษาอย่างน้อย 4 ตัวอักษร'),
+  term: z.number().min(1).max(3),
+})
+
 export default function YearCreateForm() {
-  const methods = useForm<{ year: string; term: string }>({
-    resolver: zodResolver(
-      z.object({
-        year: z.string().min(4, 'กรุณากรอกปีการศึกษาอย่างน้อย 4 ตัวอักษร'),
-        term: z.string().min(1).max(3),
-      }),
-    ),
+  const { onCreate } = useYearQueries()
+  const { closeAll } = useOverlay()
+  
+  const methods = useForm<{ year: number; term: number }>({
+    resolver: zodResolver(schema),
     defaultValues: {
-      year: (new Date().getFullYear() + 543).toString(),
-      term: '1',
+      year: new Date().getFullYear() + 543,
+      term: 1,
     },
   })
 
-  const { onCreate } = useYearContext()
+  const onSubmit = useCallback(
+    async (data: { year: number; term: number }) => {
+      await onCreate({
+        year: data.year,
+        term: data.term,
+      })
+      methods.reset()
+      closeAll()
+    },
+    [onCreate, methods, closeAll],
+  )
 
   return (
     <Form {...methods}>
-      <form
-        className="grid gap-4"
-        onSubmit={methods.handleSubmit(onCreate)}
-      >
+      <form className="grid gap-4" onSubmit={methods.handleSubmit(onSubmit)}>
         <FormField
           control={methods.control}
           name="year"
@@ -43,7 +55,13 @@ export default function YearCreateForm() {
             <FormItem>
               <FormLabel>ปีการศึกษา</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="กรอกปีการศึกษา" />
+                <Input
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(Number(e.target.value))
+                  }}
+                  placeholder="กรอกปีการศึกษา"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -56,7 +74,13 @@ export default function YearCreateForm() {
             <FormItem>
               <FormLabel>ภาคการศึกษา</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="กรอกภาคการศึกษา" />
+                <Input
+                  {...field}
+                  onChange={(e) => {
+                    field.onChange(Number(e.target.value))
+                  }}
+                  placeholder="กรอกภาคการศึกษา"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
