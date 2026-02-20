@@ -8,6 +8,7 @@ import { auth } from '@/auth'
 import { OverlayProvider } from '@/hooks/contexts/use-overlay'
 import TanstackQueryProvider from '@/hooks/contexts/tanstack-query'
 import { TabStorageProvider } from '@/hooks/contexts/tab-storage'
+import { AppProvider } from '@/hooks/contexts/app-context'
 
 const sarabun = Sarabun({
   variable: '--font-sarabun',
@@ -31,11 +32,13 @@ export default async function RootLayout({
     <html lang="en">
       <body className={`${sarabun.className} antialiased`}>
         <TanstackQueryProvider>
-          <SessionProvider session={session}>
-            <TabStorageProvider>
-              <OverlayProvider>{children}</OverlayProvider>
-            </TabStorageProvider>
-          </SessionProvider>
+          <AppProvider>
+            <SessionProvider session={session}>
+              <TabStorageProvider>
+                <OverlayProvider>{children}</OverlayProvider>
+              </TabStorageProvider>
+            </SessionProvider>
+          </AppProvider>
         </TanstackQueryProvider>
         <Toaster position="top-right" />
       </body>
