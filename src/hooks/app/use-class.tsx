@@ -6,6 +6,7 @@ import { Album } from 'lucide-react'
 import { toast } from 'sonner'
 import { useOverlay } from '@/hooks/contexts/use-overlay'
 import { useYearContext } from './use-year'
+import { useClassesInYear } from '../queries/use-year'
 
 type ClassContextValue = {
   classes: Class[]
@@ -44,7 +45,7 @@ export function ClassProvider({
   } = useClassQueries()
   // state
   const { activeYear } = useYearContext()
-  const { data, isPending } = classList
+  const { data, isPending } = useClassesInYear()
   const { closeAll } = useOverlay()
   // memo
   const classes = React.useMemo(() => {
@@ -72,11 +73,6 @@ export function ClassProvider({
     async (data: { name: string; subject: string; year: string }) => {
       await createClass.mutateAsync(
         {
-          params: {
-            path: {
-              yearId: activeYear.id,
-            },
-          },
           body: {
             name: data.name,
             subject: data.subject,
@@ -90,7 +86,7 @@ export function ClassProvider({
         },
       )
     },
-    [activeYear.id, closeAll, createClass],
+    [closeAll, createClass],
   )
 
   const onClassUpdate = useCallback(
@@ -102,7 +98,6 @@ export function ClassProvider({
         {
           params: {
             path: {
-              yearId: activeYear.id,
               classId: classId,
             },
           },
@@ -125,7 +120,7 @@ export function ClassProvider({
         },
       )
     },
-    [activeYear.id, classList, closeAll, updateClass],
+    [classList, closeAll, updateClass],
   )
 
   const onClassDelete = useCallback(
@@ -134,7 +129,6 @@ export function ClassProvider({
         {
           params: {
             path: {
-              yearId: activeYear.id,
               classId: classId,
             },
           },
@@ -152,7 +146,7 @@ export function ClassProvider({
         },
       )
     },
-    [activeYear.id, classList, closeAll, deleteClass],
+    [classList, closeAll, deleteClass],
   )
 
   return (

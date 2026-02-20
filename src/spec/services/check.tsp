@@ -1,14 +1,12 @@
 using TypeSpec.Http;
 
-
 namespace MiniTeacherService.ChecksApi;
 
-@route("/year/{yearId}/class/{classId}/check")
+@route("class/{classId}/check")
 @tag("Check")
 interface Check {
   /** Create a check date */
   @post create(
-    @path yearId: string,
     @path classId: string,
     @body body: CreateCheckDateBody,
   ): ApiResponse<CheckDate> | ApiError;
@@ -17,7 +15,6 @@ interface Check {
   @route("{checkDateId}")
   @put
   update(
-    @path yearId: string,
     @path classId: string,
     @path checkDateId: string,
     @body body: UpdateCheckDateBody,
@@ -27,24 +24,19 @@ interface Check {
   @route("{checkDateId}")
   @delete
   delete(
-    @path yearId: string,
     @path classId: string,
     @path checkDateId: string,
   ): ApiResponse<EmptyData> | ApiError;
 
   /** Get check dates by class id */
   @get listByClassId(
-    @path yearId: string,
     @path classId: string,
   ): ApiResponse<CheckDateWithStudents[]> | ApiError;
 
-  
-  #suppress "@typespec/http/patch-implicit-optional" ""
   /** Update a check student */
   @route("{checkDateId}/student")
   @put
   checkStudent(
-    @path yearId: string,
     @path classId: string,
     @path checkDateId: string,
     @body body: CreateCheckStudentBody,

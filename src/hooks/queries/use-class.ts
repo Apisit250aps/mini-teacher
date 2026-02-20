@@ -33,18 +33,6 @@ export const useGetClassMembers = (classId?: string) => {
 }
 
 export const useClassQueries = () => {
-  const list = $api.useQuery('get', '/class', undefined, {
-    select: (res) => {
-      if (!res) return []
-      if (!res.success) {
-        toast.error(res.message, {
-          description: res.error,
-        })
-        return []
-      }
-      return res.data
-    },
-  })
 
   const create = $api.useMutation('post', '/class', {
     onSettled(data, _error, _variables, _onMutateResult, context) {
@@ -112,7 +100,6 @@ export const useClassQueries = () => {
     },
   })
   return {
-    list,
     create,
     update,
     remove,
