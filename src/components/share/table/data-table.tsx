@@ -41,6 +41,8 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
   value?: string[]
   onChange?: (value: string[]) => void
+  limit?: number
+  page?: number
 }
 
 export default function DataTable<TData, TValue>({
@@ -48,6 +50,8 @@ export default function DataTable<TData, TValue>({
   data,
   value,
   onChange,
+  limit = 10,
+  page = 1,
 }: DataTableProps<TData & { id: string }, TValue>) {
   const memoData = useMemo(() => data || [], [data])
   const memoColumns = useMemo(() => columns, [columns])
@@ -68,8 +72,8 @@ export default function DataTable<TData, TValue>({
 
   const [rowSelection, setRowSelection] = React.useState(initialRowSelection)
   const [pagination, setPagination] = React.useState({
-    pageIndex: 0,
-    pageSize: 10,
+    pageIndex: page - 1,
+    pageSize: limit,
   })
 
   // Use refs to track previous values and prevent infinite loops
