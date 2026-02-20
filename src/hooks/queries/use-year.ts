@@ -2,7 +2,6 @@ import { $api } from '@/lib/client'
 import { onSelectItem, onSettledToast } from '@/lib/utils/hooks'
 import { useYearContext } from '../app/use-year'
 import { Year } from '@/models'
-import { on } from 'events'
 
 export const useClassesInYear = () => {
   const { activeYear } = useYearContext()
