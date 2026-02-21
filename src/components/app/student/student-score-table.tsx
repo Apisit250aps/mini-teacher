@@ -11,6 +11,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { useStudentScoreTable } from '@/hooks/app/use-score'
 import { Spinner } from '@/components/ui/spinner'
+import { ScoreAssignCreateAction } from '@/components/app/class/score/action-modal'
 
 export default function StudentScoreTable() {
   const { tableData, isLoading, onScoreChange } = useStudentScoreTable()
@@ -31,7 +32,12 @@ export default function StudentScoreTable() {
     : []
 
   return (
-    <div className="overflow-x-auto">
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h3 className="text-lg font-semibold">บันทึกคะแนน</h3>
+        <ScoreAssignCreateAction />
+      </div>
+      <div className="overflow-x-auto">
       <Table className="w-auto">
         <TableHeader>
           <TableRow>
@@ -85,6 +91,7 @@ export default function StudentScoreTable() {
           ))}
         </TableBody>
       </Table>
+      </div>
     </div>
   )
 }

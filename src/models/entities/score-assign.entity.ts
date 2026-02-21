@@ -1,7 +1,7 @@
 import z from 'zod'
 import { zodAutoUuid, zodDate, zodTimestamp, zodUuid } from '@/lib/zod/fields'
 
-export const assignEnum = ['ASSIGNMENT', 'EXAM', 'HOMEWORK', 'PROJECT'] as const
+export const assignEnum = ['ASSIGNMENT', 'EXAM', 'QUIZ'] as const
 
 export const BaseScoreAssign = z.object({
   id: zodAutoUuid(),
