@@ -42,10 +42,19 @@ export async function getScoreAssignsByClassId(
       {
         $lookup: {
           from: 'score_students',
-          localField: 'id',
-          foreignField: 'assignId',
+          let: { scoreAssignId: '$id' },
           as: 'scores',
           pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $or: [
+                    { $eq: ['$scoreAssignId', '$$scoreAssignId'] },
+                    { $eq: ['$assignId', '$$scoreAssignId'] },
+                  ],
+                },
+              },
+            },
             {
               $project: {
                 _id: 0,
@@ -87,10 +96,19 @@ export async function getScoreAssignById(
       {
         $lookup: {
           from: 'score_students',
-          localField: 'id',
-          foreignField: 'assignId',
+          let: { scoreAssignId: '$id' },
           as: 'scores',
           pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $or: [
+                    { $eq: ['$scoreAssignId', '$$scoreAssignId'] },
+                    { $eq: ['$assignId', '$$scoreAssignId'] },
+                  ],
+                },
+              },
+            },
             {
               $project: {
                 _id: 0,

@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { ColumnDef } from '@tanstack/react-table'
 import { useGetClassMembers } from '@/hooks/queries/use-class'
 import { useScoreQueries } from '@/hooks/queries/use-score'
@@ -36,10 +36,28 @@ export function useStudentScoreTable(): UseStudentScoreTableResult {
   const { activeYear } = useYearContext()
   const scoreListQuery = scoreQueries.list
   const { scoreStudent } = scoreQueries
-  const [scoreChanges, setScoreChanges] = useState<Record<string, number>>({})
+  const [scoreChanges, setScoreChanges] = useState<Record<string, string>>({})
+
+  const getScoreKey = useCallback(
+    (studentId: string, scoreAssignId: string) => `${studentId}_${scoreAssignId}`,
+    [],
+  )
+
+  const setDraftScore = useCallback(
+    (studentId: string, scoreAssignId: string, value: string) => {
+      const scoreKey = getScoreKey(studentId, scoreAssignId)
+      setScoreChanges((prev) => {
+        const next = { ...prev }
+        next[scoreKey] = value
+        return next
+      })
+    },
+    [getScoreKey],
+  )
 
   const getStudentScore = useCallback(
     (studentId: string, scoreAssignId: string) => {
+      const scoreKey = getScoreKey(studentId, scoreAssignId)
       const scoreAssign = scoreListQuery.data?.find(
         (item) => item.id === scoreAssignId,
       )
@@ -49,9 +67,12 @@ export function useStudentScoreTable(): UseStudentScoreTableResult {
         }
       )?.scores?.find((item) => item.studentId === studentId)
 
-      return scoreData?.score ?? scoreChanges[`${studentId}_${scoreAssignId}`] ?? ''
+      const draftValue = scoreChanges[scoreKey]
+      if (draftValue !== undefined) return draftValue
+
+      return scoreData?.score ?? ''
     },
-    [scoreListQuery.data, scoreChanges],
+    [getScoreKey, scoreChanges, scoreListQuery.data],
   )
 
   const onScoreChange = useCallback(
@@ -62,14 +83,7 @@ export function useStudentScoreTable(): UseStudentScoreTableResult {
       score: number,
     ) => {
       if (!activeClass || !activeYear) return
-      const scoreKey = `${studentId}_${scoreAssignId}`
-
-      // Update local state for immediate UI feedback
-      setScoreChanges((prev) => {
-        const next = { ...prev }
-        next[scoreKey] = score
-        return next
-      })
+      const scoreKey = getScoreKey(studentId, scoreAssignId)
 
       try {
         await scoreStudent.mutateAsync({
@@ -87,17 +101,22 @@ export function useStudentScoreTable(): UseStudentScoreTableResult {
         })
         // Refetch after successful update
         await scoreListQuery.refetch()
-      } catch {
-        // Remove local change on error
-        setScoreChanges((prev) => {
-          const newChanges = { ...prev }
-          delete newChanges[scoreKey]
-          return newChanges
-        })
-      }
+      } catch {}
+
+      setScoreChanges((prev) => {
+        if (!(scoreKey in prev)) return prev
+        const next = { ...prev }
+        delete next[scoreKey]
+        return next
+      })
     },
-    [activeClass, activeYear, scoreStudent, scoreListQuery],
+    [activeClass, activeYear, getScoreKey, scoreStudent, scoreListQuery],
   )
+
+  const onScoreChangeRef = useRef(onScoreChange)
+  useEffect(() => {
+    onScoreChangeRef.current = onScoreChange
+  }, [onScoreChange])
 
   const tableData = useMemo<StudentScoreTableRow[]>(() => {
     const scoreAssigns = scoreListQuery.data ?? []
@@ -165,8 +184,13 @@ export function useStudentScoreTable(): UseStudentScoreTableResult {
               max={maxScore}
               value={row.original[`score_${assignId}`] ?? ''}
               onChange={(e) => {
-                if (!e.target.value) {
-                  onScoreChange(
+                setDraftScore(row.original.studentId, assignId, e.target.value)
+              }}
+              onBlur={(e) => {
+                const rawValue = e.target.value
+
+                if (!rawValue) {
+                  onScoreChangeRef.current(
                     row.original.memberId,
                     row.original.studentId,
                     assignId,
@@ -175,17 +199,24 @@ export function useStudentScoreTable(): UseStudentScoreTableResult {
                   return
                 }
 
-                const parsedScore = parseInt(e.target.value, 10)
+                const parsedScore = parseInt(rawValue, 10)
                 const safeScore = Number.isNaN(parsedScore)
                   ? minScore
                   : Math.min(maxScore, Math.max(minScore, parsedScore))
 
-                onScoreChange(
+                setDraftScore(row.original.studentId, assignId, String(safeScore))
+
+                onScoreChangeRef.current(
                   row.original.memberId,
                   row.original.studentId,
                   assignId,
                   safeScore,
                 )
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.currentTarget.blur()
+                }
               }}
             />
           )
@@ -219,7 +250,12 @@ export function useStudentScoreTable(): UseStudentScoreTableResult {
         },
       },
     ]
-  }, [onScoreChange, scoreAssignIds, scoreAssignNameMap, scoreAssignRangeMap])
+  }, [
+    scoreAssignIds,
+    scoreAssignNameMap,
+    scoreAssignRangeMap,
+    setDraftScore,
+  ])
 
   return {
     columns,
