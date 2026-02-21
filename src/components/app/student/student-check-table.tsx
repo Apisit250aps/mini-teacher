@@ -8,7 +8,7 @@ import {
 import DataTable from '@/components/share/table/data-table'
 
 import { useGetClassMembers } from '@/hooks/queries/use-class'
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useCheckQueries } from '@/hooks/queries/use-check'
 import { CheckDateCreateAction } from '../class/check/action-modal'
 import { useClassContext } from '@/hooks/app/use-class'
@@ -66,6 +66,7 @@ export default function StudentCheckTable() {
   const checkDateQuery = checkQueries.list
   const { activeClass } = useClassContext()
   const { studentCheck } = checkQueries
+  const [tableLimit, setTableLimit] = useState(10)
 
   function roundUpToNearestTen(num: number) {
     return Math.ceil(num / 10) * 10
@@ -156,6 +157,15 @@ export default function StudentCheckTable() {
     })
   }, [checkDateQuery.data, getAttendanceStatus, memberQuery.data])
 
+  useEffect(() => {
+    const nextLimit = roundUpToNearestTen(tableData.length || 10)
+    const timer = window.setTimeout(() => {
+      setTableLimit((current) => (current === nextLimit ? current : nextLimit))
+    }, 0)
+
+    return () => window.clearTimeout(timer)
+  }, [tableData.length])
+
   const columns = useMemo<ColumnDef<StudentCheckTableRow>[]>(() => {
     const baseColumns: ColumnDef<StudentCheckTableRow>[] = [
       {
@@ -237,7 +247,7 @@ export default function StudentCheckTable() {
         <DataTable
           columns={columns}
           data={tableData}
-          limit={roundUpToNearestTen(tableData.length || 10)}
+          limit={tableLimit}
         />
       </div>
     </div>

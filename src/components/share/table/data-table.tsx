@@ -76,6 +76,14 @@ export default function DataTable<TData, TValue>({
     pageSize: limit,
   })
 
+  useEffect(() => {
+    setPagination((prev) => ({
+      ...prev,
+      pageIndex: page - 1,
+      pageSize: limit,
+    }))
+  }, [page, limit])
+
   // Use refs to track previous values and prevent infinite loops
   const prevValueRef = useRef<string[] | undefined>(undefined)
   const isInternalUpdateRef = useRef(false)
