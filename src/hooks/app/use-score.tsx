@@ -1,12 +1,10 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { ColumnDef } from '@tanstack/react-table'
+import { useCallback, useMemo, useState } from 'react'
 import { useGetClassMembers } from '@/hooks/queries/use-class'
 import { useScoreQueries } from '@/hooks/queries/use-score'
 import { useClassContext } from '@/hooks/app/use-class'
 import { useYearContext } from '@/hooks/app/use-year'
-import { ScoreInputCell } from '@/components/app/student/score-input-cell'
 
 type StudentScoreTableRow = {
   id: string
@@ -17,10 +15,22 @@ type StudentScoreTableRow = {
   [key: string]: string | number
 }
 
+type ScoreAssignItem = {
+  id: string
+  name: string
+  minScore: number
+  maxScore: number
+}
+
 type UseStudentScoreTableResult = {
-  columns: ColumnDef<StudentScoreTableRow>[]
+  scoreAssigns: ScoreAssignItem[]
   tableData: StudentScoreTableRow[]
   isLoading: boolean
+  setDraftScore: (
+    studentId: string,
+    scoreAssignId: string,
+    value: string,
+  ) => void
   onScoreChange: (
     memberId: string,
     studentId: string,
@@ -113,13 +123,19 @@ export function useStudentScoreTable(): UseStudentScoreTableResult {
     [activeClass, activeYear, getScoreKey, scoreStudent, scoreListQuery],
   )
 
-  const onScoreChangeRef = useRef(onScoreChange)
-  useEffect(() => {
-    onScoreChangeRef.current = onScoreChange
-  }, [onScoreChange])
+  const scoreAssigns = useMemo<ScoreAssignItem[]>(
+    () =>
+      (scoreListQuery.data ?? []).map((scoreAssign) => ({
+        id: scoreAssign.id,
+        name: scoreAssign.name,
+        minScore: scoreAssign.minScore ?? 0,
+        maxScore: scoreAssign.maxScore ?? 100,
+      })),
+    [scoreListQuery.data],
+  )
 
   const tableData = useMemo<StudentScoreTableRow[]>(() => {
-    const scoreAssigns = scoreListQuery.data ?? []
+    const assignList = scoreListQuery.data ?? []
 
     return (memberQuery.data ?? []).map((member) => {
       const row: StudentScoreTableRow = {
@@ -130,7 +146,7 @@ export function useStudentScoreTable(): UseStudentScoreTableResult {
         studentName: `${member.student.prefix}${member.student.firstName} ${member.student.lastName}`,
       }
 
-      scoreAssigns.forEach((scoreAssign) => {
+      assignList.forEach((scoreAssign) => {
         row[`score_${scoreAssign.id}`] = getStudentScore(
           member.studentId,
           scoreAssign.id,
@@ -142,99 +158,11 @@ export function useStudentScoreTable(): UseStudentScoreTableResult {
     })
   }, [scoreListQuery.data, getStudentScore, memberQuery.data])
 
-  const scoreAssignIds = useMemo(
-    () => (scoreListQuery.data ?? []).map((scoreAssign) => scoreAssign.id),
-    [scoreListQuery.data],
-  )
-
-  const scoreAssignNameMap = useMemo(() => {
-    const map = new Map<string, string>()
-    ;(scoreListQuery.data ?? []).forEach((scoreAssign) => {
-      map.set(scoreAssign.id, scoreAssign.name)
-    })
-    return map
-  }, [scoreListQuery.data])
-
-  const scoreAssignRangeMap = useMemo(() => {
-    const map = new Map<string, { minScore: number; maxScore: number }>()
-    ;(scoreListQuery.data ?? []).forEach((scoreAssign) => {
-      map.set(scoreAssign.id, {
-        minScore: scoreAssign.minScore ?? 0,
-        maxScore: scoreAssign.maxScore ?? 100,
-      })
-    })
-    return map
-  }, [scoreListQuery.data])
-
-  const columns = useMemo<ColumnDef<StudentScoreTableRow>[]>(() => {
-    const dynamicScoreColumns: ColumnDef<StudentScoreTableRow>[] = scoreAssignIds.map(
-      (assignId) => ({
-        id: `score_${assignId}`,
-        header: () => scoreAssignNameMap.get(assignId) || 'งาน',
-        minSize: 128,
-        cell: ({ row }) => {
-          const range = scoreAssignRangeMap.get(assignId)
-          const minScore = range?.minScore ?? 0
-          const maxScore = range?.maxScore ?? 100
-          return (
-            <ScoreInputCell
-              value={row.original[`score_${assignId}`] ?? ''}
-              minScore={minScore}
-              maxScore={maxScore}
-              onDraftChange={(value) => {
-                setDraftScore(row.original.studentId, assignId, value)
-              }}
-              onCommit={async (safeScore) => {
-                await onScoreChangeRef.current(
-                  row.original.memberId,
-                  row.original.studentId,
-                  assignId,
-                  safeScore,
-                )
-              }}
-            />
-          )
-        },
-      }),
-    )
-
-    return [
-      {
-        accessorKey: 'studentCode',
-        header: 'รหัสนักเรียน',
-        size: 80,
-      },
-      {
-        accessorKey: 'studentName',
-        header: 'ชื่อนักเรียน',
-        minSize: 160,
-      },
-      ...dynamicScoreColumns,
-      {
-        id: 'total',
-        header: 'รวม',
-        cell: ({ row }) => {
-          const total = scoreAssignIds.reduce((sum, assignId) => {
-            const score = row.original[`score_${assignId}`]
-            if (typeof score === 'number') return sum + score
-            return sum + (parseInt(score as string, 10) || 0)
-          }, 0)
-
-          return <span className="font-semibold">{total}</span>
-        },
-      },
-    ]
-  }, [
-    scoreAssignIds,
-    scoreAssignNameMap,
-    scoreAssignRangeMap,
-    setDraftScore,
-  ])
-
   return {
-    columns,
+    scoreAssigns,
     tableData,
     isLoading: scoreListQuery.isLoading || memberQuery.isLoading,
+    setDraftScore,
     onScoreChange,
   }
 }

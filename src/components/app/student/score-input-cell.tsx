@@ -5,7 +5,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import z from 'zod'
-import { fa } from 'zod/v4/locales';
 
 type ScoreInputCellForm = {
   score: string
