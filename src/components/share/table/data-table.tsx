@@ -195,11 +195,8 @@ export default function DataTable<TData, TValue>({
             ))
           ) : (
             <TableRow>
-              <TableCell
-                colSpan={memoColumns.length}
-                className="h-24 text-center"
-              >
-                No results.
+              <TableCell colSpan={memoColumns.length} className="text-center">
+                ไม่มีข้อมูล
               </TableCell>
             </TableRow>
           )}
