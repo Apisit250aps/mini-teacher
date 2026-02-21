@@ -23,24 +23,24 @@ export async function updateScoreStudent(
 }
 
 export async function getUniqueScoreStudent(
-  assignId: string,
+  scoreAssignId: string,
   studentId: string,
 ): Promise<ScoreStudent | null> {
   const collection = await scoreStudentsCollection()
   const result = await collection.findOne(
-    { assignId, studentId },
+    { scoreAssignId, studentId },
     { projection: { _id: 0 } },
   )
   return result
 }
 
 export async function getScoreStudentsByAssignId(
-  assignId: string,
+  scoreAssignId: string,
 ): Promise<ScoreStudent[]> {
   const collection = await scoreStudentsCollection()
   const data = await collection
     .aggregate<ScoreStudent>([
-      { $match: { assignId } },
+      { $match: { scoreAssignId } },
       {
         $lookup: {
           from: 'students',

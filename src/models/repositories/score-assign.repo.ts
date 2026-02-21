@@ -75,3 +75,48 @@ export async function getScoreAssignsByClassId(
     .toArray()
   return data
 }
+
+export async function getScoreAssignById(
+  classId: string,
+  assignId: string,
+): Promise<ScoreAssign | null> {
+  const collection = await scoreAssignsCollection()
+  const data = await collection
+    .aggregate<ScoreAssign>([
+      { $match: { classId, id: assignId } },
+      {
+        $lookup: {
+          from: 'score_students',
+          localField: 'id',
+          foreignField: 'assignId',
+          as: 'scores',
+          pipeline: [
+            {
+              $project: {
+                _id: 0,
+              },
+            },
+            {
+              $lookup: {
+                from: 'students',
+                localField: 'studentId',
+                foreignField: 'id',
+                as: 'student',
+                pipeline: [
+                  {
+                    $project: {
+                      _id: 0,
+                    },
+                  },
+                ],
+              },
+            },
+            { $unwind: '$student' },
+          ],
+        },
+      },
+    ])
+    .toArray()
+
+  return data[0] ?? null
+}

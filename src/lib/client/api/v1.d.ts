@@ -420,7 +420,7 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-            students: components["schemas"]["ScoreStudentDetail"][];
+            scores: components["schemas"]["ScoreStudentDetail"][];
         };
         ScoreStudent: {
             id: string;
@@ -481,8 +481,6 @@ export interface components {
             type?: "ASSIGNMENT" | "QUIZ" | "EXAM";
             assignDate?: string | null;
             finalDate?: string | null;
-            /** Format: date-time */
-            updatedAt: string;
         };
         UpdateScoreStudentBody: {
             /** Format: int32 */

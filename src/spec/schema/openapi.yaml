@@ -1789,7 +1789,7 @@ components:
         - type
         - createdAt
         - updatedAt
-        - students
+        - scores
       properties:
         id:
           type: string
@@ -1832,7 +1832,7 @@ components:
         updatedAt:
           type: string
           format: date-time
-        students:
+        scores:
           type: array
           items:
             $ref: '#/components/schemas/ScoreStudentDetail'
@@ -1944,8 +1944,6 @@ components:
           format: date-time
     UpdateScoreAssignBody:
       type: object
-      required:
-        - updatedAt
       properties:
         name:
           type: string
@@ -1975,9 +1973,6 @@ components:
             - type: string
               format: date-time
             - type: 'null'
-        updatedAt:
-          type: string
-          format: date-time
     UpdateScoreStudentBody:
       type: object
       required:

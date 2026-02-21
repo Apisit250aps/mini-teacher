@@ -136,10 +136,12 @@ export async function DeleteClass(
 
 export async function GetClassYear(
   req: NextRequest,
-  { params }: { params: Promise<{ yearId: string }> },
+  context?: { params?: Promise<{ yearId?: string }> },
 ): Promise<NextResponse<ApiResponse<Class[]>>> {
   try {
-    const { yearId } = await params
+    const pathYearId = (await context?.params)?.yearId
+    const queryYearId = req.nextUrl.searchParams.get('yearId')
+    const yearId = pathYearId ?? queryYearId
     if (!yearId) {
       return NextResponse.json(
         {

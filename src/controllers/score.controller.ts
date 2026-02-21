@@ -10,6 +10,7 @@ import {
   createScoreAssign,
   createScoreStudent,
   deleteScoreAssign,
+  getScoreAssignById,
   getScoreAssignsByClassId,
   getUniqueScoreStudent,
   updateScoreAssign,
@@ -249,6 +250,50 @@ export async function PatchScoreStudent(
         success: false,
         error: onErrorMessage(error),
         message: 'Failed to create score student',
+      },
+      {
+        status: 500,
+      },
+    )
+  }
+}
+
+export async function GetScoreAssignById(
+  _req: NextRequest,
+  { params }: { params: Promise<ScoreAssignParams> },
+): Promise<NextResponse<ApiResponse<ScoreAssign>>> {
+  try {
+    const { classId, scoreAssignId } = await params
+    const scoreAssign = await getScoreAssignById(classId, scoreAssignId)
+
+    if (!scoreAssign) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Score assign not found',
+        },
+        {
+          status: 404,
+        },
+      )
+    }
+
+    return NextResponse.json(
+      {
+        success: true,
+        data: scoreAssign,
+        message: 'Score assign retrieved successfully',
+      },
+      {
+        status: 200,
+      },
+    )
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: onErrorMessage(error),
+        message: 'Failed to retrieve score assign',
       },
       {
         status: 500,

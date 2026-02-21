@@ -26,7 +26,7 @@ model ScoreAssignDetail {
   finalDate?: utcDateTime | null;
   createdAt: utcDateTime;
   updatedAt: utcDateTime;
-  students: ScoreStudentDetail[];
+  scores: ScoreStudentDetail[];
 }
 
 model ScoreStudent {
@@ -66,7 +66,6 @@ model UpdateScoreAssignBody {
   type?: "ASSIGNMENT" | "QUIZ" | "EXAM";
   assignDate?: utcDateTime | null;
   finalDate?: utcDateTime | null;
-  updatedAt: utcDateTime;
 }
 
 model CreateScoreStudentBody {

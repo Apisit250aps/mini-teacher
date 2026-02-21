@@ -8,76 +8,78 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
-import { useGetClassMembers } from '@/hooks/queries/use-class'
-import { useState } from 'react'
-
 import { Input } from '@/components/ui/input'
+import { useStudentScoreTable } from '@/hooks/app/use-score'
+import { Spinner } from '@/components/ui/spinner'
 
 export default function StudentScoreTable() {
-  const memberQuery = useGetClassMembers()
-  const [attendanceStatus, setAttendanceStatus] = useState<
-    Record<string, string>
-  >({})
+  const { tableData, isLoading, onScoreChange } = useStudentScoreTable()
 
-  const work = [
-    'งานที่ 1',
-    'งานที่ 2',
-    'งานที่ 3',
-    'งานที่ 4',
-    'งานที่ 5',
-    'งานที่ 6',
-    'งานที่ 7',
-    'งานที่ 8',
-    'งานที่ 9',
-    'งานที่ 10',
-  ]
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center py-8">
+        <Spinner />
+      </div>
+    )
+  }
+
+  // Extract score assignments from first row (if exists)
+  const scoreAssignIds = tableData.length > 0
+    ? Object.keys(tableData[0])
+        .filter((key) => key.startsWith('score_'))
+        .map((key) => key.replace('score_', ''))
+    : []
 
   return (
-    <div>
+    <div className="overflow-x-auto">
       <Table className="w-auto">
         <TableHeader>
           <TableRow>
             <TableHead>รหัสนักเรียน</TableHead>
             <TableHead>ชื่อนักเรียน</TableHead>
-            {work.map((w, index) => (
-              <TableHead key={index}>{w}</TableHead>
+            {scoreAssignIds.map((assignId) => (
+              <TableHead key={assignId} className="min-w-32">
+                {tableData[0]?.[`assign_${assignId}`] as string || 'งาน'}
+              </TableHead>
             ))}
+            <TableHead>รวม</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {memberQuery.data?.map((member) => (
-            <TableRow key={member.id}>
-              <TableCell className="w-10">{member.student.code}</TableCell>
-              <TableCell>
-                {member.student.prefix}
-                {member.student.firstName} {member.student.lastName}
-              </TableCell>
-              {work.map((_, index) => (
-                <TableCell className="max-w-17" key={index}>
+          {tableData.map((row) => (
+            <TableRow key={row.id}>
+              <TableCell className="w-20">{row.studentCode}</TableCell>
+              <TableCell className="min-w-40">{row.studentName}</TableCell>
+              {scoreAssignIds.map((assignId) => (
+                <TableCell key={`${row.id}_${assignId}`} className="w-24">
                   <Input
                     className="[&::-webkit-outer-spin-button]:hidden [&::-webkit-inner-spin-button]:hidden"
                     type="number"
                     min={0}
-                    max={10}
-                    value={attendanceStatus[`${member.id}${_}`] || ''}
-                    onChange={(e) =>
-                      setAttendanceStatus({
-                        ...attendanceStatus,
-                        [`${member.id}${_}`]: e.target.value,
-                      })
-                    }
+                    max={100}
+                    value={row[`score_${assignId}`] || ''}
+                    onChange={(e) => {
+                      const score = e.target.value
+                        ? parseInt(e.target.value, 10)
+                        : 0
+                      onScoreChange(
+                        row.memberId,
+                        row.studentId,
+                        assignId,
+                        score,
+                      )
+                    }}
                   />
                 </TableCell>
               ))}
-              <TableCell>
-                {work.reduce((sum, _, index) => {
-                  const value = parseInt(
-                    attendanceStatus[`${member.id}${work[index]}`] || '0',
-                    10,
+              <TableCell className="font-semibold">
+                {scoreAssignIds.reduce((sum, assignId) => {
+                  const score = row[`score_${assignId}`]
+                  return (
+                    sum +
+                    (typeof score === 'number' ? score : parseInt(score as string) || 0)
                   )
-                  return sum + value
                 }, 0)}
-                / 100
               </TableCell>
             </TableRow>
           ))}
