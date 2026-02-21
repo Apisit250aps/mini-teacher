@@ -30,6 +30,10 @@ export default function StudentCheckTable() {
   const { activeClass } = useClassContext()
   const { studentCheck } = checkQueries
 
+  function roundUpToNearestTen(num: number) {
+    return Math.ceil(num / 10) * 10
+  }
+
   const getAttendanceStatus = useCallback(
     (studentId: string, checkDateId: string) => {
       const checkDate = checkDateQuery.data?.find(
@@ -232,7 +236,7 @@ export default function StudentCheckTable() {
         <CheckDateCreateAction />
       </div>
       <div className="w-full max-w-full min-w-0 mt-4">
-        <DataTable columns={columns} data={tableData} />
+        <DataTable columns={columns} data={tableData} limit={roundUpToNearestTen(tableData.length)} />
       </div>
     </div>
   )
