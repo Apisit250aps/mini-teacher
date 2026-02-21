@@ -35,6 +35,7 @@ import {
 import React, { useEffect, useRef } from 'react'
 import { useMemo } from 'react'
 import { Label } from '@/components/ui/label'
+import { Spinner } from '@/components/ui/spinner'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -43,6 +44,7 @@ interface DataTableProps<TData, TValue> {
   onChange?: (value: string[]) => void
   limit?: number
   page?: number
+  isLoading?: boolean
 }
 
 export default function DataTable<TData, TValue>({
@@ -52,6 +54,7 @@ export default function DataTable<TData, TValue>({
   onChange,
   limit = 10,
   page = 1,
+  isLoading = false,
 }: DataTableProps<TData & { id: string }, TValue>) {
   const memoData = useMemo(() => data || [], [data])
   const memoColumns = useMemo(() => columns, [columns])
@@ -164,7 +167,16 @@ export default function DataTable<TData, TValue>({
         </TableHeader>
 
         <TableBody>
-          {table.getRowModel().rows.length ? (
+          {isLoading ? (
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-10 text-center">
+                <div className="flex items-center gap-2 justify-center">
+                  <Spinner data-icon="inline-start" />
+                  กำลังโหลด...
+                </div>
+              </TableCell>
+            </TableRow>
+          ) : table.getRowModel().rows.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow key={row.id}>
                 {row.getVisibleCells().map((cell) => (

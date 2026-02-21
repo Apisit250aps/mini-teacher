@@ -248,6 +248,7 @@ export default function StudentCheckTable() {
           columns={columns}
           data={tableData}
           limit={tableLimit}
+          isLoading={checkDateQuery.isLoading || memberQuery.isLoading}
         />
       </div>
     </div>
