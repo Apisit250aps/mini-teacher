@@ -6,7 +6,7 @@ import { useGetClassMembers } from '@/hooks/queries/use-class'
 import { useScoreQueries } from '@/hooks/queries/use-score'
 import { useClassContext } from '@/hooks/app/use-class'
 import { useYearContext } from '@/hooks/app/use-year'
-import { Input } from '@/components/ui/input'
+import { ScoreInputCell } from '@/components/app/student/score-input-cell'
 
 type StudentScoreTableRow = {
   id: string
@@ -177,46 +177,20 @@ export function useStudentScoreTable(): UseStudentScoreTableResult {
           const minScore = range?.minScore ?? 0
           const maxScore = range?.maxScore ?? 100
           return (
-            <Input
-              className="[&::-webkit-outer-spin-button]:hidden [&::-webkit-inner-spin-button]:hidden max-w-20 w-full"
-              type="number"
-              min={minScore}
-              max={maxScore}
+            <ScoreInputCell
               value={row.original[`score_${assignId}`] ?? ''}
-              onChange={(e) => {
-                setDraftScore(row.original.studentId, assignId, e.target.value)
+              minScore={minScore}
+              maxScore={maxScore}
+              onDraftChange={(value) => {
+                setDraftScore(row.original.studentId, assignId, value)
               }}
-              onBlur={(e) => {
-                const rawValue = e.target.value
-
-                if (!rawValue) {
-                  onScoreChangeRef.current(
-                    row.original.memberId,
-                    row.original.studentId,
-                    assignId,
-                    minScore,
-                  )
-                  return
-                }
-
-                const parsedScore = parseInt(rawValue, 10)
-                const safeScore = Number.isNaN(parsedScore)
-                  ? minScore
-                  : Math.min(maxScore, Math.max(minScore, parsedScore))
-
-                setDraftScore(row.original.studentId, assignId, String(safeScore))
-
-                onScoreChangeRef.current(
+              onCommit={async (safeScore) => {
+                await onScoreChangeRef.current(
                   row.original.memberId,
                   row.original.studentId,
                   assignId,
                   safeScore,
                 )
-              }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.currentTarget.blur()
-                }
               }}
             />
           )
