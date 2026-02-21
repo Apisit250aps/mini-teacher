@@ -23,6 +23,43 @@ type StudentCheckTableRow = {
   [key: string]: string
 }
 
+type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LEAVE' | 'LATE'
+
+const CHECK_STATUS_OPTIONS: Array<{
+  value: AttendanceStatus
+  label: string
+  className: string
+}> = [
+  {
+    value: 'PRESENT',
+    label: 'มา',
+    className: 'text-green-500 bg-green-500/10',
+  },
+  {
+    value: 'ABSENT',
+    label: 'ขาด',
+    className: 'text-red-500 bg-red-500/10',
+  },
+  {
+    value: 'LEAVE',
+    label: 'ลา',
+    className: 'text-yellow-500 bg-yellow-500/10',
+  },
+  {
+    value: 'LATE',
+    label: 'สาย',
+    className: 'text-orange-500 bg-orange-500/10',
+  },
+]
+
+const CHECK_STATUS_LABEL_MAP = Object.fromEntries(
+  CHECK_STATUS_OPTIONS.map((option) => [option.value, option.label]),
+) as Record<AttendanceStatus, string>
+
+const CHECK_STATUS_COLOR_MAP = Object.fromEntries(
+  CHECK_STATUS_OPTIONS.map((option) => [option.value, option.className]),
+) as Record<AttendanceStatus, string>
+
 export default function StudentCheckTable() {
   const memberQuery = useGetClassMembers()
   const checkQueries = useCheckQueries()
@@ -88,33 +125,13 @@ export default function StudentCheckTable() {
   )
 
   const mapValueToStatus = useCallback((value?: string) => {
-    switch (value) {
-      case 'PRESENT':
-        return 'มา'
-      case 'ABSENT':
-        return 'ขาด'
-      case 'LEAVE':
-        return 'ลา'
-      case 'LATE':
-        return 'สาย'
-      default:
-        return ''
-    }
+    if (!value) return ''
+    return CHECK_STATUS_LABEL_MAP[value as AttendanceStatus] ?? ''
   }, [])
 
   const getStatusColor = useCallback((value?: string) => {
-    switch (value) {
-      case 'PRESENT':
-        return 'text-green-500 bg-green-500/10'
-      case 'ABSENT':
-        return 'text-red-500 bg-red-500/10'
-      case 'LEAVE':
-        return 'text-yellow-500 bg-yellow-500/10'
-      case 'LATE':
-        return 'text-orange-500 bg-orange-500/10'
-      default:
-        return ''
-    }
+    if (!value) return ''
+    return CHECK_STATUS_COLOR_MAP[value as AttendanceStatus] ?? ''
   }, [])
 
   const tableData = useMemo<StudentCheckTableRow[]>(() => {
@@ -144,10 +161,19 @@ export default function StudentCheckTable() {
       {
         accessorKey: 'studentCode',
         header: 'รหัสนักเรียน',
+        size: 120,
+        cell: ({ row }) => (
+          <div className="max-w-20 w-auto truncate">
+            {row.original.studentCode}
+          </div>
+        ),
       },
       {
         accessorKey: 'studentName',
         header: 'ชื่อนักเรียน',
+        cell: ({ row }) => (
+          <div className="max-w-65 truncate">{row.original.studentName}</div>
+        ),
       },
     ]
 
@@ -157,11 +183,14 @@ export default function StudentCheckTable() {
       id: `check_${checkDate.id}`,
       accessorKey: `check_${checkDate.id}`,
       header: checkDate.date,
+      size: 72,
+      minSize: 64,
+      maxSize: 72,
       cell: ({ row }) => {
         const status = row.original[`check_${checkDate.id}`]
 
         return (
-          <div className="max-w-17">
+          <div className="w-full max-w-18">
             <ContextMenu>
               <ContextMenuTrigger>
                 <div
@@ -171,57 +200,26 @@ export default function StudentCheckTable() {
                 </div>
               </ContextMenuTrigger>
               <ContextMenuContent>
-                <ContextMenuItem
-                  onClick={() =>
-                    handleAttendanceChange(
-                      row.original.studentId,
-                      checkDate.id,
-                      'PRESENT',
-                    )
-                  }
-                >
-                  มา
-                </ContextMenuItem>
-                <ContextMenuItem
-                  onClick={() =>
-                    handleAttendanceChange(
-                      row.original.studentId,
-                      checkDate.id,
-                      'ABSENT',
-                    )
-                  }
-                >
-                  ขาด
-                </ContextMenuItem>
-                <ContextMenuItem
-                  onClick={() =>
-                    handleAttendanceChange(
-                      row.original.studentId,
-                      checkDate.id,
-                      'LEAVE',
-                    )
-                  }
-                >
-                  ลา
-                </ContextMenuItem>
-                <ContextMenuItem
-                  onClick={() =>
-                    handleAttendanceChange(
-                      row.original.studentId,
-                      checkDate.id,
-                      'LATE',
-                    )
-                  }
-                >
-                  สาย
-                </ContextMenuItem>
+                {CHECK_STATUS_OPTIONS.map((option) => (
+                  <ContextMenuItem
+                    key={option.value}
+                    onClick={() =>
+                      handleAttendanceChange(
+                        row.original.studentId,
+                        checkDate.id,
+                        option.value,
+                      )
+                    }
+                  >
+                    {option.label}
+                  </ContextMenuItem>
+                ))}
               </ContextMenuContent>
             </ContextMenu>
           </div>
         )
       },
     }))
-
     return [...baseColumns, ...checkDateColumns]
   }, [
     checkDateQuery.data,
@@ -236,7 +234,11 @@ export default function StudentCheckTable() {
         <CheckDateCreateAction />
       </div>
       <div className="w-full max-w-full min-w-0 mt-4">
-        <DataTable columns={columns} data={tableData} limit={roundUpToNearestTen(tableData.length)} />
+        <DataTable
+          columns={columns}
+          data={tableData}
+          limit={roundUpToNearestTen(tableData.length || 10)}
+        />
       </div>
     </div>
   )
