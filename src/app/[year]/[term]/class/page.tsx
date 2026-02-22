@@ -63,11 +63,18 @@ type AttendanceSummary = {
 
 type ScoreSummary = {
   total: number
-  full: number
   entries: number
 }
 
 const formatPercent = (value: number) => `${value.toFixed(1)}%`
+
+const getCurrentGrade = (averageScore: number, hasScore: boolean) => {
+  if (!hasScore) return '-'
+  if (averageScore >= 80) return 'A'
+  if (averageScore >= 70) return 'B'
+  if (averageScore >= 60) return 'C'
+  return 'D'
+}
 
 export default function Page() {
   const { classes } = useClassContext()
@@ -140,23 +147,28 @@ export default function Page() {
     const summary = new Map<string, ScoreSummary>()
 
     for (const member of classMembers) {
-      summary.set(member.studentId, { total: 0, full: 0, entries: 0 })
+      summary.set(member.studentId, { total: 0, entries: 0 })
     }
 
     for (const assign of scoreAssigns) {
-      const maxScore = assign.maxScore > 0 ? assign.maxScore : 100
       for (const studentScore of assign.scores ?? []) {
         const studentSummary = summary.get(studentScore.studentId)
         if (!studentSummary) continue
 
         studentSummary.total += studentScore.score
-        studentSummary.full += maxScore
         studentSummary.entries += 1
       }
     }
 
     return summary
   }, [classMembers, scoreAssigns])
+
+  const totalAssignableScore = React.useMemo(() => {
+    return scoreAssigns.reduce((sum, assign) => {
+      const maxScore = assign.maxScore > 0 ? assign.maxScore : 100
+      return sum + maxScore
+    }, 0)
+  }, [scoreAssigns])
 
   const totals = React.useMemo(() => {
     let attendanceFilled = 0
@@ -166,15 +178,14 @@ export default function Page() {
 
     let scoreFilled = 0
     let scoreTotal = 0
-    let scoreFull = 0
     for (const item of scoreByStudent.values()) {
       scoreFilled += item.entries
       scoreTotal += item.total
-      scoreFull += item.full
     }
 
     const attendanceSlots = classMembers.length * checkDates.length
     const scoreSlots = classMembers.length * scoreAssigns.length
+    const classFullScore = classMembers.length * totalAssignableScore
 
     return {
       attendanceSlots,
@@ -184,22 +195,32 @@ export default function Page() {
       scoreSlots,
       scoreFilled,
       scoreRate: scoreSlots > 0 ? (scoreFilled / scoreSlots) * 100 : 0,
-      averageScore: scoreFull > 0 ? (scoreTotal / scoreFull) * 100 : 0,
+      averageScore: classFullScore > 0 ? (scoreTotal / classFullScore) * 100 : 0,
     }
-  }, [attendanceByStudent, classMembers.length, checkDates.length, scoreAssigns.length, scoreByStudent])
+  }, [
+    attendanceByStudent,
+    classMembers.length,
+    checkDates.length,
+    scoreAssigns.length,
+    scoreByStudent,
+    totalAssignableScore,
+  ])
 
   const studentRows = React.useMemo(() => {
     return classMembers.map((member) => {
       const attendance = attendanceByStudent.get(member.studentId)
       const score = scoreByStudent.get(member.studentId)
+      const attendedCount = (attendance?.present ?? 0) + (attendance?.late ?? 0)
 
       const attendanceRate =
-        checkDates.length > 0 && attendance
-          ? (attendance.checked / checkDates.length) * 100
+        checkDates.length > 0
+          ? (attendedCount / checkDates.length) * 100
           : 0
 
       const averageScore =
-        score && score.full > 0 ? (score.total / score.full) * 100 : 0
+        totalAssignableScore > 0 ? ((score?.total ?? 0) / totalAssignableScore) * 100 : 0
+
+      const grade = getCurrentGrade(averageScore, totalAssignableScore > 0)
 
       return {
         id: member.id,
@@ -211,9 +232,16 @@ export default function Page() {
         leave: attendance?.leave ?? 0,
         attendanceRate,
         averageScore,
+        grade,
       }
     })
-  }, [attendanceByStudent, checkDates.length, classMembers, scoreByStudent])
+  }, [
+    attendanceByStudent,
+    checkDates.length,
+    classMembers,
+    scoreByStudent,
+    totalAssignableScore,
+  ])
 
   const isLoading =
     membersQuery.isPending || checksQuery.isPending || scoreAssignsQuery.isPending
@@ -293,7 +321,7 @@ export default function Page() {
             <CardTitle>{formatPercent(totals.averageScore)}</CardTitle>
           </CardHeader>
           <CardContent className="text-xs text-muted-foreground">
-            กรอกคะแนนแล้ว {totals.scoreFilled}/{totals.scoreSlots || 0}
+            เต็มรวม {totalAssignableScore} คะแนน • กรอกแล้ว {totals.scoreFilled}/{totals.scoreSlots || 0}
           </CardContent>
         </Card>
       </div>
@@ -317,12 +345,13 @@ export default function Page() {
                 <TableHead className="text-center">ลา</TableHead>
                 <TableHead className="text-right">เข้าเรียน</TableHead>
                 <TableHead className="text-right">คะแนนเฉลี่ย</TableHead>
+                <TableHead className="text-center">เกรดตอนนี้</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={8} className="py-10 text-center">
+                  <TableCell colSpan={9} className="py-10 text-center">
                     <div className="inline-flex items-center gap-2 text-muted-foreground">
                       <Spinner />
                       กำลังโหลดข้อมูล...
@@ -331,7 +360,7 @@ export default function Page() {
                 </TableRow>
               ) : studentRows.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={8} className="py-10 text-center text-muted-foreground">
+                  <TableCell colSpan={9} className="py-10 text-center text-muted-foreground">
                     ไม่พบข้อมูลนักเรียนในห้องเรียนนี้
                   </TableCell>
                 </TableRow>
@@ -346,6 +375,7 @@ export default function Page() {
                     <TableCell className="text-center">{row.leave}</TableCell>
                     <TableCell className="text-right">{formatPercent(row.attendanceRate)}</TableCell>
                     <TableCell className="text-right">{formatPercent(row.averageScore)}</TableCell>
+                    <TableCell className="text-center">{row.grade}</TableCell>
                   </TableRow>
                 ))
               )}

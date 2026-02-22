@@ -32,8 +32,14 @@ import z from 'zod'
 const CreateScoreAssignFormSchema = z.object({
   name: z.string().min(1, 'กรุณากรอกชื่องาน/ข้อสอบ'),
   description: z.string().optional().nullable(),
-  minScore: z.string().optional().refine((v) => !v || !isNaN(Number(v)), 'ต้องเป็นตัวเลข'),
-  maxScore: z.string().optional().refine((v) => !v || !isNaN(Number(v)), 'ต้องเป็นตัวเลข'),
+  minScore: z
+    .number()
+    .refine((v) => !v || !isNaN(Number(v)), 'ต้องเป็นตัวเลข')
+    .refine((v) => !v || Number(v) >= 0, 'คะแนนต่ำสุดต้องไม่น้อยกว่า 0'),
+  maxScore: z
+    .number()
+    .refine((v) => !v || !isNaN(Number(v)), 'ต้องเป็นตัวเลข')
+    .refine((v) => !v || Number(v) <= 10, 'คะแนนสูงสุดต้องไม่เกิน 10'),
   type: z.enum(assignEnum).optional(),
   assignDate: z.string().optional().nullable(),
   finalDate: z.string().optional().nullable(),
@@ -52,8 +58,8 @@ export function ScoreAssignCreateAction() {
     defaultValues: {
       name: '',
       description: null,
-      minScore: '',
-      maxScore: '',
+      minScore: 0,
+      maxScore: 10,
       type: undefined,
       assignDate: null,
       finalDate: null,
@@ -73,8 +79,12 @@ export function ScoreAssignCreateAction() {
               minScore: data.minScore ? Number(data.minScore) : undefined,
               maxScore: data.maxScore ? Number(data.maxScore) : undefined,
               type: data.type,
-              assignDate: data.assignDate ? new Date(data.assignDate).toISOString() : null,
-              finalDate: data.finalDate ? new Date(data.finalDate).toISOString() : null,
+              assignDate: data.assignDate
+                ? new Date(data.assignDate).toISOString()
+                : null,
+              finalDate: data.finalDate
+                ? new Date(data.finalDate).toISOString()
+                : null,
             },
             params: {
               path: {
@@ -117,10 +127,7 @@ export function ScoreAssignCreateAction() {
               <FormItem>
                 <FormLabel>ชื่องาน/ข้อสอบ *</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="เช่น งานที่ 1, สอบกลางภาค"
-                  />
+                  <Input {...field} placeholder="เช่น งานที่ 1, สอบกลางภาค" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -153,11 +160,7 @@ export function ScoreAssignCreateAction() {
                 <FormItem>
                   <FormLabel>คะแนนต่ำสุด</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      type="number"
-                      placeholder="0"
-                    />
+                    <Input {...field} type="number" placeholder="0" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -171,11 +174,7 @@ export function ScoreAssignCreateAction() {
                 <FormItem>
                   <FormLabel>คะแนนสูงสุด</FormLabel>
                   <FormControl>
-                    <Input
-                      {...field}
-                      type="number"
-                      placeholder="100"
-                    />
+                    <Input {...field} type="number" placeholder="100" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
