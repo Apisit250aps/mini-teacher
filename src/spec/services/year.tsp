@@ -7,7 +7,7 @@ namespace MiniTeacherService.YearsApi;
 @tag("Years")
 interface Years {
   /** List years */
-  @get list(): ApiResponse<Year[]> | ApiError;
+  @get list(): ApiResponse<YearDetail[]> | ApiError;
 
   /** Create a year */
   @post create(@body body: CreateYearBody): ApiResponse<Year> | ApiError;

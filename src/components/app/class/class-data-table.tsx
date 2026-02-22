@@ -9,6 +9,7 @@ import { Cell, ColumnDef } from '@tanstack/react-table'
 import { Pen, Trash } from 'lucide-react'
 import ClassForm from '@/components/app/class/class-form'
 import { ConfirmDialog } from '@/components/share/overlay/confirm-dialog'
+import { useClassesInYear } from '@/hooks/queries/use-year';
 
 const ColumnActions = ({ cell }: { cell: Cell<Class, unknown> }) => {
   const { onClassUpdate, onClassDelete } = useClassContext()
@@ -67,7 +68,7 @@ const columns: ColumnDef<Class>[] = [
 ]
 
 export default function ClassDataTable() {
-  const { classes } = useClassContext()
+  const classes = useClassesInYear()
 
-  return <DataTable columns={columns} data={classes} />
+  return <DataTable columns={columns} data={classes.data || []} isLoading={classes.isPending} />
 }

@@ -9,10 +9,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useOverlay } from '@/hooks/contexts/use-overlay'
-import { useYearQueries } from '@/hooks/queries/use-year'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
 
@@ -21,29 +18,20 @@ const schema = z.object({
   term: z.number().min(1).max(3),
 })
 
-export default function YearCreateForm() {
-  const { onCreate } = useYearQueries()
-  const { closeAll } = useOverlay()
-  
+export default function YearCreateForm({
+  value,
+  onSubmit,
+}: {
+  value?: { year: number; term: number }
+  onSubmit: (data: { year: number; term: number }) => void
+}) {
   const methods = useForm<{ year: number; term: number }>({
     resolver: zodResolver(schema),
     defaultValues: {
-      year: new Date().getFullYear() + 543,
-      term: 1,
+      year: value?.year ?? new Date().getFullYear() + 543,
+      term: value?.term ?? 1,
     },
   })
-
-  const onSubmit = useCallback(
-    async (data: { year: number; term: number }) => {
-      await onCreate({
-        year: data.year,
-        term: data.term,
-      })
-      methods.reset()
-      closeAll()
-    },
-    [onCreate, methods, closeAll],
-  )
 
   return (
     <Form {...methods}>

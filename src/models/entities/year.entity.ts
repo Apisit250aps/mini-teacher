@@ -1,5 +1,6 @@
 import { zodDate, zodTimestamp, zodAutoUuid, zodUuid } from '@/lib/zod/fields'
 import z from 'zod'
+import { BaseClassSchema } from './class.entity'
 
 export const BaseYearSchema = z.object({
   id: zodAutoUuid(),
@@ -10,6 +11,11 @@ export const BaseYearSchema = z.object({
   createdAt: zodDate(),
   updatedAt: zodTimestamp(),
 })
+
+export const YearDetailSchema = BaseYearSchema.extend({
+  classes: z.array(BaseClassSchema),
+})
+
 export const CreateYearSchema = BaseYearSchema.extend({
   createdAt: zodTimestamp(),
 })
@@ -18,5 +24,6 @@ export const UpdateYearSchema = BaseYearSchema.omit({
   createdAt: true,
 }).partial()
 export type Year = z.infer<typeof BaseYearSchema>
+export type YearDetail = z.infer<typeof YearDetailSchema>
 export type CreateYear = z.infer<typeof CreateYearSchema>
 export type UpdateYear = z.infer<typeof UpdateYearSchema>

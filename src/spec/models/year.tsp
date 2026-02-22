@@ -10,6 +10,10 @@ model Year {
   updatedAt: utcDateTime;
 }
 
+model YearDetail extends Year {
+  classes: Class[];
+}
+
 model CreateYearBody {
   year: int32;
   term: int32;

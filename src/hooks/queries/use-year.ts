@@ -1,7 +1,8 @@
+'use client'
 import { $api } from '@/lib/client'
 import { onSelectItem, onSettledToast } from '@/lib/utils/hooks'
 import { useYearContext } from '../app/use-year'
-import { Year } from '@/models'
+import { Class, Year, YearDetail } from '@/models'
 
 export const useClassesInYear = () => {
   const { activeYear } = useYearContext()
@@ -17,16 +18,14 @@ export const useClassesInYear = () => {
     },
     {
       enabled: !!activeYear.id,
-      select: onSelectItem,
+      select: onSelectItem<Class[]>,
     },
   )
   return classes
 }
 
 export const useYearQueries = () => {
-  const list = $api.useQuery('get', '/year', undefined, {
-    select: onSelectItem,
-  })
+  const list = $api.useQuery('get', '/year', {}, { select: onSelectItem<YearDetail[]> })
   const active = $api.useMutation('patch', '/year/{yearId}')
   const create = $api.useMutation('post', '/year')
   const update = $api.useMutation('put', '/year/{yearId}')

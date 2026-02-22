@@ -1,5 +1,5 @@
 import { yearsCollection } from '@/lib/mongo'
-import { Year } from '@/models/entities'
+import { Year, YearDetail } from '@/models/entities'
 import { v7 as uuidv7 } from 'uuid'
 
 export async function createYear(year: Year): Promise<Year> {
@@ -83,9 +83,24 @@ export async function authGetYearById(
   return yearsCol.findOne({ id, user: userId }, { projection: { _id: 0 } })
 }
 
-export async function authGetAllYears(userId: string): Promise<Year[]> {
+export async function authGetAllYears(userId: string): Promise<YearDetail[]> {
   const yearsCol = await yearsCollection()
-  return yearsCol.find({ user: userId }, { projection: { _id: 0 } }).toArray()
+  const result = await yearsCol
+    .aggregate<YearDetail>([
+      { $match: { user: userId } },
+      {
+        $lookup: {
+          from: 'classes',
+          localField: 'id',
+          foreignField: 'year',
+          as: 'classes',
+          pipeline: [{ $project: { _id: 0 } }],
+        },
+      },
+      { $project: { _id: 0 } },
+    ])
+    .toArray()
+  return result
 }
 
 export async function authUpdateYear(

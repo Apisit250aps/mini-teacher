@@ -1145,7 +1145,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Year'
+                      $ref: '#/components/schemas/YearDetail'
                   error:
                     type: string
         '400':
@@ -1966,3 +1966,14 @@ components:
         updatedAt:
           type: string
           format: date-time
+    YearDetail:
+      type: object
+      required:
+        - classes
+      properties:
+        classes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Class'
+      allOf:
+        - $ref: '#/components/schemas/Year'

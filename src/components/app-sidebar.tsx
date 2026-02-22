@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { GraduationCap, LibraryBig } from 'lucide-react'
+import { Calendar1, GraduationCap, LibraryBig } from 'lucide-react'
 
 import { NavMenu } from '@/components/nav-menu'
 import { NavUser } from '@/components/nav-user'
@@ -25,6 +25,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const nav = [
     { name: 'ห้องเรียน', url: `${basePath}/manage`, icon: LibraryBig },
     { name: 'นักเรียน', url: `${basePath}/student`, icon: GraduationCap },
+    { name: 'เทอม', url: `${basePath}/term`, icon: Calendar1 },
   ]
   return (
     <Sidebar collapsible="icon" {...props}>

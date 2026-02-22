@@ -492,6 +492,9 @@ export interface components {
             /** Format: date-time */
             updatedAt: string;
         };
+        YearDetail: {
+            classes: components["schemas"]["Class"][];
+        } & components["schemas"]["Year"];
     };
     responses: never;
     parameters: never;
@@ -1646,7 +1649,7 @@ export interface operations {
                     "application/json": {
                         success: boolean;
                         message: string;
-                        data?: components["schemas"]["Year"][];
+                        data?: components["schemas"]["YearDetail"][];
                         error?: string;
                     };
                 };

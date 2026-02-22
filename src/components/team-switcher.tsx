@@ -21,13 +21,26 @@ import {
 import { useYearContext } from '@/hooks/app/use-year'
 import ModalDialog from '@/components/share/overlay/modal-dialog'
 import YearCreateForm from '@/components/app/year/year-create-form'
+import { useOverlay } from '@/hooks/contexts/use-overlay'
+import { useYearQueries } from '@/hooks/queries/use-year'
 
 export function TeamSwitcher() {
   const { isMobile } = useSidebar()
-  const { activeYear, years, onActive } = useYearContext()
+  const { closeAll } = useOverlay()
+  const { activeYear, onActive } = useYearContext()
+  const { onCreate, list: years } = useYearQueries()
 
   if (!activeYear) {
     return null
+  }
+
+  const onSubmit = async (data: { year: number; term: number }) => {
+    await onCreate({
+      year: data.year,
+      term: data.term,
+    }).then(() => {
+      closeAll()
+    })
   }
 
   return (
@@ -63,7 +76,7 @@ export function TeamSwitcher() {
             <DropdownMenuLabel className="text-muted-foreground text-xs">
               Years
             </DropdownMenuLabel>
-            {years?.map((year) => (
+            {years.data?.map((year) => (
               <DropdownMenuItem
                 key={year.id}
                 onClick={() => onActive(year!)}
@@ -95,7 +108,7 @@ export function TeamSwitcher() {
                 </DropdownMenuItem>
               }
             >
-              <YearCreateForm />
+              <YearCreateForm onSubmit={onSubmit} />
             </ModalDialog>
           </DropdownMenuContent>
         </DropdownMenu>
