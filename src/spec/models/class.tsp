@@ -15,6 +15,7 @@ model CreateClassBody {
   name: string;
   subject: string;
   isActive?: boolean;
+  description?: string;
 }
 
 model UpdateClassBody {
@@ -23,6 +24,7 @@ model UpdateClassBody {
   subject?: string;
   isActive?: boolean;
   updatedAt?: utcDateTime;
+  description?: string;
 }
 
 model PatchClassMemberBody {

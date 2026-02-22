@@ -1,8 +1,9 @@
 'use client'
 import { $api } from '@/lib/client'
-import { onSelectItem, onSettledToast } from '@/lib/utils/hooks'
+import { onSettledToast } from '@/lib/utils/hooks'
 import { useYearContext } from '../app/use-year'
-import { Class, Year, YearDetail } from '@/models'
+import { Year } from '@/models'
+import { toast } from 'sonner'
 
 export const useClassesInYear = () => {
   const { activeYear } = useYearContext()
@@ -18,14 +19,39 @@ export const useClassesInYear = () => {
     },
     {
       enabled: !!activeYear.id,
-      select: onSelectItem<Class[]>,
+      select: (res) => {
+        if (!res) return []
+        if (!res.success) {
+          toast.error(res.message, {
+            description: res.error,
+          })
+          return []
+        }
+        return res.data
+      },
     },
   )
   return classes
 }
 
 export const useYearQueries = () => {
-  const list = $api.useQuery('get', '/year', {}, { select: onSelectItem<YearDetail[]> })
+  const list = $api.useQuery(
+    'get',
+    '/year',
+    {},
+    {
+      select: (res) => {
+        if (!res) return []
+        if (!res.success) {
+          toast.error(res.message, {
+            description: res.error,
+          })
+          return []
+        }
+        return res.data
+      },
+    },
+  )
   const active = $api.useMutation('patch', '/year/{yearId}')
   const create = $api.useMutation('post', '/year')
   const update = $api.useMutation('put', '/year/{yearId}')

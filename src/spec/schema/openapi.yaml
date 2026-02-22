@@ -1599,6 +1599,8 @@ components:
           type: string
         isActive:
           type: boolean
+        description:
+          type: string
     CreateScoreAssignBody:
       type: object
       required:
@@ -1869,6 +1871,8 @@ components:
         updatedAt:
           type: string
           format: date-time
+        description:
+          type: string
     UpdateScoreAssignBody:
       type: object
       properties:

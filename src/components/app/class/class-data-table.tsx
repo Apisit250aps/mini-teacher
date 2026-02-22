@@ -1,18 +1,20 @@
 'use client'
+import ClassForm from '@/components/app/class/class-form'
 import { ActionDropdown } from '@/components/share/overlay/action-dropdown'
 import ModalDialog from '@/components/share/overlay/modal-dialog'
 import DataTable from '@/components/share/table/data-table'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
-import { useClassContext } from '@/hooks/app/use-class'
 import { Class, ClassFormValue } from '@/models/entities'
 import { Cell, ColumnDef } from '@tanstack/react-table'
 import { Pen, Trash } from 'lucide-react'
-import ClassForm from '@/components/app/class/class-form'
 import { ConfirmDialog } from '@/components/share/overlay/confirm-dialog'
-import { useClassesInYear } from '@/hooks/queries/use-year';
+import { useClassesInYear } from '@/hooks/queries/use-year'
+import { useClassQueries } from '@/hooks/queries/use-class'
+import { useOverlay } from '@/hooks/contexts/use-overlay'
 
 const ColumnActions = ({ cell }: { cell: Cell<Class, unknown> }) => {
-  const { onClassUpdate, onClassDelete } = useClassContext()
+  const { onUpdate, onDelete } = useClassQueries()
+  const { closeAll } = useOverlay()
 
   return (
     <ActionDropdown id={`CLASS_ACTION_COLUMNS_${cell.row.original.id}`}>
@@ -30,12 +32,14 @@ const ColumnActions = ({ cell }: { cell: Cell<Class, unknown> }) => {
         <ClassForm
           value={cell.row.original}
           onSubmit={function (data: ClassFormValue): void {
-            onClassUpdate(cell.row.original.id, data)
+            onUpdate(cell.row.original.id, data).then(() => {
+              closeAll()
+            })
           }}
         />
       </ModalDialog>
       <ConfirmDialog
-        dialogKey="DELETE_CLASS_CONFIRM"
+        dialogKey={`DELETE_CLASS_CONFIRM_${cell.row.original.id}`}
         trigger={
           <DropdownMenuItem variant="destructive" className="text-destructive">
             <Trash />
@@ -44,7 +48,7 @@ const ColumnActions = ({ cell }: { cell: Cell<Class, unknown> }) => {
         }
         title="ยืนยันการลบห้องเรียน"
         description="คุณแน่ใจหรือไม่ว่าต้องการลบห้องเรียนนี้? การกระทำนี้ไม่สามารถย้อนกลับได้"
-        onConfirm={() => onClassDelete(cell.row.original.id)}
+        onConfirm={() => onDelete(cell.row.original.id).then(() => closeAll())}
       />
     </ActionDropdown>
   )
@@ -62,6 +66,11 @@ const columns: ColumnDef<Class>[] = [
     accessorKey: 'subject',
   },
   {
+    id: 'description',
+    header: 'รายละเอียด',
+    accessorKey: 'description',
+  },
+  {
     header: 'จัดการ',
     cell: ColumnActions,
   },
@@ -70,5 +79,11 @@ const columns: ColumnDef<Class>[] = [
 export default function ClassDataTable() {
   const classes = useClassesInYear()
 
-  return <DataTable columns={columns} data={classes.data || []} isLoading={classes.isPending} />
+  return (
+    <DataTable
+      columns={columns}
+      data={(classes.data as Class[]) || []}
+      isLoading={classes.isPending}
+    />
+  )
 }

@@ -326,6 +326,7 @@ export interface components {
             name: string;
             subject: string;
             isActive?: boolean;
+            description?: string;
         };
         CreateScoreAssignBody: {
             name: string;
@@ -445,6 +446,7 @@ export interface components {
             isActive?: boolean;
             /** Format: date-time */
             updatedAt?: string;
+            description?: string;
         };
         UpdateScoreAssignBody: {
             name?: string;

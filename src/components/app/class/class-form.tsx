@@ -13,6 +13,7 @@ import { useYearContext } from '@/hooks/app/use-year'
 import { ClassFormSchema, type ClassFormValue } from '@/models/entities'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { Textarea } from '@/components/ui/textarea'
 
 export default function ClassForm({
   value,
@@ -26,6 +27,7 @@ export default function ClassForm({
     defaultValues: {
       name: value?.name ?? '',
       subject: value?.subject ?? '',
+      description: value?.description ?? null,
       year: value?.year ?? activeYear?.id ?? '',
     },
   })
@@ -60,6 +62,23 @@ export default function ClassForm({
               <FormLabel>วิชา</FormLabel>
               <FormControl>
                 <Input {...field} placeholder="กรอกชื่อวิชา" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={methods.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>คำอธิบาย</FormLabel>
+              <FormControl>
+                <Textarea
+                  {...field}
+                  value={field.value ?? ''}
+                  placeholder="กรอกคำอธิบาย"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

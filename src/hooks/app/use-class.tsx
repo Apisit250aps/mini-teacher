@@ -1,10 +1,7 @@
 'use client'
 import { Class } from '@/models/entities'
-import React, { useCallback } from 'react'
-import { useClassQueries } from '@/hooks/queries/use-class'
+import React from 'react'
 import { Album } from 'lucide-react'
-import { toast } from 'sonner'
-import { useOverlay } from '@/hooks/contexts/use-overlay'
 import { useYearContext } from './use-year'
 import { useClassesInYear } from '../queries/use-year'
 
@@ -12,20 +9,6 @@ type ClassContextValue = {
   classes: Class[]
   classRoutes: { name: string; url: string; icon: typeof Album }[]
   activeClass?: Class
-  onClassCreate: (data: {
-    name: string
-    subject: string
-    year: string
-  }) => Promise<void>
-  onClassUpdate: (
-    classId: string,
-    data: {
-      name: string
-      subject: string
-      year: string
-    },
-  ) => Promise<void>
-  onClassDelete: (classId: string) => Promise<void>
 }
 
 const ClassContext = React.createContext<ClassContextValue | null>(null)
@@ -37,15 +20,9 @@ export function ClassProvider({
   children: React.ReactNode
   activeClass?: Class
 }) {
-  const {
-    create: createClass,
-    update: updateClass,
-    remove: deleteClass,
-  } = useClassQueries()
   // state
   const { activeYear } = useYearContext()
   const classList = useClassesInYear()
-  const { closeAll } = useOverlay()
   // memo
   const classes = React.useMemo(() => {
     if (classList.isPending) return []
@@ -68,95 +45,12 @@ export function ClassProvider({
     }))
   }, [classes, activeYear])
 
-  const onClassCreate = useCallback(
-    async (data: { name: string; subject: string; year: string }) => {
-      await createClass.mutateAsync(
-        {
-          body: {
-            name: data.name,
-            subject: data.subject,
-            year: data.year,
-          },
-        },
-        {
-          onSuccess: () => {
-            closeAll()
-          },
-        },
-      )
-    },
-    [closeAll, createClass],
-  )
-
-  const onClassUpdate = useCallback(
-    async (
-      classId: string,
-      data: { name: string; subject: string; year: string },
-    ) => {
-      await updateClass.mutateAsync(
-        {
-          params: {
-            path: {
-              classId: classId,
-            },
-          },
-          body: {
-            name: data.name,
-            subject: data.subject,
-            year: data.year,
-          },
-        },
-        {
-          onSettled(data, error) {
-            if (error) {
-              toast.error('เกิดข้อผิดพลาดในการอัปเดตชั้นเรียน')
-              return
-            }
-            toast.success('อัปเดตชั้นเรียนเรียบร้อยแล้ว')
-            classList.refetch()
-            closeAll()
-          },
-        },
-      )
-    },
-    [classList, closeAll, updateClass],
-  )
-
-  const onClassDelete = useCallback(
-    async (classId: string) => {
-      await deleteClass.mutateAsync(
-        {
-          params: {
-            path: {
-              classId: classId,
-            },
-          },
-        },
-        {
-          onSettled(data, error) {
-            if (error) {
-              toast.error('เกิดข้อผิดพลาดในการลบชั้นเรียน')
-              return
-            }
-            toast.success('ลบชั้นเรียนเรียบร้อยแล้ว')
-            classList.refetch()
-            closeAll()
-          },
-        },
-      )
-    },
-    [classList, closeAll, deleteClass],
-  )
-
   return (
     <ClassContext.Provider
       value={{
         classes,
         classRoutes,
         activeClass,
-        onClassCreate,
-        onClassUpdate,
-        onClassDelete,
       }}
     >
       {children}
