@@ -78,13 +78,35 @@ export const useScoreQueries = () => {
     'put',
     '/year/{yearId}/class/{classId}/score/{scoreAssignId}/student',
     {
-      onSettled: onSettledToast,
+      onError: (error) => onSettledToast(undefined, error),
     },
   )
+
+  const onInputScore = async (
+    scoreAssignId: string,
+    studentId: string,
+    score: number,
+  ) => {
+    if (!activeYear.id || !activeClass?.id) return
+    await scoreStudent.mutateAsync({
+      params: {
+        path: {
+          yearId: activeYear.id,
+          classId: activeClass.id,
+          scoreAssignId,
+        },
+      },
+      body: {
+        studentId,
+        score,
+      },
+    })
+  }
 
   return {
     list,
     create,
     scoreStudent,
+    onInputScore,
   }
 }

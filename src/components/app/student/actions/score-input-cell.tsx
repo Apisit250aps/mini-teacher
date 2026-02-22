@@ -10,7 +10,6 @@ import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import z from 'zod'
 
-
 type ScoreInputCellProps = {
   assign: ScoreAssignDetail
   studentId: string
@@ -24,7 +23,7 @@ export function ScoreInputCell({
 }: ScoreInputCellProps) {
   const { activeClass } = useClassContext()
   const { activeYear } = useYearContext()
-  const { scoreStudent } = useScoreQueries()
+  const { scoreStudent, onInputScore } = useScoreQueries()
   const schema = useMemo(
     () =>
       z.object({
@@ -78,21 +77,9 @@ export function ScoreInputCell({
     async (score: number) => {
       if (!activeYear.id || !activeClass?.id) return
 
-      await scoreStudent.mutateAsync({
-        params: {
-          path: {
-            yearId: activeYear.id,
-            classId: activeClass.id,
-            scoreAssignId: assign.id,
-          },
-        },
-        body: {
-          studentId,
-          score,
-        },
-      })
+      await onInputScore(assign.id, studentId, score)
     },
-    [activeYear.id, activeClass, scoreStudent, assign.id, studentId],
+    [activeYear.id, activeClass, onInputScore, assign.id, studentId],
   )
 
   const commitValue = useCallback(
@@ -118,6 +105,7 @@ export function ScoreInputCell({
 
   return (
     <Controller
+      key={`${assign.id}-${studentId}`}
       control={methods.control}
       name="score"
       render={({ field }) => (

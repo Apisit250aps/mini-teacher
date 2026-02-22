@@ -79,7 +79,7 @@ export async function getScoreAssignsByClassId(
           ],
         },
       },
-      { $sort: { createdAt: -1 } },
+      { $sort: { createdAt: 1 } },
     ])
     .toArray()
   return data
