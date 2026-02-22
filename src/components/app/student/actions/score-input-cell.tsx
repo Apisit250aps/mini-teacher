@@ -1,16 +1,15 @@
 'use client'
 
 import { Input } from '@/components/ui/input'
-import { useStudentScore } from '@/hooks/app/use-score';
+import { useClassContext } from '@/hooks/app/use-class'
+import { useYearContext } from '@/hooks/app/use-year'
+import { useScoreQueries } from '@/hooks/queries/use-score'
 import { ScoreAssignDetail } from '@/models'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import z from 'zod'
 
-type ScoreInputCellForm = {
-  score: string
-}
 
 type ScoreInputCellProps = {
   assign: ScoreAssignDetail
@@ -23,7 +22,9 @@ export function ScoreInputCell({
   assign,
   studentId,
 }: ScoreInputCellProps) {
-  const {} = useStudentScore()
+  const { activeClass } = useClassContext()
+  const { activeYear } = useYearContext()
+  const { scoreStudent } = useScoreQueries()
   const schema = useMemo(
     () =>
       z.object({
@@ -43,7 +44,7 @@ export function ScoreInputCell({
     [assign.minScore, assign.maxScore],
   )
 
-  const methods = useForm<ScoreInputCellForm>({
+  const methods = useForm({
     resolver: zodResolver(schema),
     mode: 'onBlur',
     defaultValues: {
@@ -64,6 +65,36 @@ export function ScoreInputCell({
     })
   }, [methods, assign.scores, studentId])
 
+  const onDraftChange = useCallback(
+    (value: string) => {
+      methods.setValue('score', value, {
+        shouldDirty: true,
+      })
+    },
+    [methods],
+  )
+
+  const onCommit = useCallback(
+    async (score: number) => {
+      if (!activeYear.id || !activeClass?.id) return
+
+      await scoreStudent.mutateAsync({
+        params: {
+          path: {
+            yearId: activeYear.id,
+            classId: activeClass.id,
+            scoreAssignId: assign.id,
+          },
+        },
+        body: {
+          studentId,
+          score,
+        },
+      })
+    },
+    [activeYear.id, activeClass, scoreStudent, assign.id, studentId],
+  )
+
   const commitValue = useCallback(
     async (rawValue: string) => {
       const normalized =
@@ -80,7 +111,7 @@ export function ScoreInputCell({
       onDraftChange(String(safeScore))
       await onCommit(safeScore)
     },
-    [methods, assign.minScore],
+    [methods, assign.minScore, onDraftChange, onCommit],
   )
 
   const errorMessage = methods.formState.errors.score?.message
@@ -116,7 +147,7 @@ export function ScoreInputCell({
               e.currentTarget.blur()
             }
           }}
-          disabled={disabled}
+          disabled={disabled || scoreStudent.isPending || !assign.isEditable}
         />
       )}
     />

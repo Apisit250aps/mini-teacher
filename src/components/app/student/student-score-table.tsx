@@ -18,7 +18,6 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from '@/components/ui/context-menu'
-import { ScoreAssign, ScoreAssignDetail } from '@/models'
 
 export default function StudentScoreTable() {
   const { scoreStudent, classMembers, isLoading } = useStudentScore()

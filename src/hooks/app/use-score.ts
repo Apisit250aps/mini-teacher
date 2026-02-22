@@ -1,5 +1,5 @@
 import { useGetClassMembers } from '../queries/use-class'
-import { useGetScoreAssigns, useScoreQueries } from '../queries/use-score'
+import { useGetScoreAssigns } from '../queries/use-score'
 
 export const useStudentScore = () => {
   
