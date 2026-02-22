@@ -78,7 +78,6 @@ export function ScoreAssignCreateAction() {
             },
             params: {
               path: {
-                yearId: activeYear.id,
                 classId: activeClass.id,
               },
             },

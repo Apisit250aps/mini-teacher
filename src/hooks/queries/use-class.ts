@@ -1,7 +1,7 @@
 import { $api } from '@/lib/client'
 import { useClassContext } from '@/hooks/app/use-class'
 import { toast } from 'sonner'
-import { UpdateClass } from '@/models'
+import { CreateClass, UpdateClass } from '@/models'
 
 export const useGetClassMembers = (classId?: string) => {
   const { activeClass } = useClassContext()
@@ -102,20 +102,20 @@ export const useClassQueries = () => {
     },
   })
 
-  const onUpdate = (classId: string, data: UpdateClass) => {
+  const onCreate = (data: Omit<CreateClass, 'id' | 'isActive' | 'createdAt' | 'updatedAt'>) => {
+    return create.mutateAsync({
+      body: data,
+    })
+  }
+
+  const onUpdate = (classId: string, data: Omit<UpdateClass, 'updatedAt'>) => {
     return update.mutateAsync({
       params: {
         path: {
           classId: classId,
         },
       },
-      body: {
-        name: data.name,
-        subject: data.subject,
-        year: data.year,
-        isActive: data.isActive,
-        description: data.description ?? '',
-      },
+      body: data,
     })
   }
 
@@ -135,6 +135,7 @@ export const useClassQueries = () => {
     remove,
     addOrRemoveMember,
     addMember,
+    onCreate,
     onUpdate,
     onDelete,
   }

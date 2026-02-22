@@ -4,13 +4,15 @@ import ClassForm from '@/components/app/class/class-form'
 import PageLayout from '@/components/layouts/page-layout'
 import ModalDialog from '@/components/share/overlay/modal-dialog'
 import { Button } from '@/components/ui/button'
-import { useClassContext } from '@/hooks/app/use-class'
 import { useYearContext } from '@/hooks/app/use-year'
+import { useOverlay } from '@/hooks/contexts/use-overlay'
+import { useClassQueries } from '@/hooks/queries/use-class'
 import React from 'react'
 
 export default function ClassView() {
   const { activeYear } = useYearContext()
-  const { onClassCreate } = useClassContext()
+  const { onCreate } = useClassQueries()
+  const { closeAll } = useOverlay()
 
   return (
     <PageLayout
@@ -26,7 +28,9 @@ export default function ClassView() {
               </Button>
             }
           >
-            <ClassForm onSubmit={onClassCreate} />
+            <ClassForm
+              onSubmit={(data) => onCreate(data).then(() => closeAll())}
+            />
           </ModalDialog>
         </>
       }

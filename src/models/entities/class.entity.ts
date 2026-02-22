@@ -6,7 +6,7 @@ export const BaseClassSchema = z.object({
   year: zodUuid(),
   name: z.string().min(1, 'ชื่อห้องเรียนต้องไม่ว่าง'),
   subject: z.string().min(1, 'วิชาต้องไม่ว่าง'),
-  description: z.string().nullable(),
+  description: z.string(),
   isActive: z.boolean().default(true),
   createdAt: zodDate(),
   updatedAt: zodTimestamp(),

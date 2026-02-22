@@ -27,7 +27,7 @@ export default function ClassForm({
     defaultValues: {
       name: value?.name ?? '',
       subject: value?.subject ?? '',
-      description: value?.description ?? null,
+      description: value?.description ?? '-',
       year: value?.year ?? activeYear?.id ?? '',
     },
   })
