@@ -1,6 +1,8 @@
 'use client'
 
 import { Input } from '@/components/ui/input'
+import { useStudentScore } from '@/hooks/app/use-score';
+import { ScoreAssignDetail } from '@/models'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -11,22 +13,17 @@ type ScoreInputCellForm = {
 }
 
 type ScoreInputCellProps = {
-  value: string | number
-  minScore: number
-  maxScore: number
-  onDraftChange: (value: string) => void
-  onCommit: (score: number) => Promise<void>
+  assign: ScoreAssignDetail
+  studentId: string
   disabled?: boolean
 }
 
 export function ScoreInputCell({
-  value,
-  minScore,
-  maxScore,
-  onDraftChange,
-  onCommit,
   disabled = false,
+  assign,
+  studentId,
 }: ScoreInputCellProps) {
+  const {} = useStudentScore()
   const schema = useMemo(
     () =>
       z.object({
@@ -34,17 +31,25 @@ export function ScoreInputCell({
           .string()
           .min(1, 'กรุณากรอกคะแนน')
           .refine((v) => !Number.isNaN(Number(v)), 'ต้องเป็นตัวเลข')
-          .refine((v) => Number(v) >= minScore, `ต้องไม่น้อยกว่า ${minScore}`)
-          .refine((v) => Number(v) <= maxScore, `ต้องไม่เกิน ${maxScore}`),
+          .refine(
+            (v) => Number(v) >= assign.minScore,
+            `ต้องไม่น้อยกว่า ${assign.minScore}`,
+          )
+          .refine(
+            (v) => Number(v) <= assign.maxScore,
+            `ต้องไม่เกิน ${assign.maxScore}`,
+          ),
       }),
-    [maxScore, minScore],
+    [assign.minScore, assign.maxScore],
   )
 
   const methods = useForm<ScoreInputCellForm>({
     resolver: zodResolver(schema),
     mode: 'onBlur',
     defaultValues: {
-      score: String(value ?? ''),
+      score: String(
+        assign.scores.find((s) => s.studentId === studentId)?.score ?? '',
+      ),
     },
   })
 
@@ -52,12 +57,17 @@ export function ScoreInputCell({
 
   useEffect(() => {
     if (isFocusedRef.current) return
-    methods.reset({ score: String(value ?? '') })
-  }, [methods, value])
+    methods.reset({
+      score: String(
+        assign.scores.find((s) => s.studentId === studentId)?.score ?? '',
+      ),
+    })
+  }, [methods, assign.scores, studentId])
 
   const commitValue = useCallback(
     async (rawValue: string) => {
-      const normalized = rawValue.trim() === '' ? String(minScore) : rawValue
+      const normalized =
+        rawValue.trim() === '' ? String(assign.minScore) : rawValue
       methods.setValue('score', normalized, {
         shouldDirty: true,
         shouldValidate: true,
@@ -70,7 +80,7 @@ export function ScoreInputCell({
       onDraftChange(String(safeScore))
       await onCommit(safeScore)
     },
-    [methods, minScore, onCommit, onDraftChange],
+    [methods, assign.minScore],
   )
 
   const errorMessage = methods.formState.errors.score?.message
@@ -83,8 +93,8 @@ export function ScoreInputCell({
         <Input
           className="[&::-webkit-outer-spin-button]:hidden [&::-webkit-inner-spin-button]:hidden max-w-20 w-full"
           type="number"
-          min={minScore}
-          max={maxScore}
+          min={assign.minScore}
+          max={assign.maxScore}
           value={field.value ?? ''}
           aria-invalid={!!errorMessage}
           title={errorMessage ? String(errorMessage) : undefined}

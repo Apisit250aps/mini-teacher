@@ -1732,6 +1732,7 @@ components:
         - classId
         - name
         - isEditable
+        - description
         - minScore
         - maxScore
         - type
@@ -1789,7 +1790,7 @@ components:
         scores:
           type: array
           items:
-            $ref: '#/components/schemas/ScoreStudent'
+            $ref: '#/components/schemas/ScoreStudentDetail'
       allOf:
         - $ref: '#/components/schemas/ScoreAssign'
     ScoreStudent:

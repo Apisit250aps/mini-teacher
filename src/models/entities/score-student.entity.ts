@@ -1,5 +1,6 @@
 import { zodAutoUuid, zodDate, zodTimestamp, zodUuid } from '@/lib/zod/fields'
 import z from 'zod'
+import { BaseStudentSchema } from './student.entity'
 
 export const BaseScoreStudent = z.object({
   id: zodAutoUuid(),
@@ -8,6 +9,10 @@ export const BaseScoreStudent = z.object({
   score: z.number().min(0).default(0),
   createdAt: zodDate(),
   updatedAt: zodTimestamp(),
+})
+
+export const ScoreStudentDetailSchema = BaseScoreStudent.extend({
+  student: BaseStudentSchema,
 })
 
 export const CreateScoreStudentSchema = BaseScoreStudent.omit({
@@ -19,4 +24,5 @@ export const CreateScoreStudentSchema = BaseScoreStudent.omit({
 })
 
 export type ScoreStudent = z.infer<typeof BaseScoreStudent>
+export type ScoreStudentDetail = z.infer<typeof ScoreStudentDetailSchema>
 export type CreateScoreStudent = z.infer<typeof CreateScoreStudentSchema>

@@ -5,7 +5,7 @@ model ScoreAssign {
   classId: string;
   name: string;
   isEditable: boolean;
-  description?: string | null;
+  description: string | null;
   minScore: int32 = 0;
   maxScore: int32 = 100;
   type: "ASSIGNMENT" | "QUIZ" | "EXAM" = "ASSIGNMENT";
@@ -16,7 +16,7 @@ model ScoreAssign {
 }
 
 model ScoreAssignDetail extends ScoreAssign {
-  scores: ScoreStudent[];
+  scores: ScoreStudentDetail[];
 }
 
 model ScoreStudent {

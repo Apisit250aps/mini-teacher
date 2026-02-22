@@ -372,7 +372,7 @@ export interface components {
             classId: string;
             name: string;
             isEditable: boolean;
-            description?: string | null;
+            description: string | null;
             /**
              * Format: int32
              * @default 0
@@ -396,7 +396,7 @@ export interface components {
             updatedAt: string;
         };
         ScoreAssignDetail: {
-            scores: components["schemas"]["ScoreStudent"][];
+            scores: components["schemas"]["ScoreStudentDetail"][];
         } & components["schemas"]["ScoreAssign"];
         ScoreStudent: {
             id: string;

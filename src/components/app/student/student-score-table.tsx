@@ -1,6 +1,6 @@
 'use client'
 import { ScoreAssignCreateAction } from '@/components/app/class/score/action-modal'
-import { ScoreInputCell } from '@/components/app/student/score-input-cell'
+import { ScoreInputCell } from '@/components/app/student/actions/score-input-cell'
 import {
   Table,
   TableBody,
@@ -18,9 +18,10 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from '@/components/ui/context-menu'
+import { ScoreAssign, ScoreAssignDetail } from '@/models'
 
 export default function StudentScoreTable() {
-  const { scoreAssigns, classMembers, isLoading } = useStudentScore()
+  const { scoreStudent, classMembers, isLoading } = useStudentScore()
 
   return (
     <div className="space-y-4">
@@ -34,7 +35,7 @@ export default function StudentScoreTable() {
             <TableRow>
               <TableHead className="w-20">รหัสนักเรียน</TableHead>
               <TableHead className="w-auto">ชื่อนักเรียน</TableHead>
-              {scoreAssigns?.map((assign) => (
+              {scoreStudent?.data?.map((assign) => (
                 <ContextMenu key={assign.id}>
                   <ContextMenuTrigger asChild>
                     <TableHead className="text-center">{assign.name}</TableHead>
@@ -53,7 +54,7 @@ export default function StudentScoreTable() {
             {isLoading ? (
               <TableRow>
                 <TableCell
-                  colSpan={scoreAssigns?.length ?? 0 + 2}
+                  colSpan={scoreStudent?.data?.length ?? 0 + 2}
                   className="text-center py-10"
                 >
                   <Spinner />
@@ -68,26 +69,25 @@ export default function StudentScoreTable() {
                       {member.student.prefix}
                       {member.student.firstName} {member.student.lastName}
                     </TableCell>
-                    {scoreAssigns?.map((assign) => (
-                      <TableCell key={assign.id} className="text-center p-1">
-                        <ScoreInputCell
-                          value={
-                            assign.scores.find(
-                              (s) => s.studentId === member.studentId,
-                            )?.score ?? ''
-                          }
-                          minScore={assign.minScore ?? 0}
-                          maxScore={assign.maxScore ?? 10}
-                          onDraftChange={function (value: string): void {
-                            throw new Error('Function not implemented.')
-                          }}
-                          onCommit={function (score: number): Promise<void> {
-                            throw new Error('Function not implemented.')
-                          }}
-                          disabled={!assign.isEditable}
-                        />
-                      </TableCell>
-                    ))}
+                    {scoreStudent?.data?.map((assign) => {
+                      const convertedAssign = {
+                        ...assign,
+                        assignDate: assign.assignDate
+                          ? new Date(assign.assignDate)
+                          : null,
+                        finalDate: assign.finalDate
+                          ? new Date(assign.finalDate)
+                          : null,
+                      }
+                      return (
+                        <TableCell key={assign.id} className="text-center p-1">
+                          <ScoreInputCell
+                            studentId={member.studentId}
+                            assign={convertedAssign}
+                          />
+                        </TableCell>
+                      )
+                    })}
                   </TableRow>
                 ))}
               </React.Fragment>
