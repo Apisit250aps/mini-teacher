@@ -7,7 +7,6 @@ import { onSettledToast } from '@/lib/utils/hooks'
 export const useGetScoreAssigns = (classId?: string) => {
   const { activeClass } = useClassContext()
 
-
   const query = $api.useQuery(
     'get',
     '/class/{classId}/score',
@@ -64,13 +63,9 @@ export const useScoreQueries = () => {
     },
   )
 
-  const create = $api.useMutation(
-    'post',
-    '/class/{classId}/score',
-    {
-      onSettled: onSettledToast,
-    },
-  )
+  const create = $api.useMutation('post', '/class/{classId}/score', {
+    onSettled: onSettledToast,
+  })
 
   const scoreStudent = $api.useMutation(
     'put',
