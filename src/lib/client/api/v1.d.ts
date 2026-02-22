@@ -109,6 +109,60 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/class/{classId}/score": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description List score assignments in a class */
+        get: operations["Scores_list"];
+        put?: never;
+        /** @description Create a score assignment */
+        post: operations["Scores_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/class/{classId}/score/{scoreAssignId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Get a score assignment by id */
+        get: operations["Scores_getById"];
+        /** @description Update a score assignment */
+        put: operations["Scores_update"];
+        post?: never;
+        /** @description Delete a score assignment */
+        delete: operations["Scores_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/class/{classId}/score/{scoreAssignId}/student": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** @description Create or update a score for a student */
+        put: operations["Scores_upsertScoreStudent"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/student": {
         parameters: {
             query?: never;
@@ -193,60 +247,6 @@ export interface paths {
         /** @description Get classes in a year */
         get: operations["Years_getClasses"];
         put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/year/{yearId}/class/{classId}/score": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description List score assignments in a class */
-        get: operations["Scores_list"];
-        put?: never;
-        /** @description Create a score assignment */
-        post: operations["Scores_create"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/year/{yearId}/class/{classId}/score/{scoreAssignId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Get a score assignment by id */
-        get: operations["Scores_getById"];
-        /** @description Update a score assignment */
-        put: operations["Scores_update"];
-        post?: never;
-        /** @description Delete a score assignment */
-        delete: operations["Scores_delete"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/year/{yearId}/class/{classId}/score/{scoreAssignId}/student": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /** @description Create or update a score for a student */
-        put: operations["Scores_upsertScoreStudent"];
         post?: never;
         delete?: never;
         options?: never;
@@ -1113,6 +1113,292 @@ export interface operations {
             };
         };
     };
+    Scores_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                classId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["ScoreAssignDetail"][];
+                        error?: string;
+                    };
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    Scores_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                classId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateScoreAssignBody"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["ScoreAssign"];
+                        error?: string;
+                    };
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    Scores_getById: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                classId: string;
+                scoreAssignId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["ScoreAssignDetail"];
+                        error?: string;
+                    };
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    Scores_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                classId: string;
+                scoreAssignId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateScoreAssignBody"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["ScoreAssign"];
+                        error?: string;
+                    };
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    Scores_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                classId: string;
+                scoreAssignId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["EmptyData"];
+                        error?: string;
+                    };
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
+    Scores_upsertScoreStudent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                classId: string;
+                scoreAssignId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateScoreStudentBody"] | components["schemas"]["UpdateScoreStudentBody"];
+            };
+        };
+        responses: {
+            /** @description The request has succeeded. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                        message: string;
+                        data?: components["schemas"]["ScoreStudent"];
+                        error?: string;
+                    };
+                };
+            };
+            /** @description The server could not understand the request due to invalid syntax. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Server error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+        };
+    };
     Students_list: {
         parameters: {
             query?: never;
@@ -1637,298 +1923,6 @@ export interface operations {
                         success: boolean;
                         message: string;
                         data?: components["schemas"]["Class"][];
-                        error?: string;
-                    };
-                };
-            };
-            /** @description The server could not understand the request due to invalid syntax. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Server error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
-    };
-    Scores_list: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                yearId: string;
-                classId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The request has succeeded. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        success: boolean;
-                        message: string;
-                        data?: components["schemas"]["ScoreAssignDetail"][];
-                        error?: string;
-                    };
-                };
-            };
-            /** @description The server could not understand the request due to invalid syntax. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Server error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
-    };
-    Scores_create: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                yearId: string;
-                classId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateScoreAssignBody"];
-            };
-        };
-        responses: {
-            /** @description The request has succeeded. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        success: boolean;
-                        message: string;
-                        data?: components["schemas"]["ScoreAssign"];
-                        error?: string;
-                    };
-                };
-            };
-            /** @description The server could not understand the request due to invalid syntax. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Server error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
-    };
-    Scores_getById: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                yearId: string;
-                classId: string;
-                scoreAssignId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The request has succeeded. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        success: boolean;
-                        message: string;
-                        data?: components["schemas"]["ScoreAssignDetail"];
-                        error?: string;
-                    };
-                };
-            };
-            /** @description The server could not understand the request due to invalid syntax. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Server error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
-    };
-    Scores_update: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                yearId: string;
-                classId: string;
-                scoreAssignId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateScoreAssignBody"];
-            };
-        };
-        responses: {
-            /** @description The request has succeeded. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        success: boolean;
-                        message: string;
-                        data?: components["schemas"]["ScoreAssign"];
-                        error?: string;
-                    };
-                };
-            };
-            /** @description The server could not understand the request due to invalid syntax. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Server error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
-    };
-    Scores_delete: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                yearId: string;
-                classId: string;
-                scoreAssignId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description The request has succeeded. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        success: boolean;
-                        message: string;
-                        data?: components["schemas"]["EmptyData"];
-                        error?: string;
-                    };
-                };
-            };
-            /** @description The server could not understand the request due to invalid syntax. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Server error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-        };
-    };
-    Scores_upsertScoreStudent: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                yearId: string;
-                classId: string;
-                scoreAssignId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateScoreStudentBody"] | components["schemas"]["UpdateScoreStudentBody"];
-            };
-        };
-        responses: {
-            /** @description The request has succeeded. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        success: boolean;
-                        message: string;
-                        data?: components["schemas"]["ScoreStudent"];
                         error?: string;
                     };
                 };

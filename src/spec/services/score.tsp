@@ -3,18 +3,14 @@ using TypeSpec.Rest;
 
 namespace MiniTeacherService.ScoresApi;
 
-@route("/year/{yearId}/class/{classId}/score")
+@route("class/{classId}/score")
 @tag("Scores")
 interface Scores {
   /** List score assignments in a class */
-  @get list(
-    @path yearId: string,
-    @path classId: string,
-  ): ApiResponse<ScoreAssignDetail[]> | ApiError;
+  @get list(@path classId: string): ApiResponse<ScoreAssignDetail[]> | ApiError;
 
   /** Create a score assignment */
   @post create(
-    @path yearId: string,
     @path classId: string,
     @body body: CreateScoreAssignBody,
   ): ApiResponse<ScoreAssign> | ApiError;
@@ -23,7 +19,6 @@ interface Scores {
   @route("{scoreAssignId}")
   @put
   update(
-    @path yearId: string,
     @path classId: string,
     @path scoreAssignId: string,
     @body body: UpdateScoreAssignBody,
@@ -33,7 +28,6 @@ interface Scores {
   @route("{scoreAssignId}")
   @delete
   delete(
-    @path yearId: string,
     @path classId: string,
     @path scoreAssignId: string,
   ): ApiResponse<EmptyData> | ApiError;
@@ -42,7 +36,6 @@ interface Scores {
   @route("{scoreAssignId}")
   @get
   getById(
-    @path yearId: string,
     @path classId: string,
     @path scoreAssignId: string,
   ): ApiResponse<ScoreAssignDetail> | ApiError;
@@ -51,7 +44,6 @@ interface Scores {
   @route("{scoreAssignId}/student")
   @put
   upsertScoreStudent(
-    @path yearId: string,
     @path classId: string,
     @path scoreAssignId: string,
     @body body: CreateScoreStudentBody | UpdateScoreStudentBody,

@@ -6,19 +6,18 @@ import { onSettledToast } from '@/lib/utils/hooks'
 
 export const useGetScoreAssigns = (classId?: string) => {
   const { activeClass } = useClassContext()
-  const { activeYear } = useYearContext()
+
 
   const query = $api.useQuery(
     'get',
-    '/year/{yearId}/class/{classId}/score',
+    '/class/{classId}/score',
     {
       params: {
         path: {
-          yearId: activeYear.id,
           classId: (activeClass?.id ?? classId) as string,
         },
       },
-      enabled: !!activeYear.id && (!!activeClass?.id || !!classId),
+      enabled: !!activeClass?.id || !!classId,
     },
     {
       select: (res) => {
@@ -42,15 +41,14 @@ export const useScoreQueries = () => {
 
   const list = $api.useQuery(
     'get',
-    '/year/{yearId}/class/{classId}/score',
+    '/class/{classId}/score',
     {
       params: {
         path: {
-          yearId: activeYear.id,
           classId: activeClass?.id as string,
         },
       },
-      enabled: !!activeYear.id && !!activeClass?.id,
+      enabled: !!activeClass?.id,
     },
     {
       select: (res) => {
@@ -68,7 +66,7 @@ export const useScoreQueries = () => {
 
   const create = $api.useMutation(
     'post',
-    '/year/{yearId}/class/{classId}/score',
+    '/class/{classId}/score',
     {
       onSettled: onSettledToast,
     },
@@ -76,7 +74,7 @@ export const useScoreQueries = () => {
 
   const scoreStudent = $api.useMutation(
     'put',
-    '/year/{yearId}/class/{classId}/score/{scoreAssignId}/student',
+    '/class/{classId}/score/{scoreAssignId}/student',
     {
       onError: (error) => onSettledToast(undefined, error),
     },
@@ -91,7 +89,6 @@ export const useScoreQueries = () => {
     await scoreStudent.mutateAsync({
       params: {
         path: {
-          yearId: activeYear.id,
           classId: activeClass.id,
           scoreAssignId,
         },

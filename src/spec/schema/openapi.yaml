@@ -610,6 +610,303 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Classes
+  /class/{classId}/score:
+    get:
+      operationId: Scores_list
+      description: List score assignments in a class
+      parameters:
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ScoreAssignDetail'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Scores
+    post:
+      operationId: Scores_create
+      description: Create a score assignment
+      parameters:
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/ScoreAssign'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Scores
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateScoreAssignBody'
+  /class/{classId}/score/{scoreAssignId}:
+    put:
+      operationId: Scores_update
+      description: Update a score assignment
+      parameters:
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: scoreAssignId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/ScoreAssign'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Scores
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateScoreAssignBody'
+    delete:
+      operationId: Scores_delete
+      description: Delete a score assignment
+      parameters:
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: scoreAssignId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/EmptyData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Scores
+    get:
+      operationId: Scores_getById
+      description: Get a score assignment by id
+      parameters:
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: scoreAssignId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/ScoreAssignDetail'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Scores
+  /class/{classId}/score/{scoreAssignId}/student:
+    put:
+      operationId: Scores_upsertScoreStudent
+      description: Create or update a score for a student
+      parameters:
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: scoreAssignId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/ScoreStudent'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Scores
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              anyOf:
+                - $ref: '#/components/schemas/CreateScoreStudentBody'
+                - $ref: '#/components/schemas/UpdateScoreStudentBody'
   /student:
     get:
       operationId: Students_list
@@ -1128,333 +1425,6 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Years
-  /year/{yearId}/class/{classId}/score:
-    get:
-      operationId: Scores_list
-      description: List score assignments in a class
-      parameters:
-        - name: yearId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ScoreAssignDetail'
-                  error:
-                    type: string
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      tags:
-        - Scores
-    post:
-      operationId: Scores_create
-      description: Create a score assignment
-      parameters:
-        - name: yearId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/ScoreAssign'
-                  error:
-                    type: string
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      tags:
-        - Scores
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateScoreAssignBody'
-  /year/{yearId}/class/{classId}/score/{scoreAssignId}:
-    put:
-      operationId: Scores_update
-      description: Update a score assignment
-      parameters:
-        - name: yearId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: scoreAssignId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/ScoreAssign'
-                  error:
-                    type: string
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      tags:
-        - Scores
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateScoreAssignBody'
-    delete:
-      operationId: Scores_delete
-      description: Delete a score assignment
-      parameters:
-        - name: yearId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: scoreAssignId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/EmptyData'
-                  error:
-                    type: string
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      tags:
-        - Scores
-    get:
-      operationId: Scores_getById
-      description: Get a score assignment by id
-      parameters:
-        - name: yearId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: scoreAssignId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/ScoreAssignDetail'
-                  error:
-                    type: string
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      tags:
-        - Scores
-  /year/{yearId}/class/{classId}/score/{scoreAssignId}/student:
-    put:
-      operationId: Scores_upsertScoreStudent
-      description: Create or update a score for a student
-      parameters:
-        - name: yearId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: scoreAssignId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/ScoreStudent'
-                  error:
-                    type: string
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      tags:
-        - Scores
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              anyOf:
-                - $ref: '#/components/schemas/CreateScoreStudentBody'
-                - $ref: '#/components/schemas/UpdateScoreStudentBody'
 components:
   schemas:
     CheckDate:
