@@ -10,21 +10,53 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { useStudentCheck } from '@/hooks/app/use-check'
 import { useClassContext } from '@/hooks/app/use-class'
-import { useYearContext } from '@/hooks/app/use-year'
 import { useOverlay } from '@/hooks/contexts/use-overlay'
 import { useCheckQueries } from '@/hooks/queries/use-check'
 import { onSettledToast } from '@/lib/utils/hooks'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Calendar } from 'lucide-react'
-import { useCallback } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
+
+const toDateInputValue = (date: Date) => {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+const getDefaultCheckDateValue = (checkDates: Array<{ date: string }>) => {
+  if (!checkDates.length) {
+    return toDateInputValue(new Date())
+  }
+
+  const latestDate = checkDates
+    .map((item) => new Date(item.date))
+    .filter((date) => !Number.isNaN(date.getTime()))
+    .sort((a, b) => b.getTime() - a.getTime())[0]
+
+  if (!latestDate) {
+    return toDateInputValue(new Date())
+  }
+
+  const nextDate = new Date(latestDate)
+  nextDate.setDate(nextDate.getDate() + 1)
+  return toDateInputValue(nextDate)
+}
 
 export function CheckDateCreateAction() {
   const { activeClass } = useClassContext()
   const { create } = useCheckQueries()
   const { closeAll } = useOverlay()
+  const { checkDates } = useStudentCheck()
+  const defaultDate = useMemo(
+    () => getDefaultCheckDateValue(checkDates),
+    [checkDates],
+  )
+
   const methods = useForm({
     resolver: zodResolver(
       z.object({
@@ -38,37 +70,41 @@ export function CheckDateCreateAction() {
       }),
     ),
     defaultValues: {
-      date: '',
+      date: defaultDate,
     },
   })
 
-  const onSubmit = useCallback(
-    async (data: { date: string }) => {
-      await create
-        .mutateAsync(
-          {
-            body: {
-              date: data.date,
-            },
-            params: {
-              path: {
-                classId: activeClass?.id ?? '',
-              },
+  useEffect(() => {
+    if (methods.formState.isDirty) return
+    methods.reset({
+      date: defaultDate,
+    })
+  }, [defaultDate, methods])
+
+  const onSubmit = async (data: { date: string }) => {
+    await create
+      .mutateAsync(
+        {
+          body: {
+            date: data.date,
+          },
+          params: {
+            path: {
+              classId: activeClass?.id ?? '',
             },
           },
-          {
-            onSettled(data, error, _variables, _, context) {
-              onSettledToast(data, error)
-              context.client.refetchQueries({})
-              methods.reset()
-              closeAll()
-            },
+        },
+        {
+          onSettled(data, error, _variables, _, context) {
+            onSettledToast(data, error)
+            context.client.refetchQueries({})
+            methods.reset({ date: defaultDate })
+            closeAll()
           },
-        )
-        .then((res) => console.log(res))
-    },
-    [create, activeClass?.id, methods, closeAll],
-  )
+        },
+      )
+      .then((res) => console.log(res))
+  }
   return (
     <ModalDialog
       title={`สร้างรายการเช็คชื่อใหม่`}

@@ -1,6 +1,6 @@
 import { checkDatesCollection } from '@/lib/mongo'
 import { CheckDate } from '@/models/entities'
-import { omit, sortBy } from 'lodash'
+import { omit } from 'lodash'
 
 export async function createCheckDate(
   checkDate: CheckDate,
@@ -49,7 +49,7 @@ export async function getCheckDatesByClassId(
   const checked = await check_dates
     .aggregate<CheckDate>([
       { $match: { classId } },
-      { $sort: { date: -1 } },
+      { $sort: { date: 1 } },
       { $project: { _id: 0 } },
       {
         $lookup: {
