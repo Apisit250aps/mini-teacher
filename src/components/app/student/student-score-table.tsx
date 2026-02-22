@@ -1,5 +1,4 @@
 'use client'
-import { useStudentScoreTable } from '@/hooks/app/use-score'
 import { ScoreAssignCreateAction } from '@/components/app/class/score/action-modal'
 import { ScoreInputCell } from '@/components/app/student/score-input-cell'
 import {
@@ -11,10 +10,11 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Spinner } from '@/components/ui/spinner'
+import { useStudentScore } from '@/hooks/app/use-score';
+
 
 export default function StudentScoreTable() {
-  const { scoreAssigns, tableData, isLoading, setDraftScore, onScoreChange } =
-    useStudentScoreTable()
+  const { scoreAssigns, classMembers, isLoading } = useStudentScore()
 
   return (
     <div className="space-y-4">
@@ -26,70 +26,43 @@ export default function StudentScoreTable() {
         <Table className="w-auto">
           <TableHeader>
             <TableRow>
-              <TableHead>รหัสนักเรียน</TableHead>
-              <TableHead>ชื่อนักเรียน</TableHead>
-              {scoreAssigns.map((assign) => (
-                <TableHead key={assign.id} className="min-w-32">
+              <TableHead className="w-20">รหัสนักเรียน</TableHead>
+              <TableHead className="w-auto">ชื่อนักเรียน</TableHead>
+              {scoreAssigns?.map((assign) => (
+                <TableHead key={assign.id} className="text-center">
                   {assign.name}
                 </TableHead>
               ))}
-              <TableHead>รวม</TableHead>
             </TableRow>
           </TableHeader>
-
           <TableBody>
             {isLoading ? (
               <TableRow>
                 <TableCell
-                  colSpan={scoreAssigns.length + 3}
-                  className="h-10 text-center"
+                  colSpan={scoreAssigns?.length ?? 0 + 2}
+                  className="text-center py-10"
                 >
-                  <div className="flex items-center gap-2 justify-center">
-                    <Spinner data-icon="inline-start" />
-                    กำลังโหลด...
-                  </div>
+                  <Spinner />
                 </TableCell>
               </TableRow>
-            ) : tableData.length ? (
-              tableData.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell className="w-20">{row.studentCode}</TableCell>
-                  <TableCell className="min-w-40">{row.studentName}</TableCell>
-                  {scoreAssigns.map((assign) => (
-                    <TableCell key={`${row.id}_${assign.id}`} className="w-24">
-                      <ScoreInputCell
-                        value={row[`score_${assign.id}`] ?? ''}
-                        minScore={assign.minScore}
-                        maxScore={assign.maxScore}
-                        onDraftChange={(value) => {
-                          setDraftScore(row.studentId, assign.id, value)
-                        }}
-                        onCommit={async (safeScore) => {
-                          await onScoreChange(
-                            row.memberId,
-                            row.studentId,
-                            assign.id,
-                            safeScore,
-                          )
-                        }}
-                      />
-                    </TableCell>
-                  ))}
-                  <TableCell className="font-semibold">
-                    {scoreAssigns.reduce((sum, assign) => {
-                      const score = row[`score_${assign.id}`]
-                      if (typeof score === 'number') return sum + score
-                      return sum + (parseInt(score as string, 10) || 0)
-                    }, 0)}
-                  </TableCell>
-                </TableRow>
-              ))
             ) : (
-              <TableRow>
-                <TableCell colSpan={scoreAssigns.length + 3} className="text-center">
-                  ไม่มีข้อมูล
-                </TableCell>
-              </TableRow>
+              <>
+                {classMembers?.map((member) => (
+                  <TableRow key={member.id} className="border-0">
+                    <TableCell>{member.student.code}</TableCell>
+                    <TableCell>
+                      {member.student.prefix}
+                      {member.student.firstName} {member.student.lastName}
+                    </TableCell>
+                    {scoreAssigns?.map((assign) => (
+                      <TableCell
+                        key={assign.id}
+                        className="text-center"
+                      ></TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </>
             )}
           </TableBody>
         </Table>

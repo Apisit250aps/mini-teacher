@@ -2,11 +2,11 @@
 import React from 'react'
 import { Year } from '@/models'
 
-type AppContextValue = {
+type AppContext = {
   years?: Year
 }
 
-const AppContext = React.createContext<AppContextValue | null>(null)
+const AppContext = React.createContext<AppContext | null>(null)
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   return (

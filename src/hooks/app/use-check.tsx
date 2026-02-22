@@ -12,6 +12,7 @@ import { useGetClassMembers } from '@/hooks/queries/use-class'
 import { useCheckQueries } from '@/hooks/queries/use-check'
 import { useClassContext } from '@/hooks/app/use-class'
 import { CHECK_STATUS } from '@/models/entities'
+import { roundUpToNearestTen } from '@/lib/utils/math';
 
 type StudentCheckTableRow = {
 	id: string
@@ -73,9 +74,7 @@ export function useStudentCheckTable(): UseStudentCheckTableResult {
 	const { studentCheck } = checkQueries
 	const [tableLimit, setTableLimit] = useState(10)
 
-	const roundUpToNearestTen = useCallback((num: number) => {
-		return Math.ceil(num / 10) * 10
-	}, [])
+	
 
 	const getAttendanceStatus = useCallback(
 		(studentId: string, checkDateId: string) => {
@@ -169,7 +168,7 @@ export function useStudentCheckTable(): UseStudentCheckTableResult {
 		}, 0)
 
 		return () => window.clearTimeout(timer)
-	}, [roundUpToNearestTen, tableData.length])
+	}, [tableData.length])
 
 	const columns = useMemo<ColumnDef<StudentCheckTableRow>[]>(() => {
 		const baseColumns: ColumnDef<StudentCheckTableRow>[] = [
