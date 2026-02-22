@@ -21,5 +21,5 @@ export const zodLocaleDateString = () =>
     .or(z.string())
     .transform((date) => {
       const onlyDate = new Date(date)
-      return onlyDate.toLocaleDateString()
+      return onlyDate.toDateString()
     })

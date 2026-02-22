@@ -1,7 +1,7 @@
 import { $api } from '@/lib/client'
 import { useClassContext } from '@/hooks/app/use-class'
 import { toast } from 'sonner'
-import { Class, CreateClass, UpdateClass } from '@/models'
+import { UpdateClass } from '@/models'
 
 export const useGetClassMembers = (classId?: string) => {
   const { activeClass } = useClassContext()
