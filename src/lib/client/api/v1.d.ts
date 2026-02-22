@@ -371,6 +371,7 @@ export interface components {
             id: string;
             classId: string;
             name: string;
+            isEditable: boolean;
             description?: string | null;
             /**
              * Format: int32
@@ -395,33 +396,8 @@ export interface components {
             updatedAt: string;
         };
         ScoreAssignDetail: {
-            id: string;
-            classId: string;
-            name: string;
-            description?: string | null;
-            /**
-             * Format: int32
-             * @default 0
-             */
-            minScore: number;
-            /**
-             * Format: int32
-             * @default 100
-             */
-            maxScore: number;
-            /**
-             * @default ASSIGNMENT
-             * @enum {string}
-             */
-            type: "ASSIGNMENT" | "QUIZ" | "EXAM";
-            assignDate?: string | null;
-            finalDate?: string | null;
-            /** Format: date-time */
-            createdAt: string;
-            /** Format: date-time */
-            updatedAt: string;
-            scores: components["schemas"]["ScoreStudentDetail"][];
-        };
+            scores: components["schemas"]["ScoreStudent"][];
+        } & components["schemas"]["ScoreAssign"];
         ScoreStudent: {
             id: string;
             scoreAssignId: string;

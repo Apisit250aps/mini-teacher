@@ -1731,6 +1731,7 @@ components:
         - id
         - classId
         - name
+        - isEditable
         - minScore
         - maxScore
         - type
@@ -1743,6 +1744,8 @@ components:
           type: string
         name:
           type: string
+        isEditable:
+          type: boolean
         description:
           anyOf:
             - type: string
@@ -1781,61 +1784,14 @@ components:
     ScoreAssignDetail:
       type: object
       required:
-        - id
-        - classId
-        - name
-        - minScore
-        - maxScore
-        - type
-        - createdAt
-        - updatedAt
         - scores
       properties:
-        id:
-          type: string
-        classId:
-          type: string
-        name:
-          type: string
-        description:
-          anyOf:
-            - type: string
-            - type: 'null'
-        minScore:
-          type: integer
-          format: int32
-          default: 0
-        maxScore:
-          type: integer
-          format: int32
-          default: 100
-        type:
-          type: string
-          enum:
-            - ASSIGNMENT
-            - QUIZ
-            - EXAM
-          default: ASSIGNMENT
-        assignDate:
-          anyOf:
-            - type: string
-              format: date-time
-            - type: 'null'
-        finalDate:
-          anyOf:
-            - type: string
-              format: date-time
-            - type: 'null'
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
         scores:
           type: array
           items:
-            $ref: '#/components/schemas/ScoreStudentDetail'
+            $ref: '#/components/schemas/ScoreStudent'
+      allOf:
+        - $ref: '#/components/schemas/ScoreAssign'
     ScoreStudent:
       type: object
       required:

@@ -10,8 +10,14 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Spinner } from '@/components/ui/spinner'
-import { useStudentScore } from '@/hooks/app/use-score';
-
+import { useStudentScore } from '@/hooks/app/use-score'
+import React from 'react'
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from '@/components/ui/context-menu'
 
 export default function StudentScoreTable() {
   const { scoreAssigns, classMembers, isLoading } = useStudentScore()
@@ -29,9 +35,17 @@ export default function StudentScoreTable() {
               <TableHead className="w-20">รหัสนักเรียน</TableHead>
               <TableHead className="w-auto">ชื่อนักเรียน</TableHead>
               {scoreAssigns?.map((assign) => (
-                <TableHead key={assign.id} className="text-center">
-                  {assign.name}
-                </TableHead>
+                <ContextMenu key={assign.id}>
+                  <ContextMenuTrigger asChild>
+                    <TableHead className="text-center">{assign.name}</TableHead>
+                  </ContextMenuTrigger>
+                  <ContextMenuContent>
+                    <ContextMenuItem>Profile</ContextMenuItem>
+                    <ContextMenuItem>Billing</ContextMenuItem>
+                    <ContextMenuItem>Team</ContextMenuItem>
+                    <ContextMenuItem>สามารถแก้ไขคะแนนได้</ContextMenuItem>
+                  </ContextMenuContent>
+                </ContextMenu>
               ))}
             </TableRow>
           </TableHeader>
@@ -46,7 +60,7 @@ export default function StudentScoreTable() {
                 </TableCell>
               </TableRow>
             ) : (
-              <>
+              <React.Fragment>
                 {classMembers?.map((member) => (
                   <TableRow key={member.id} className="border-0">
                     <TableCell>{member.student.code}</TableCell>
@@ -55,14 +69,28 @@ export default function StudentScoreTable() {
                       {member.student.firstName} {member.student.lastName}
                     </TableCell>
                     {scoreAssigns?.map((assign) => (
-                      <TableCell
-                        key={assign.id}
-                        className="text-center"
-                      ></TableCell>
+                      <TableCell key={assign.id} className="text-center p-1">
+                        <ScoreInputCell
+                          value={
+                            assign.scores.find(
+                              (s) => s.studentId === member.studentId,
+                            )?.score ?? ''
+                          }
+                          minScore={assign.minScore ?? 0}
+                          maxScore={assign.maxScore ?? 10}
+                          onDraftChange={function (value: string): void {
+                            throw new Error('Function not implemented.')
+                          }}
+                          onCommit={function (score: number): Promise<void> {
+                            throw new Error('Function not implemented.')
+                          }}
+                          disabled={!assign.isEditable}
+                        />
+                      </TableCell>
                     ))}
                   </TableRow>
                 ))}
-              </>
+              </React.Fragment>
             )}
           </TableBody>
         </Table>

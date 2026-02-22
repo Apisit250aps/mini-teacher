@@ -4,6 +4,7 @@ model ScoreAssign {
   id: string;
   classId: string;
   name: string;
+  isEditable: boolean;
   description?: string | null;
   minScore: int32 = 0;
   maxScore: int32 = 100;
@@ -14,19 +15,8 @@ model ScoreAssign {
   updatedAt: utcDateTime;
 }
 
-model ScoreAssignDetail {
-  id: string;
-  classId: string;
-  name: string;
-  description?: string | null;
-  minScore: int32 = 0;
-  maxScore: int32 = 100;
-  type: "ASSIGNMENT" | "QUIZ" | "EXAM" = "ASSIGNMENT";
-  assignDate?: utcDateTime | null;
-  finalDate?: utcDateTime | null;
-  createdAt: utcDateTime;
-  updatedAt: utcDateTime;
-  scores: ScoreStudentDetail[];
+model ScoreAssignDetail extends ScoreAssign {
+  scores: ScoreStudent[];
 }
 
 model ScoreStudent {
