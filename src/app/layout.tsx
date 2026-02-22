@@ -17,9 +17,33 @@ const sarabun = Sarabun({
 })
 
 export const metadata: Metadata = {
-  title: 'Mini Teacher',
-  description: 'Mini Teacher Management App ',
+  title: 'Mini Teacher | ระบบเช็คชื่อและจัดการคะแนนนักเรียนสำหรับคุณครู',
+  description:
+    'Mini Teacher แอปพลิเคชันช่วยคุณครูจัดการชั้นเรียน เช็คชื่อเข้าเรียน บันทึกคะแนน และติดตามพัฒนาการนักเรียนแบบเรียลไทม์ ใช้งานง่าย รวดเร็ว',
+  keywords: [
+    'Mini Teacher',
+    'ระบบเช็คชื่อ',
+    'จัดการคะแนน',
+    'สมุดพกคุณครู',
+    'แอปคุณครู',
+    'ระบบจัดการห้องเรียน',
+  ],
   authors: [{ name: 'Apisit Saithong' }],
+  creator: 'Apisit Saithong',
+
+  openGraph: {
+    title: 'Mini Teacher | ระบบจัดการชั้นเรียนอัจฉริยะ',
+    description: 'ช่วยคุณครูเช็คชื่อและบันทึกคะแนนนักเรียนได้ง่ายๆ ในที่เดียว',
+    url: 'https://mini-teacher.vercel.app',
+    siteName: 'Mini Teacher',
+    locale: 'th_TH',
+    type: 'website',
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+  },
 }
 
 export default async function RootLayout({
