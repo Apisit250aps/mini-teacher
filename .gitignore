@@ -181,3 +181,5 @@ dist
 bruno/*
 backup/
 # 
+.env.docker
+.env.local 
