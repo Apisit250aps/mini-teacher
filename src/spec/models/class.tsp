@@ -4,6 +4,7 @@ model Class {
   id: string;
   year: string;
   name: string;
+  description: string;
   subject: string;
   isActive: boolean;
   createdAt: utcDateTime;

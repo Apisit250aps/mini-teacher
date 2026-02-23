@@ -1,7 +1,7 @@
-import { Class, YearDetail } from '@/models'
 import { Cell, ColumnDef } from '@tanstack/react-table'
 import { DeleteYearAction, EditYearAction } from './year-actions'
 import { ActionDropdown } from '@/components/share/overlay/action-dropdown'
+import { Class, YearDetail } from '@/models/domain'
 
 const YearActionColumn = ({ cell }: { cell: Cell<YearDetail, unknown> }) => {
   return (

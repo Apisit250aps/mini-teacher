@@ -2,7 +2,7 @@
 import { $api } from '@/lib/client'
 import { onSettledToast } from '@/lib/utils/hooks'
 import { useYearContext } from '../app/use-year'
-import { Year } from '@/models'
+import type { Year } from '@/models/domain'
 import { toast } from 'sonner'
 
 export const useClassesInYear = () => {

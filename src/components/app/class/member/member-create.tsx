@@ -7,6 +7,7 @@ import { useClassQueries, useGetClassMembers } from '@/hooks/queries/use-class'
 import { useClassContext } from '@/hooks/app/use-class'
 import { toast } from 'sonner'
 import { useOverlay } from '@/hooks/contexts/use-overlay'
+import type { StudentFormValue } from '@/models/domain'
 
 export default function MemberCreate() {
   const { addMember } = useClassQueries()

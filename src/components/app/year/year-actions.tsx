@@ -3,9 +3,9 @@ import ModalDialog from '@/components/share/overlay/modal-dialog'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu'
 import { useOverlay } from '@/hooks/contexts/use-overlay'
 import { useYearQueries } from '@/hooks/queries/use-year'
-import { YearDetail } from '@/models/entities/year.entity'
 import { Pen, Trash } from 'lucide-react'
 import YearCreateForm from './year-create-form'
+import type { YearDetail } from '@/models/domain'
 
 export const DeleteYearAction = ({ yearId }: { yearId: string }) => {
   const { onRemove } = useYearQueries()

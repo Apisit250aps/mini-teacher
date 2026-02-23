@@ -79,7 +79,13 @@ export function TeamSwitcher() {
             {years.data?.map((year) => (
               <DropdownMenuItem
                 key={year.id}
-                onClick={() => onActive(year!)}
+                onClick={() =>
+                  onActive({
+                    ...year,
+                    createdAt: new Date(year.createdAt),
+                    updatedAt: new Date(year.updatedAt),
+                  })
+                }
                 className="gap-2 p-2"
               >
                 <div className="flex size-6 items-center justify-center rounded-md border">

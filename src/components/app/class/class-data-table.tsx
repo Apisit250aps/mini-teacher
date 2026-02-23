@@ -32,7 +32,10 @@ const ColumnActions = ({ cell }: { cell: Cell<Class, unknown> }) => {
         <ClassForm
           value={cell.row.original}
           onSubmit={function (data: ClassFormValue): void {
-            onUpdate(cell.row.original.id, data).then(() => {
+            onUpdate(cell.row.original.id, {
+              id: cell.row.original.id,
+              ...data,
+            }).then(() => {
               closeAll()
             })
           }}

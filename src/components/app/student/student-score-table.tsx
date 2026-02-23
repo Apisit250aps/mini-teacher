@@ -71,12 +71,15 @@ export default function StudentScoreTable() {
                     {scoreStudent?.data?.map((assign) => {
                       const convertedAssign = {
                         ...assign,
-                        assignDate: assign.assignDate
-                          ? new Date(assign.assignDate)
-                          : null,
-                        finalDate: assign.finalDate
-                          ? new Date(assign.finalDate)
-                          : null,
+                        assignDate: new Date(assign.assignDate!) ?? null,
+                        finalDate: new Date(assign.finalDate!) ?? null,
+                        createdAt: new Date(assign.createdAt),
+                        updatedAt: new Date(assign.updatedAt),
+                        scores: assign.scores.map((score) => ({
+                          ...score,
+                          createdAt: new Date(score.createdAt),
+                          updatedAt: new Date(score.updatedAt),
+                        })),
                       }
                       return (
                         <TableCell key={assign.id} className="text-center p-1">

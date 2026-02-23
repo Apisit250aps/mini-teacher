@@ -1,6 +1,6 @@
 import { Class } from './classes'
 
-interface Year {
+type Year = {
   id: string
   user: string
   year: number
@@ -9,20 +9,12 @@ interface Year {
   createdAt: Date | string
   updatedAt: Date | string
 }
-
-interface CreateYear {
-  user: string
-  year: number
-  term: number
-  isActive?: boolean
-}
-
-interface UpdateYear extends Partial<CreateYear> {
-  id: string
-}
-
+type CreateYear = Omit<Year, 'id' | 'createdAt' | 'updatedAt'>
+type UpdateYear = Partial<CreateYear> & { id: string }
+type YearForm = Omit<CreateYear, 'user' | 'isActive'>
+// type YearDetail = Year & { classes: Class[] }
 interface YearDetail extends Year {
   classes: Class[]
 }
 
-export type { Year, CreateYear, UpdateYear, YearDetail }
+export type { Year, CreateYear, UpdateYear, YearDetail, YearForm }

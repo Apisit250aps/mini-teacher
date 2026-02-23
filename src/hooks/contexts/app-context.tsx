@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { Year } from '@/models'
+import type { Year } from '@/models/domain'
 
 type AppContext = {
   years?: Year

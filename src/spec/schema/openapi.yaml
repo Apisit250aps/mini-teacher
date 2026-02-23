@@ -1492,6 +1492,7 @@ components:
         - id
         - year
         - name
+        - description
         - subject
         - isActive
         - createdAt
@@ -1502,6 +1503,8 @@ components:
         year:
           type: string
         name:
+          type: string
+        description:
           type: string
         subject:
           type: string

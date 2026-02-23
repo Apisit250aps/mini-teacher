@@ -285,6 +285,7 @@ export interface components {
             id: string;
             year: string;
             name: string;
+            description: string;
             subject: string;
             isActive: boolean;
             /** Format: date-time */

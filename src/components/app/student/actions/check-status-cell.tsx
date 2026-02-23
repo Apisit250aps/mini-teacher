@@ -8,10 +8,10 @@ import {
 } from '@/components/ui/context-menu'
 import { useClassContext } from '@/hooks/app/use-class'
 import { useCheckQueries } from '@/hooks/queries/use-check'
-import { CHECK_STATUS } from '@/models'
+import type { CheckStatus } from '@/models/domain'
 import { useMemo, useState } from 'react'
 
-type AttendanceStatus = NonNullable<CHECK_STATUS>
+type AttendanceStatus = NonNullable<CheckStatus>
 
 type CheckDateStudentStatus = {
   studentId: string

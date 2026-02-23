@@ -9,6 +9,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import type { YearForm } from '@/models/domain'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
@@ -22,10 +23,10 @@ export default function YearCreateForm({
   value,
   onSubmit,
 }: {
-  value?: { year: number; term: number }
-  onSubmit: (data: { year: number; term: number }) => void
+  value?: YearForm
+  onSubmit: (data: YearForm) => void
 }) {
-  const methods = useForm<{ year: number; term: number }>({
+  const methods = useForm<YearForm>({
     resolver: zodResolver(schema),
     defaultValues: {
       year: value?.year ?? new Date().getFullYear() + 543,
