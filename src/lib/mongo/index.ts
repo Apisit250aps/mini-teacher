@@ -8,9 +8,9 @@ import type {
   CheckDate,
   ScoreAssign,
   ScoreStudent,
-} from '@/models/entities'
+  Year,
+} from '@/models/domain'
 import { connect } from '@/lib/mongo/client'
-import { Year } from '@/models/entities/year.entity'
 
 let _users: Collection<User> | null = null
 let _years: Collection<Year> | null = null

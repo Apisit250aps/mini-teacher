@@ -1,5 +1,5 @@
 'use client'
-import { Year } from '@/models/entities'
+import type { Year } from '@/models/domain'
 import React, { useCallback } from 'react'
 import { useYearQueries } from '@/hooks/queries/use-year'
 import { useOverlay } from '@/hooks/contexts/use-overlay'

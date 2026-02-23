@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
-import { AuthUpdateUser, UserLogin } from '@/models/entities'
+import { AuthUpdateUser } from '@/models/entities'
+import type { UserLogin } from '@/models/domain'
 import {
   findWithObjectId,
   oAuthCreateUser,
@@ -80,7 +81,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       const validate = await safeValidate(AuthUpdateUser, {
         name: user.name || '',
       })
-      await oAuthCreateUser(user.id!, validate.data!)
+      if (validate.data) {
+        const { name, email, isActive, isTeacher } = validate.data
+        await oAuthCreateUser(user.id!, { name, email, isActive, isTeacher })
+      }
     },
   },
 })

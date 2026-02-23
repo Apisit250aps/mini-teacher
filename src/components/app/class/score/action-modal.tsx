@@ -22,6 +22,7 @@ import { useYearContext } from '@/hooks/app/use-year'
 import { useOverlay } from '@/hooks/contexts/use-overlay'
 import { useScoreQueries } from '@/hooks/queries/use-score'
 import { assignEnum } from '@/models/entities'
+import type { AssignType } from '@/models/domain'
 import { onSettledToast } from '@/lib/utils/hooks'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Plus } from 'lucide-react'
@@ -45,7 +46,15 @@ const CreateScoreAssignFormSchema = z.object({
   finalDate: z.string().optional().nullable(),
 })
 
-type CreateScoreAssignForm = z.infer<typeof CreateScoreAssignFormSchema>
+interface CreateScoreAssignForm {
+  name: string
+  description?: string | null
+  minScore: number
+  maxScore: number
+  type?: AssignType
+  assignDate?: string | null
+  finalDate?: string | null
+}
 
 export function ScoreAssignCreateAction() {
   const { activeClass } = useClassContext()

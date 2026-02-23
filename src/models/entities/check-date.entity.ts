@@ -23,6 +23,3 @@ export const CreateCheckDateSchema = BaseCheckDate.omit({
   createdAt: zodTimestamp(),
   updatedAt: zodTimestamp(),
 })
-
-export type CheckDate = z.infer<typeof BaseCheckDate>
-export type CreateCheckDate = z.infer<typeof CreateCheckDateSchema>

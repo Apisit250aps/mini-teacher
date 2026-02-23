@@ -23,7 +23,3 @@ export const UpdateYearSchema = BaseYearSchema.omit({
   id: true,
   createdAt: true,
 }).partial()
-export type Year = z.infer<typeof BaseYearSchema>
-export type YearDetail = z.infer<typeof YearDetailSchema>
-export type CreateYear = z.infer<typeof CreateYearSchema>
-export type UpdateYear = z.infer<typeof UpdateYearSchema>

@@ -1,58 +1,67 @@
 import { classMembersCollection } from '@/lib/mongo'
-import { ClassMember, ClassMemberDetail } from '@/models/entities'
+import type {
+  ClassMemberDetail,
+  ClassMemberRepository,
+} from '@/models/domain'
 
-export async function addClassMember(
-  classMember: ClassMember,
-): Promise<ClassMember> {
-  const collection = await classMembersCollection()
-  await collection.insertOne(classMember)
-  return classMember
-}
+const classMemberRepository: ClassMemberRepository = {
+  addClassMember: async (classMember) => {
+    const collection = await classMembersCollection()
+    await collection.insertOne(classMember)
+    return classMember
+  },
 
-export async function deleteClassMember(
-  classId: string,
-  studentId: string,
-): Promise<void> {
-  const collection = await classMembersCollection()
-  await collection.deleteOne({ classId, studentId })
-}
+  deleteClassMember: async (classId, studentId) => {
+    const collection = await classMembersCollection()
+    await collection.deleteOne({ classId, studentId })
+  },
 
-export async function getUniqMember(classId: string, studentId: string) {
-  const collection = await classMembersCollection()
-  const member = await collection.findOne({ classId, studentId })
-  return member
-}
+  getUniqMember: async (classId, studentId) => {
+    const collection = await classMembersCollection()
+    const member = await collection.findOne(
+      { classId, studentId },
+      { projection: { _id: 0 } },
+    )
+    return member
+  },
 
-export async function getClassMembersByClassId(
-  classId: string,
-): Promise<ClassMemberDetail[]> {
-  const member = await classMembersCollection()
-  const data = await member
-    .aggregate<ClassMemberDetail>([
-      { $match: { classId } },
-      {
-        $lookup: {
-          from: 'students',
-          localField: 'studentId',
-          foreignField: 'id',
-          as: 'student',
-          pipeline: [
-            {
-              $project: {
-                _id: 0,
+  getClassMembersByClassId: async (classId) => {
+    const member = await classMembersCollection()
+    const data = await member
+      .aggregate<ClassMemberDetail>([
+        { $match: { classId } },
+        {
+          $lookup: {
+            from: 'students',
+            localField: 'studentId',
+            foreignField: 'id',
+            as: 'student',
+            pipeline: [
+              {
+                $project: {
+                  _id: 0,
+                },
               },
-            },
-          ],
+            ],
+          },
         },
-      },
-      {
-        $project: {
-          _id: 0,
+        {
+          $project: {
+            _id: 0,
+          },
         },
-      },
-      { $unwind: '$student' },
-    ])
-    .toArray()
+        { $unwind: '$student' },
+      ])
+      .toArray()
 
-  return data
+    return data
+  },
 }
+
+// Named exports for backward compatibility
+export const addClassMember = classMemberRepository.addClassMember
+export const deleteClassMember = classMemberRepository.deleteClassMember
+export const getUniqMember = classMemberRepository.getUniqMember
+export const getClassMembersByClassId = classMemberRepository.getClassMembersByClassId
+
+export default classMemberRepository

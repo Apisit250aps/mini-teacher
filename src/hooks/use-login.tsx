@@ -1,6 +1,7 @@
 'use client'
 
-import { UserLogin, UserLoginSchema } from '@/models/entities'
+import type { UserLogin } from '@/models/domain'
+import { UserLoginSchema } from '@/models/entities'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'

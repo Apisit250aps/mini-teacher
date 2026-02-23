@@ -30,8 +30,3 @@ export const StudentFormSchema = CreateStudentSchema.pick({
   lastName: true,
   nickname: true,
 })
-
-export type Student = z.infer<typeof BaseStudentSchema>
-export type CreateStudent = z.infer<typeof CreateStudentSchema>
-export type UpdateStudent = z.infer<typeof UpdateStudentSchema>
-export type StudentFormValue = z.infer<typeof StudentFormSchema>

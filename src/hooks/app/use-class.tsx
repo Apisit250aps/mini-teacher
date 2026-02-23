@@ -1,5 +1,5 @@
 'use client'
-import { Class } from '@/models/entities'
+import type { Class } from '@/models/domain'
 import React from 'react'
 import { Album } from 'lucide-react'
 import { useYearContext } from './use-year'

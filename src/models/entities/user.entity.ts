@@ -54,8 +54,3 @@ export const UserLoginSchema = BaseUserSchema.pick({
   name: true,
   password: true,
 })
-
-export type User = z.infer<typeof BaseUserSchema>
-export type CreateUser = z.infer<typeof CreateUserSchema>
-export type UpdateUser = z.infer<typeof UpdateUserSchema>
-export type UserLogin = z.infer<typeof UserLoginSchema>

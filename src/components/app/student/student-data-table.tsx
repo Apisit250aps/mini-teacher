@@ -2,7 +2,7 @@
 import { ActionDropdown } from '@/components/share/overlay/action-dropdown'
 import DataTable from '@/components/share/table/data-table'
 import { useStudentQueries } from '@/hooks/queries/use-student'
-import { Student } from '@/models/entities'
+import type { Student } from '@/models/domain'
 import { Cell, ColumnDef } from '@tanstack/react-table'
 import {
   StudentDeleteAction,

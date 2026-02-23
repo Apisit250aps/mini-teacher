@@ -18,7 +18,3 @@ export const ClassMemberSchema = BaseClassMemberSchema.extend({
 export const ClassMemberDetailSchema = BaseClassMemberSchema.extend({
   student: BaseStudentSchema,
 })
-
-export type ClassMember = z.infer<typeof BaseClassMemberSchema>
-export type ClassMemberDetail = z.infer<typeof ClassMemberDetailSchema>
-export type ClassMemberCreateInput = z.infer<typeof ClassMemberSchema>

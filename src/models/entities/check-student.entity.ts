@@ -21,6 +21,3 @@ export const CreateCheckStudentSchema = BaseCheckStudent.omit({
   createdAt: zodTimestamp(),
   updatedAt: zodTimestamp(),
 })
-
-export type CheckStudent = z.infer<typeof BaseCheckStudent>
-export type CHECK_STATUS = z.infer<typeof checkEnumSchema>

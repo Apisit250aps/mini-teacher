@@ -1,7 +1,7 @@
 'use client'
 import DataTable from '@/components/share/table/data-table'
 import { useClassQueries, useGetClassMembers } from '@/hooks/queries/use-class'
-import { ClassMemberDetail } from '@/models/entities'
+import type { ClassMemberDetail } from '@/models/domain'
 import { Cell, ColumnDef } from '@tanstack/react-table'
 import MemberCreate from '@/components/app/class/member/member-create'
 import { ActionDropdown } from '@/components/share/overlay/action-dropdown'
@@ -13,7 +13,6 @@ import ModalDialog from '@/components/share/overlay/modal-dialog'
 import StudentSelectTable from '@/components/app/student/student-select-table'
 import { Button } from '@/components/ui/button'
 import { useClassContext } from '@/hooks/app/use-class'
-import { useYearContext } from '@/hooks/app/use-year'
 import { useOverlay } from '@/hooks/contexts/use-overlay'
 
 const ColumnActions = ({

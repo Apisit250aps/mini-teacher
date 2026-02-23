@@ -22,7 +22,3 @@ export const CreateScoreStudentSchema = BaseScoreStudent.omit({
   createdAt: zodTimestamp(),
   updatedAt: zodTimestamp(),
 })
-
-export type ScoreStudent = z.infer<typeof BaseScoreStudent>
-export type ScoreStudentDetail = z.infer<typeof ScoreStudentDetailSchema>
-export type CreateScoreStudent = z.infer<typeof CreateScoreStudentSchema>

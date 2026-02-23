@@ -33,7 +33,7 @@ import { useYearContext } from '@/hooks/app/use-year'
 import { useGetClassMembers } from '@/hooks/queries/use-class'
 import { useGetClassCheckDates } from '@/hooks/queries/use-check'
 import { useGetScoreAssigns } from '@/hooks/queries/use-score'
-import { Class, ClassMemberDetail, ScoreAssign } from '@/models/entities'
+import type { Class, ClassMemberDetail, ScoreAssign } from '@/models/domain'
 import { Album } from 'lucide-react'
 
 type CheckStatus = 'PRESENT' | 'ABSENT' | 'LATE' | 'LEAVE' | null

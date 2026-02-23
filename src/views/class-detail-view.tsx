@@ -2,7 +2,7 @@
 import React from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import PageLayout from '@/components/layouts/page-layout'
-import { Class } from '@/models/entities'
+import type { Class } from '@/models/domain'
 import ClassMemberSection from '@/components/app/class/class-member-section'
 import { useStoredTab } from '@/hooks/contexts/tab-storage'
 import { useClassContext } from '@/hooks/app/use-class'

@@ -1,140 +1,141 @@
 import { scoreAssignsCollection } from '@/lib/mongo'
-import { ScoreAssign } from '../entities'
+import type { ScoreAssign, ScoreAssignRepository } from '@/models/domain'
 import { omit } from 'lodash'
 
-export async function createScoreAssign(
-  data: ScoreAssign,
-): Promise<ScoreAssign> {
-  const collection = await scoreAssignsCollection()
-  await collection.insertOne(data)
-  return data
-}
+const scoreAssignRepository: ScoreAssignRepository = {
+  createScoreAssign: async (data) => {
+    const collection = await scoreAssignsCollection()
+    await collection.insertOne(data)
+    return data
+  },
 
-export async function updateScoreAssign(
-  assignId: string,
-  data: Partial<ScoreAssign>,
-): Promise<ScoreAssign | null> {
-  const collection = await scoreAssignsCollection()
-  const result = await collection.findOneAndUpdate(
-    { id: assignId },
-    { $set: omit(data, 'id') },
-    { returnDocument: 'after' },
-  )
-  return result
-}
+  updateScoreAssign: async (assignId, data) => {
+    const collection = await scoreAssignsCollection()
+    const result = await collection.findOneAndUpdate(
+      { id: assignId },
+      { $set: omit(data, 'id') },
+      { returnDocument: 'after' },
+    )
+    return result
+  },
 
-export async function deleteScoreAssign(assignId: string): Promise<boolean> {
-  const collection = await scoreAssignsCollection()
-  const result = await collection.deleteOne({ id: assignId })
-  if (result.deletedCount === 0) {
-    throw new Error('Score assign not found')
-  }
-  return true
-}
+  deleteScoreAssign: async (assignId) => {
+    const collection = await scoreAssignsCollection()
+    const result = await collection.deleteOne({ id: assignId })
+    if (result.deletedCount === 0) {
+      throw new Error('Score assign not found')
+    }
+    return true
+  },
 
-export async function getScoreAssignsByClassId(
-  classId: string,
-): Promise<ScoreAssign[]> {
-  const collection = await scoreAssignsCollection()
-  const data = await collection
-    .aggregate<ScoreAssign>([
-      { $match: { classId } },
-      {
-        $lookup: {
-          from: 'score_students',
-          let: { scoreAssignId: '$id' },
-          as: 'scores',
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $or: [
-                    { $eq: ['$scoreAssignId', '$$scoreAssignId'] },
-                    { $eq: ['$assignId', '$$scoreAssignId'] },
+  getScoreAssignsByClassId: async (classId) => {
+    const collection = await scoreAssignsCollection()
+    const data = await collection
+      .aggregate<ScoreAssign>([
+        { $match: { classId } },
+        {
+          $lookup: {
+            from: 'score_students',
+            let: { scoreAssignId: '$id' },
+            as: 'scores',
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $or: [
+                      { $eq: ['$scoreAssignId', '$$scoreAssignId'] },
+                      { $eq: ['$assignId', '$$scoreAssignId'] },
+                    ],
+                  },
+                },
+              },
+              {
+                $project: {
+                  _id: 0,
+                },
+              },
+              {
+                $lookup: {
+                  from: 'students',
+                  localField: 'studentId',
+                  foreignField: 'id',
+                  as: 'student',
+                  pipeline: [
+                    {
+                      $project: {
+                        _id: 0,
+                      },
+                    },
                   ],
                 },
               },
-            },
-            {
-              $project: {
-                _id: 0,
-              },
-            },
-            {
-              $lookup: {
-                from: 'students',
-                localField: 'studentId',
-                foreignField: 'id',
-                as: 'student',
-                pipeline: [
-                  {
-                    $project: {
-                      _id: 0,
-                    },
-                  },
-                ],
-              },
-            },
-            { $unwind: '$student' },
-          ],
+              { $unwind: '$student' },
+            ],
+          },
         },
-      },
-      { $sort: { createdAt: 1 } },
-    ])
-    .toArray()
-  return data
-}
+        { $sort: { createdAt: 1 } },
+      ])
+      .toArray()
+    return data
+  },
 
-export async function getScoreAssignById(
-  classId: string,
-  assignId: string,
-): Promise<ScoreAssign | null> {
-  const collection = await scoreAssignsCollection()
-  const data = await collection
-    .aggregate<ScoreAssign>([
-      { $match: { classId, id: assignId } },
-      {
-        $lookup: {
-          from: 'score_students',
-          let: { scoreAssignId: '$id' },
-          as: 'scores',
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $or: [
-                    { $eq: ['$scoreAssignId', '$$scoreAssignId'] },
-                    { $eq: ['$assignId', '$$scoreAssignId'] },
+  getScoreAssignById: async (classId, assignId) => {
+    const collection = await scoreAssignsCollection()
+    const data = await collection
+      .aggregate<ScoreAssign>([
+        { $match: { classId, id: assignId } },
+        {
+          $lookup: {
+            from: 'score_students',
+            let: { scoreAssignId: '$id' },
+            as: 'scores',
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $or: [
+                      { $eq: ['$scoreAssignId', '$$scoreAssignId'] },
+                      { $eq: ['$assignId', '$$scoreAssignId'] },
+                    ],
+                  },
+                },
+              },
+              {
+                $project: {
+                  _id: 0,
+                },
+              },
+              {
+                $lookup: {
+                  from: 'students',
+                  localField: 'studentId',
+                  foreignField: 'id',
+                  as: 'student',
+                  pipeline: [
+                    {
+                      $project: {
+                        _id: 0,
+                      },
+                    },
                   ],
                 },
               },
-            },
-            {
-              $project: {
-                _id: 0,
-              },
-            },
-            {
-              $lookup: {
-                from: 'students',
-                localField: 'studentId',
-                foreignField: 'id',
-                as: 'student',
-                pipeline: [
-                  {
-                    $project: {
-                      _id: 0,
-                    },
-                  },
-                ],
-              },
-            },
-            { $unwind: '$student' },
-          ],
+              { $unwind: '$student' },
+            ],
+          },
         },
-      },
-    ])
-    .toArray()
+      ])
+      .toArray()
 
-  return data[0] ?? null
+    return data[0] ?? null
+  },
 }
+
+// Named exports for backward compatibility
+export const createScoreAssign = scoreAssignRepository.createScoreAssign
+export const updateScoreAssign = scoreAssignRepository.updateScoreAssign
+export const deleteScoreAssign = scoreAssignRepository.deleteScoreAssign
+export const getScoreAssignsByClassId = scoreAssignRepository.getScoreAssignsByClassId
+export const getScoreAssignById = scoreAssignRepository.getScoreAssignById
+
+export default scoreAssignRepository

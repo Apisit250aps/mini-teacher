@@ -1,2 +1,2 @@
-export * from '@/models/entities'
+export * from '@/models/domain'
 export * from '@/models/repositories'

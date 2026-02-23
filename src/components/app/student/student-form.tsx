@@ -10,7 +10,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { StudentFormSchema, StudentFormValue } from '@/models/entities'
+import { StudentFormSchema } from '@/models/entities'
+import type { StudentFormValue } from '@/models/domain'
 import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'
 import { useForm } from 'react-hook-form'

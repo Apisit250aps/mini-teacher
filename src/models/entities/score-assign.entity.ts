@@ -30,8 +30,3 @@ export const CreateScoreAssignSchema = BaseScoreAssign.omit({
   createdAt: zodTimestamp(),
   updatedAt: zodTimestamp(),
 })
-
-export type ScoreAssign = z.infer<typeof BaseScoreAssign>
-export type ScoreAssignDetail = z.infer<typeof ScoreAssignDetailSchema>
-export type CreateScoreAssign = z.infer<typeof CreateScoreAssignSchema>
-export type AssignType = z.infer<typeof BaseScoreAssign.shape.type>
