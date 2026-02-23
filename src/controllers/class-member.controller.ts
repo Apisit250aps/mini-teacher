@@ -5,13 +5,8 @@ import {
   ClassMemberSchema,
   CreateStudentSchema,
 } from '@/models/entities'
-import {
-  createStudent,
-  deleteClassMember,
-  addClassMember,
-  getClassMembersByClassId,
-  getUniqMember,
-} from '@/models/repositories'
+import studentRepository from '@/models/repositories/student.repo'
+import classMemberRepository from '@/models/repositories/class-member.repo'
 import { NextRequest, NextResponse } from 'next/server'
 
 type ClassMemberParams = {
@@ -41,16 +36,16 @@ export async function PatchClassMember(
         },
       )
     }
-    const uniqMember = await getUniqMember(
+    const uniqMember = await classMemberRepository.getUniqMember(
       validate.data.classId,
       validate.data.studentId,
     )
     let message = ''
     if (uniqMember) {
-      await deleteClassMember(validate.data.classId, validate.data.studentId)
+      await classMemberRepository.deleteClassMember(validate.data.classId, validate.data.studentId)
       message = 'Class member removed successfully'
     } else {
-      await addClassMember(validate.data)
+      await classMemberRepository.addClassMember(validate.data)
       message = 'Class member added successfully'
     }
     return NextResponse.json(
@@ -117,7 +112,7 @@ export async function CreateAndAddClassMember(
       )
     }
 
-    const student = await createStudent(studentValidate.data)
+    const student = await studentRepository.createStudent(studentValidate.data)
     if (!student) {
       return NextResponse.json(
         {
@@ -146,7 +141,7 @@ export async function CreateAndAddClassMember(
         },
       )
     }
-    const classMember = await addClassMember(memberValidate.data)
+    const classMember = await classMemberRepository.addClassMember(memberValidate.data)
     return NextResponse.json(
       {
         success: true,
@@ -177,7 +172,7 @@ export async function GetMemberByClassId(
 ): Promise<NextResponse<ApiResponse<ClassMemberDetail[]>>> {
   try {
     const { classId } = await params
-    const members = await getClassMembersByClassId(classId)
+    const members = await classMemberRepository.getClassMembersByClassId(classId)
     return NextResponse.json(
       {
         success: true,

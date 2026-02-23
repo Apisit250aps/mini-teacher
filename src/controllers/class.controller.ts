@@ -1,13 +1,7 @@
 import { onErrorMessage, safeValidate } from '@/lib/utils'
 import type { Class } from '@/models/domain'
 import { CreateClassSchema, UpdateClassSchema } from '@/models/entities'
-import {
-  createClass,
-  updateClass,
-  deleteClass,
-  getClassesByYear,
-  getClassById,
-} from '@/models/repositories'
+import classRepository from '@/models/repositories/class.repo'
 import { NextRequest, NextResponse } from 'next/server'
 
 type ClassParams = {
@@ -34,7 +28,7 @@ export async function CreateClass(
       )
     }
 
-    const createdClass = await createClass(validate.data)
+    const createdClass = await classRepository.createClass(validate.data)
 
     return NextResponse.json(
       {
@@ -75,7 +69,7 @@ export async function UpdateClass(
       )
     }
 
-    const updatedClass = await updateClass(classId, validate.data)
+    const updatedClass = await classRepository.updateClass(classId, validate.data)
     if (!updatedClass) {
       return NextResponse.json(
         {
@@ -112,7 +106,7 @@ export async function DeleteClass(
 ): Promise<NextResponse<ApiResponse<null>>> {
   try {
     const { classId } = await params
-    await deleteClass(classId)
+    await classRepository.deleteClass(classId)
     return NextResponse.json(
       {
         success: true,
@@ -151,7 +145,7 @@ export async function GetClassYear(
         { status: 400 },
       )
     }
-    const classes = await getClassesByYear(yearId)
+    const classes = await classRepository.getClassesByYear(yearId)
     return NextResponse.json(
       {
         success: true,
@@ -178,7 +172,7 @@ export async function GetClassById(
 ): Promise<NextResponse<ApiResponse<Class>>> {
   try {
     const { classId } = await params
-    const foundClass = await getClassById(classId)
+    const foundClass = await classRepository.getClassById(classId)
     if (!foundClass) {
       return NextResponse.json(
         {

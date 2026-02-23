@@ -4,16 +4,8 @@ import {
   CreateCheckDateSchema,
   CreateCheckStudentSchema,
 } from '@/models/entities'
-import {
-  createCheckDate,
-  createCheckStudent,
-  deleteCheckDate,
-  getCheckDateById,
-  getCheckDatesByClassId,
-  getUniqueCheckStudent,
-  updateCheckDate,
-  updateCheckStudent,
-} from '@/models/repositories'
+import checkDateRepository from '@/models/repositories/check-date.repo'
+import checkStudentRepository from '@/models/repositories/check-student.repo'
 import { NextRequest, NextResponse } from 'next/server'
 import z from 'zod'
 
@@ -54,7 +46,7 @@ export async function CreateCheckDate(
         },
       )
     }
-    const check = await createCheckDate(validate.data)
+    const check = await checkDateRepository.createCheckDate(validate.data)
     return NextResponse.json(
       {
         success: true,
@@ -85,7 +77,7 @@ export async function GetCheckDates(
 ): Promise<NextResponse<ApiResponse<CheckDate[]>>> {
   try {
     const { classId } = await params
-    const checks = await getCheckDatesByClassId(classId)
+    const checks = await checkDateRepository.getCheckDatesByClassId(classId)
     return NextResponse.json(
       {
         success: true,
@@ -133,15 +125,15 @@ export async function CreateCheckStudent(
         },
       )
     }
-    const existing = await getUniqueCheckStudent(
+    const existing = await checkStudentRepository.getUniqueCheckStudent(
       validate.data.checkDateId,
       validate.data.studentId,
     )
     let check: CheckStudent
     if (existing) {
-      check = await updateCheckStudent(existing.id, validate.data)
+      check = await checkStudentRepository.updateCheckStudent(existing.id, validate.data)
     } else {
-      check = await createCheckStudent(validate.data)
+      check = await checkStudentRepository.createCheckStudent(validate.data)
     }
 
     return NextResponse.json(
@@ -176,7 +168,7 @@ export async function UpdateCheckDate(
 ): Promise<NextResponse<ApiResponse<CheckDate>>> {
   try {
     const { classId, checkDateId } = await params
-    const checkDate = await getCheckDateById(checkDateId)
+    const checkDate = await checkDateRepository.getCheckDateById(checkDateId)
     if (!checkDate || checkDate.classId !== classId) {
       return NextResponse.json(
         {
@@ -216,7 +208,7 @@ export async function UpdateCheckDate(
       )
     }
 
-    const updated = await updateCheckDate(checkDateId, {
+    const updated = await checkDateRepository.updateCheckDate(checkDateId, {
       ...validate.data,
       updatedAt: new Date(),
     })
@@ -251,7 +243,7 @@ export async function DeleteCheckDate(
 ): Promise<NextResponse<ApiResponse<null>>> {
   try {
     const { classId, checkDateId } = await params
-    const checkDate = await getCheckDateById(checkDateId)
+    const checkDate = await checkDateRepository.getCheckDateById(checkDateId)
     if (!checkDate || checkDate.classId !== classId) {
       return NextResponse.json(
         {
@@ -264,7 +256,7 @@ export async function DeleteCheckDate(
       )
     }
 
-    await deleteCheckDate(checkDateId)
+    await checkDateRepository.deleteCheckDate(checkDateId)
 
     return NextResponse.json(
       {

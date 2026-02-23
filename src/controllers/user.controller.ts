@@ -1,11 +1,6 @@
 import { onErrorMessage, safeValidate } from '@/lib/utils'
 import { CreateUserSchema, UpdateUserSchema } from '@/models/entities'
-import {
-  findUserByName,
-  createUser,
-  findUserById,
-  updateUser,
-} from '@/models/repositories'
+import userRepository from '@/models/repositories/user.repo'
 import { User } from 'next-auth'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -29,7 +24,7 @@ export async function CreateUser(
         { status: 400 },
       )
     }
-    const uniq = await findUserByName(validate.data.name)
+    const uniq = await userRepository.findUserByName(validate.data.name)
     if (uniq) {
       return NextResponse.json(
         {
@@ -40,7 +35,7 @@ export async function CreateUser(
         { status: 409 },
       )
     }
-    const insert = await createUser(validate.data)
+    const insert = await userRepository.createUser(validate.data)
     if (!insert) {
       throw new Error('การสร้างผู้ใช้ล้มเหลว')
     }
@@ -82,7 +77,7 @@ export async function UpdateUser(
         { status: 400 },
       )
     }
-    const user = await findUserById(userId)
+    const user = await userRepository.findUserById(userId)
     if (!user) {
       return NextResponse.json(
         {
@@ -93,7 +88,7 @@ export async function UpdateUser(
         { status: 404 },
       )
     }
-    const update = await updateUser(userId, validate.data)
+    const update = await userRepository.updateUser(userId, validate.data)
     if (!update) {
       throw new Error('การอัปเดตผู้ใช้ล้มเหลว')
     }

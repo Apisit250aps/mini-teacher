@@ -2,13 +2,7 @@ import { auth } from '@/auth'
 import { onErrorMessage, safeValidate } from '@/lib/utils'
 import type { Student } from '@/models/domain'
 import { CreateStudentSchema, UpdateStudentSchema } from '@/models/entities'
-import {
-  teacherCreateStudent,
-  getStudentById,
-  teacherUpdateStudent,
-  teacherDeleteStudent,
-  teacherGetAllStudent,
-} from '@/models/repositories'
+import studentRepository from '@/models/repositories/student.repo'
 import { NextResponse } from 'next/server'
 import { type NextRequest } from 'next/server'
 
@@ -47,7 +41,7 @@ export async function CreateStudent(
       )
     }
 
-    const student = await teacherCreateStudent(validate.data)
+    const student = await studentRepository.teacherCreateStudent(validate.data)
 
     return NextResponse.json(
       {
@@ -75,7 +69,7 @@ export async function GetStudentById(
 ): Promise<NextResponse<ApiResponse<Student>>> {
   try {
     const { studentId } = await params
-    const student = await getStudentById(studentId)
+    const student = await studentRepository.getStudentById(studentId)
     if (!student) {
       return NextResponse.json(
         {
@@ -139,7 +133,7 @@ export async function UpdateStudent(
       )
     }
 
-    const student = await teacherUpdateStudent(studentId, validate.data)
+    const student = await studentRepository.teacherUpdateStudent(studentId, validate.data)
     if (!student) {
       return NextResponse.json(
         {
@@ -186,7 +180,7 @@ export async function DeleteStudent(
       )
     }
     const { studentId } = await params
-    const student = await getStudentById(studentId)
+    const student = await studentRepository.getStudentById(studentId)
     if (!student) {
       return NextResponse.json(
         {
@@ -197,7 +191,7 @@ export async function DeleteStudent(
       )
     }
 
-    await teacherDeleteStudent(studentId, session.user.id)
+    await studentRepository.teacherDeleteStudent(studentId, session.user.id)
     return NextResponse.json(
       {
         success: true,
@@ -233,7 +227,7 @@ export async function GetAllStudent(
         { status: 401 },
       )
     }
-    const students = await teacherGetAllStudent(session.user.id)
+    const students = await studentRepository.teacherGetAllStudent(session.user.id)
     return NextResponse.json(
       {
         success: true,

@@ -4,16 +4,8 @@ import {
   CreateScoreAssignSchema,
   CreateScoreStudentSchema,
 } from '@/models/entities'
-import {
-  createScoreAssign,
-  createScoreStudent,
-  deleteScoreAssign,
-  getScoreAssignById,
-  getScoreAssignsByClassId,
-  getUniqueScoreStudent,
-  updateScoreAssign,
-  updateScoreStudent,
-} from '@/models/repositories'
+import scoreAssignRepository from '@/models/repositories/score-assign.repo'
+import scoreStudentRepository from '@/models/repositories/score-student.repo'
 import { NextRequest, NextResponse } from 'next/server'
 
 type ClassParams = {
@@ -48,7 +40,7 @@ export async function CreateScoreAssign(
         },
       )
     }
-    const scoreAssign = await createScoreAssign(validate.data)
+    const scoreAssign = await scoreAssignRepository.createScoreAssign(validate.data)
     return NextResponse.json(
       {
         success: true,
@@ -95,7 +87,7 @@ export async function UpdateScoreAssign(
         },
       )
     }
-    const scoreAssign = await updateScoreAssign(scoreAssignId, validate.data)
+    const scoreAssign = await scoreAssignRepository.updateScoreAssign(scoreAssignId, validate.data)
     if (!scoreAssign) {
       return NextResponse.json(
         {
@@ -137,7 +129,7 @@ export async function DeleteScoreAssign(
 ): Promise<NextResponse<ApiResponse<null>>> {
   try {
     const { scoreAssignId } = await params
-    await deleteScoreAssign(scoreAssignId)
+    await scoreAssignRepository.deleteScoreAssign(scoreAssignId)
     return NextResponse.json(
       {
         success: true,
@@ -167,7 +159,7 @@ export async function GetScoreAssignsByClassId(
 ): Promise<NextResponse<ApiResponse<ScoreAssign[]>>> {
   try {
     const { classId } = await params
-    const scoreAssigns = await getScoreAssignsByClassId(classId)
+    const scoreAssigns = await scoreAssignRepository.getScoreAssignsByClassId(classId)
     return NextResponse.json(
       {
         success: true,
@@ -218,16 +210,16 @@ export async function PatchScoreStudent(
     let result: ScoreStudent
     let message: string
     let status: number
-    const uniq = await getUniqueScoreStudent(
+    const existing = await scoreStudentRepository.getUniqueScoreStudent(
       validate.data.scoreAssignId,
       validate.data.studentId,
     )
-    if (uniq) {
-      result = await updateScoreStudent(uniq.id, validate.data.score)
+    if (existing) {
+      result = await scoreStudentRepository.updateScoreStudent(existing.id, validate.data.score)
       message = 'Score student updated successfully'
       status = 200
     } else {
-      result = await createScoreStudent(validate.data)
+      result = await scoreStudentRepository.createScoreStudent(validate.data)
       message = 'Score student created successfully'
       status = 201
     }
@@ -262,7 +254,7 @@ export async function GetScoreAssignById(
 ): Promise<NextResponse<ApiResponse<ScoreAssign>>> {
   try {
     const { classId, scoreAssignId } = await params
-    const scoreAssign = await getScoreAssignById(classId, scoreAssignId)
+    const scoreAssign = await scoreAssignRepository.getScoreAssignById(classId, scoreAssignId)
 
     if (!scoreAssign) {
       return NextResponse.json(

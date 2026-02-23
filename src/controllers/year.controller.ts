@@ -2,15 +2,7 @@ import { auth } from '@/auth'
 import { onErrorMessage, safeValidate } from '@/lib/utils'
 import type { Year } from '@/models/domain'
 import { CreateYearSchema, UpdateYearSchema } from '@/models/entities'
-import {
-  getUniqYear,
-  authCreateYear,
-  authUpdateYear,
-  authGetYearById,
-  authGetAllYears,
-  authDeleteYear,
-  authSetActiveYear,
-} from '@/models/repositories'
+import yearRepository from '@/models/repositories/year.repo'
 import { NextRequest, NextResponse } from 'next/server'
 
 type YearParams = {
@@ -41,7 +33,7 @@ export async function AuthCreateYear(
       )
     }
 
-    const existing = await getUniqYear(
+    const existing = await yearRepository.getUniqYear(
       session.user.id,
       validate.data.year,
       validate.data.term,
@@ -58,7 +50,7 @@ export async function AuthCreateYear(
       )
     }
 
-    const year = await authCreateYear(validate.data)
+    const year = await yearRepository.authCreateYear(validate.data)
     return NextResponse.json(
       { success: true, message: 'Year created successfully', data: year },
       { status: 201 },
@@ -98,7 +90,7 @@ export async function AuthUpdateYear(
       )
     }
 
-    const update = await authUpdateYear(yearId, session.user.id, validate.data)
+    const update = await yearRepository.authUpdateYear(yearId, session.user.id, validate.data)
     if (!update) {
       return NextResponse.json(
         { success: false, message: 'Year not found' },
@@ -134,7 +126,7 @@ export async function AuthGetYearById(
       )
     }
     const { yearId } = await params
-    const year = await authGetYearById(yearId, session.user.id)
+    const year = await yearRepository.authGetYearById(yearId, session.user.id)
     if (!year) {
       return NextResponse.json(
         { success: false, message: 'Year not found' },
@@ -169,7 +161,7 @@ export async function AuthGetAllYears(
         { status: 401 },
       )
     }
-    const years = await authGetAllYears(session.user.id)
+    const years = await yearRepository.authGetAllYears(session.user.id)
     return NextResponse.json(
       { success: true, message: 'Years fetched successfully', data: years },
       { status: 200 },
@@ -199,7 +191,7 @@ export async function AuthDeleteYear(
       )
     }
     const { yearId } = await params
-    const year = await authGetYearById(yearId, session.user.id)
+    const year = await yearRepository.authGetYearById(yearId, session.user.id)
     if (!year) {
       return NextResponse.json(
         { success: false, message: 'Year not found' },
@@ -207,7 +199,7 @@ export async function AuthDeleteYear(
       )
     }
 
-    await authDeleteYear(yearId, session.user.id)
+    await yearRepository.authDeleteYear(yearId, session.user.id)
     return NextResponse.json(
       { success: true, message: 'Year deleted successfully', data: null },
       { status: 200 },
@@ -237,14 +229,14 @@ export async function AuthSetActiveYear(
       )
     }
     const { yearId } = await params
-    const year = await authGetYearById(yearId, session.user.id)
+    const year = await yearRepository.authGetYearById(yearId, session.user.id)
     if (!year) {
       return NextResponse.json(
         { success: false, message: 'Year not found' },
         { status: 404 },
       )
     }
-    await authSetActiveYear(session.user.id, yearId)
+    await yearRepository.authSetActiveYear(session.user.id, yearId)
     return NextResponse.json(
       { success: true, message: 'Active year set successfully', data: null },
       { status: 200 },
