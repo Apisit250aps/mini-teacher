@@ -1,8 +1,10 @@
 import { onErrorMessage, safeValidate } from '@/lib/utils'
-import type { CheckDate, CheckStudent } from '@/models'
+import type { CheckDate, CheckStudent } from '@/models/domain'
 import {
   CreateCheckDateSchema,
   CreateCheckStudentSchema,
+} from '@/models/entities'
+import {
   createCheckDate,
   createCheckStudent,
   deleteCheckDate,
@@ -11,7 +13,7 @@ import {
   getUniqueCheckStudent,
   updateCheckDate,
   updateCheckStudent,
-} from '@/models'
+} from '@/models/repositories'
 import { NextRequest, NextResponse } from 'next/server'
 import z from 'zod'
 

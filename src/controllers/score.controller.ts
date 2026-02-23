@@ -1,11 +1,9 @@
 import { onErrorMessage, safeValidate } from '@/lib/utils'
+import type { ScoreAssign, ScoreStudent } from '@/models/domain'
 import {
   CreateScoreAssignSchema,
   CreateScoreStudentSchema,
-  ScoreAssign,
-  ScoreStudent,
-} from '@/models'
-
+} from '@/models/entities'
 import {
   createScoreAssign,
   createScoreStudent,

@@ -1,15 +1,14 @@
 import { auth } from '@/auth'
 import { onErrorMessage, safeValidate } from '@/lib/utils'
+import type { Student } from '@/models/domain'
+import { CreateStudentSchema, UpdateStudentSchema } from '@/models/entities'
 import {
-  Student,
-  CreateStudentSchema,
   teacherCreateStudent,
   getStudentById,
-  UpdateStudentSchema,
   teacherUpdateStudent,
   teacherDeleteStudent,
   teacherGetAllStudent,
-} from '@/models'
+} from '@/models/repositories'
 import { NextResponse } from 'next/server'
 import { type NextRequest } from 'next/server'
 

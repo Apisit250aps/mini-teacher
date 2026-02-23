@@ -1,12 +1,11 @@
 import { onErrorMessage, safeValidate } from '@/lib/utils'
+import { CreateUserSchema, UpdateUserSchema } from '@/models/entities'
 import {
-  CreateUserSchema,
   findUserByName,
   createUser,
-  UpdateUserSchema,
   findUserById,
   updateUser,
-} from '@/models'
+} from '@/models/repositories'
 import { User } from 'next-auth'
 import { NextRequest, NextResponse } from 'next/server'
 

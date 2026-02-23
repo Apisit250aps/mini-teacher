@@ -9,16 +9,11 @@ export const zodName = () =>
   })
 export const zodEmail = () => z.email('รูปแบบอีเมลไม่ถูกต้อง')
 export const zodDate = () => z.date('รูปแบบวันที่ไม่ถูกต้อง').or(z.string())
-export const zodTimestamp = () =>
-  z
-    .date()
-    .default(() => new Date())
-    .or(z.string())
+export const zodTimestamp = () => z.date().default(() => new Date())
 
 export const zodLocaleDateString = () =>
   z
     .date()
-    .or(z.string())
     .transform((date) => {
       const onlyDate = new Date(date)
       return onlyDate.toDateString()

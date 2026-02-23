@@ -1,16 +1,17 @@
 import { auth } from '@/auth'
 import { onErrorMessage, safeValidate } from '@/lib/utils'
+import type { ClassMember, ClassMemberDetail } from '@/models/domain'
 import {
-  ClassMember,
   ClassMemberSchema,
   CreateStudentSchema,
+} from '@/models/entities'
+import {
   createStudent,
-  ClassMemberDetail,
   deleteClassMember,
   addClassMember,
   getClassMembersByClassId,
   getUniqMember,
-} from '@/models'
+} from '@/models/repositories'
 import { NextRequest, NextResponse } from 'next/server'
 
 type ClassMemberParams = {

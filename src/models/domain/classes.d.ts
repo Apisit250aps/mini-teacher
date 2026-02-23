@@ -5,8 +5,8 @@ interface Class {
   subject: string
   description: string
   isActive: boolean
-  createdAt: Date
-  updatedAt: Date
+  createdAt: Date | string
+  updatedAt: Date | string
 }
 
 interface CreateClass {

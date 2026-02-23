@@ -6,8 +6,8 @@ interface Year {
   year: number
   term: number
   isActive: boolean
-  createdAt: Date
-  updatedAt: Date
+  createdAt: Date | string
+  updatedAt: Date | string
 }
 
 interface CreateYear {
