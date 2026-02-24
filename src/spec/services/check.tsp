@@ -8,7 +8,7 @@ interface Check {
   /** Create a check date */
   @post create(
     @path classId: string,
-    @body body: CreateCheckDateBody,
+    @body body: CheckDateCreate,
   ): ApiResponse<CheckDate> | ApiError;
 
   /** Update a check date */
@@ -17,7 +17,7 @@ interface Check {
   update(
     @path classId: string,
     @path checkDateId: string,
-    @body body: UpdateCheckDateBody,
+    @body body: CheckDateUpdate,
   ): ApiResponse<CheckDate> | ApiError;
 
   /** Delete a check date */
@@ -31,7 +31,7 @@ interface Check {
   /** Get check dates by class id */
   @get listByClassId(
     @path classId: string,
-  ): ApiResponse<CheckDateWithStudents[]> | ApiError;
+  ): ApiResponse<CheckDateDetail[]> | ApiError;
 
   /** Update a check student */
   @route("{checkDateId}/student")
@@ -39,6 +39,6 @@ interface Check {
   checkStudent(
     @path classId: string,
     @path checkDateId: string,
-    @body body: CreateCheckStudentBody,
+    @body body: CheckStudentCreate,
   ): ApiResponse<CheckStudent> | ApiError;
 }

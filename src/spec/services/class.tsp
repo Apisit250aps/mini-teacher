@@ -10,14 +10,14 @@ interface Classes {
   @get list(): ApiResponse<Class[]> | ApiError;
 
   /** Create a class */
-  @post create(@body body: CreateClassBody): ApiResponse<Class> | ApiError;
+  @post create(@body body: ClassCreate): ApiResponse<Class> | ApiError;
 
   /** Update a class */
   @route("{classId}")
   @put
   update(
     @path classId: string,
-    @body body: UpdateClassBody,
+    @body body: ClassUpdate,
   ): ApiResponse<Class> | ApiError;
 
   /** Delete a class */
@@ -33,14 +33,14 @@ interface Classes {
   @put
   addOrRemoveMember(
     @path classId: string,
-    @body body: PatchClassMemberBody,
+    @body body: ClassMemberAdd,
   ): ApiResponse<EmptyData> | ApiError;
 
   @route("{classId}/member")
   @post
   addMember(
     @path classId: string,
-    @body body: CreateStudentBody,
+    @body body: StudentCreate,
   ): ApiResponse<EmptyData> | ApiError;
 
   @route("{classId}/member")

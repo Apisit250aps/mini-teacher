@@ -32,3 +32,17 @@ union ApiError {
 }
 
 model EmptyData {}
+
+enum CheckStatus {
+  PRESENT,
+  ABSENT,
+  LATE,
+  LEAVE,
+}
+
+enum AssignType {
+  EXAM,
+  HOMEWORK,
+  QUIZ,
+  PROJECT,
+}

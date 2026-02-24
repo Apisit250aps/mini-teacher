@@ -4,8 +4,8 @@ interface ClassMember {
   id: string
   classId: string
   studentId: string
-  createdAt: Date | string
-  updatedAt: Date | string
+  createdAt: Date
+  updatedAt: Date
 }
 
 interface ClassMemberDetail extends ClassMember {

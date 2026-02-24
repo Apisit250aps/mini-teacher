@@ -12,7 +12,7 @@ interface Scores {
   /** Create a score assignment */
   @post create(
     @path classId: string,
-    @body body: CreateScoreAssignBody,
+    @body body: CreateScoreAssign,
   ): ApiResponse<ScoreAssign> | ApiError;
 
   /** Update a score assignment */
@@ -21,7 +21,7 @@ interface Scores {
   update(
     @path classId: string,
     @path scoreAssignId: string,
-    @body body: UpdateScoreAssignBody,
+    @body body: UpdateScoreAssign,
   ): ApiResponse<ScoreAssign> | ApiError;
 
   /** Delete a score assignment */
@@ -46,6 +46,6 @@ interface Scores {
   upsertScoreStudent(
     @path classId: string,
     @path scoreAssignId: string,
-    @body body: CreateScoreStudentBody | UpdateScoreStudentBody,
+    @body body: CreateScoreStudent | UpdateScoreStudent,
   ): ApiResponse<ScoreStudent> | ApiError;
 }

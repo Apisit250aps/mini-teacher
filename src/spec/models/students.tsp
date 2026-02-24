@@ -1,3 +1,6 @@
+import "@typespec/http";
+using TypeSpec.Http;
+
 namespace MiniTeacherService;
 
 model Student {
@@ -12,7 +15,20 @@ model Student {
   updatedAt: utcDateTime;
 }
 
-model CreateStudentBody {
+model StudentCreate {
+  teacher: string;
+  code: string;
+  prefix: string;
+  firstName: string;
+  lastName: string;
+  nickname?: string;
+}
+
+model StudentUpdate {
+  id: string;
+}
+
+model StudentFormValue {
   prefix: string;
   code: string;
   firstName: string;
@@ -20,10 +36,3 @@ model CreateStudentBody {
   nickname?: string;
 }
 
-model UpdateStudentBody {
-  prefix?: string;
-  code?: string;
-  firstName?: string;
-  lastName?: string;
-  nickname?: string;
-}

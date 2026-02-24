@@ -1,3 +1,5 @@
+import { Class } from "./classes";
+
 interface CheckDate {
   id: string
   classId: string
@@ -7,14 +9,18 @@ interface CheckDate {
   updatedAt: Date
 }
 
-interface CreateCheckDate {
+interface CheckDateCreate {
   classId: string
   isEditable?: boolean
   date: string
 }
 
-interface UpdateCheckDate extends Partial<CreateCheckDate> {
+interface CheckDateUpdate extends Partial<CheckDateCreate> {
   id: string
 }
 
-export type { CheckDate, CreateCheckDate, UpdateCheckDate }
+interface CheckDateDetail extends CheckDate {
+  class: Class
+}
+
+export type { CheckDate, CheckDateCreate, CheckDateUpdate, CheckDateDetail }

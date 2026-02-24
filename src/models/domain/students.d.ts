@@ -6,11 +6,11 @@ interface Student {
   firstName: string
   lastName: string
   nickname?: string
-  createdAt: Date | string
-  updatedAt: Date | string
+  createdAt: Date
+  updatedAt: Date
 }
 
-interface CreateStudent {
+interface StudentCreate {
   teacher: string
   code: string
   prefix: string
@@ -19,7 +19,7 @@ interface CreateStudent {
   nickname?: string
 }
 
-interface UpdateStudent extends Partial<CreateStudent> {
+interface StudentUpdate extends Partial<StudentCreate> {
   id: string
 }
 
@@ -31,4 +31,4 @@ interface StudentFormValue {
   nickname?: string
 }
 
-export type { Student, CreateStudent, UpdateStudent, StudentFormValue }
+export type { Student, StudentCreate, StudentUpdate, StudentFormValue }

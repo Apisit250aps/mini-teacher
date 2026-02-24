@@ -5,8 +5,8 @@ interface ScoreStudent {
   scoreAssignId: string
   studentId: string
   score: number
-  createdAt: Date | string
-  updatedAt: Date | string
+  createdAt: Date
+  updatedAt: Date
 }
 
 interface ScoreStudentDetail extends ScoreStudent {

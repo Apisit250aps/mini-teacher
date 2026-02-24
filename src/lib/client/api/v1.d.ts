@@ -258,42 +258,81 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** @enum {string} */
+        AssignType: "EXAM" | "HOMEWORK" | "QUIZ" | "PROJECT";
         CheckDate: {
             id: string;
             classId: string;
-            date: string;
             isEditable: boolean;
+            date: string;
             /** Format: date-time */
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
         };
-        CheckDateWithStudents: {
-            checkStudents: components["schemas"]["CheckStudent"][];
-        } & components["schemas"]["CheckDate"];
+        CheckDateCreate: {
+            classId: string;
+            isEditable?: boolean;
+            date: string;
+        };
+        CheckDateDetail: {
+            class: components["schemas"]["Class"];
+        };
+        CheckDateUpdate: {
+            id: string;
+        };
+        /** @enum {string} */
+        CheckStatus: "PRESENT" | "ABSENT" | "LATE" | "LEAVE";
         CheckStudent: {
             id: string;
             checkDateId: string;
             studentId: string;
-            status: string;
+            status: components["schemas"]["CheckStatus"];
             /** Format: date-time */
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
+        };
+        CheckStudentCreate: {
+            checkDateId: string;
+            studentId: string;
+            status?: components["schemas"]["CheckStatus"];
+        };
+        CheckStudentDetail: {
+            student: components["schemas"]["Student"];
+        };
+        CheckStudentUpdate: {
+            id: string;
         };
         Class: {
             id: string;
             year: string;
             name: string;
-            description: string;
             subject: string;
+            description: string;
             isActive: boolean;
             /** Format: date-time */
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
         };
-        ClassMemberDetail: {
+        ClassCreate: {
+            year: string;
+            name: string;
+            subject: string;
+            description: string;
+            isActive?: boolean;
+        };
+        ClassDetail: {
+            members: components["schemas"]["Student"][];
+        };
+        ClassFormValue: {
+            year: string;
+            name: string;
+            subject: string;
+            description: string;
+        };
+        ClassMember: {
             id: string;
             classId: string;
             studentId: string;
@@ -301,64 +340,49 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-            student: {
-                id: string;
-                teacher: string;
-                code: string;
-                prefix: string;
-                firstName: string;
-                lastName: string;
-                /** Format: date-time */
-                createdAt: string;
-                /** Format: date-time */
-                updatedAt: string;
-                nickname?: string;
-            };
         };
-        CreateCheckDateBody: {
-            date: string;
-        };
-        CreateCheckStudentBody: {
+        ClassMemberAdd: {
             studentId: string;
-            status: string;
         };
-        CreateClassBody: {
-            year: string;
-            name: string;
-            subject: string;
-            isActive?: boolean;
-            description?: string;
+        ClassMemberDetail: {
+            student: components["schemas"]["Student"];
         };
-        CreateScoreAssignBody: {
+        ClassUpdate: {
+            id: string;
+        };
+        CreateClassMember: {
+            classId: string;
+            studentId: string;
+        };
+        CreateScoreAssign: {
+            classId: string;
+            isEditable?: boolean;
             name: string;
             description?: string | null;
-            /** Format: int32 */
+            /** Format: double */
             minScore?: number;
-            /** Format: int32 */
+            /** Format: double */
             maxScore?: number;
-            /** @enum {string} */
-            type?: "ASSIGNMENT" | "QUIZ" | "EXAM";
-            assignDate?: string | null;
-            finalDate?: string | null;
+            type?: components["schemas"]["AssignType"];
+            /** Format: date-time */
+            assignDate?: string;
+            /** Format: date-time */
+            finalDate?: string;
         };
-        CreateScoreStudentBody: {
+        CreateScoreStudent: {
+            scoreAssignId: string;
             studentId: string;
-            /** Format: int32 */
-            score: number;
+            /** Format: double */
+            score?: number;
         };
-        CreateStudentBody: {
-            prefix: string;
-            code: string;
-            firstName: string;
-            lastName: string;
-            nickname?: string;
-        };
-        CreateYearBody: {
-            /** Format: int32 */
-            year: number;
-            /** Format: int32 */
-            term: number;
+        CreateUser: {
+            name: string;
+            password: string;
             isActive?: boolean;
+            isTeacher?: boolean;
+            firstName?: string;
+            lastName?: string;
+            email?: string;
         };
         EmptyData: Record<string, never>;
         ErrorResponse: {
@@ -366,32 +390,21 @@ export interface components {
             message: string;
             error: string;
         };
-        PatchClassMemberBody: {
-            studentId?: string;
-        };
         ScoreAssign: {
             id: string;
             classId: string;
-            name: string;
             isEditable: boolean;
-            description: string | null;
-            /**
-             * Format: int32
-             * @default 0
-             */
+            name: string;
+            description?: string | null;
+            /** Format: double */
             minScore: number;
-            /**
-             * Format: int32
-             * @default 100
-             */
+            /** Format: double */
             maxScore: number;
-            /**
-             * @default ASSIGNMENT
-             * @enum {string}
-             */
-            type: "ASSIGNMENT" | "QUIZ" | "EXAM";
-            assignDate?: string | null;
-            finalDate?: string | null;
+            type: components["schemas"]["AssignType"];
+            /** Format: date-time */
+            assignDate: string;
+            /** Format: date-time */
+            finalDate: string;
             /** Format: date-time */
             createdAt: string;
             /** Format: date-time */
@@ -399,12 +412,12 @@ export interface components {
         };
         ScoreAssignDetail: {
             scores: components["schemas"]["ScoreStudentDetail"][];
-        } & components["schemas"]["ScoreAssign"];
+        };
         ScoreStudent: {
             id: string;
             scoreAssignId: string;
             studentId: string;
-            /** Format: int32 */
+            /** Format: double */
             score: number;
             /** Format: date-time */
             createdAt: string;
@@ -412,15 +425,6 @@ export interface components {
             updatedAt: string;
         };
         ScoreStudentDetail: {
-            id: string;
-            scoreAssignId: string;
-            studentId: string;
-            /** Format: int32 */
-            score: number;
-            /** Format: date-time */
-            createdAt: string;
-            /** Format: date-time */
-            updatedAt: string;
             student: components["schemas"]["Student"];
         };
         Student: {
@@ -436,58 +440,59 @@ export interface components {
             /** Format: date-time */
             updatedAt: string;
         };
-        UpdateCheckDateBody: {
-            date?: string;
-            isEditable?: boolean;
-        };
-        UpdateClassBody: {
-            year?: string;
-            name?: string;
-            subject?: string;
-            isActive?: boolean;
-            /** Format: date-time */
-            updatedAt?: string;
-            description?: string;
-        };
-        UpdateScoreAssignBody: {
-            name?: string;
-            description?: string | null;
-            /** Format: int32 */
-            minScore?: number;
-            /** Format: int32 */
-            maxScore?: number;
-            /** @enum {string} */
-            type?: "ASSIGNMENT" | "QUIZ" | "EXAM";
-            assignDate?: string | null;
-            finalDate?: string | null;
-        };
-        UpdateScoreStudentBody: {
-            /** Format: int32 */
-            score: number;
-        };
-        UpdateStudentBody: {
-            prefix?: string;
-            code?: string;
-            firstName?: string;
-            lastName?: string;
+        StudentCreate: {
+            teacher: string;
+            code: string;
+            prefix: string;
+            firstName: string;
+            lastName: string;
             nickname?: string;
         };
-        UpdateYearBody: {
-            user?: string;
-            /** Format: int32 */
-            year?: number;
-            /** Format: int32 */
-            term?: number;
-            isActive?: boolean;
+        StudentFormValue: {
+            prefix: string;
+            code: string;
+            firstName: string;
+            lastName: string;
+            nickname?: string;
+        };
+        StudentUpdate: {
+            id: string;
+        };
+        UpdateScoreAssign: {
+            id: string;
+        };
+        UpdateScoreStudent: {
+            id: string;
+        };
+        UpdateUser: {
+            id: string;
+        };
+        User: {
+            id: string;
+            name: string;
+            password: string;
+            isActive: boolean;
+            isTeacher: boolean;
+            firstName?: string;
+            lastName?: string;
+            email?: string;
             /** Format: date-time */
-            updatedAt?: string;
+            lastLoginAt?: string;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        UserLogin: {
+            name: string;
+            password: string;
         };
         Year: {
             id: string;
             user: string;
-            /** Format: int32 */
+            /** Format: double */
             year: number;
-            /** Format: int32 */
+            /** Format: double */
             term: number;
             isActive: boolean;
             /** Format: date-time */
@@ -495,9 +500,30 @@ export interface components {
             /** Format: date-time */
             updatedAt: string;
         };
+        YearCreate: {
+            /** Format: double */
+            year: number;
+            /** Format: double */
+            term: number;
+        };
         YearDetail: {
             classes: components["schemas"]["Class"][];
-        } & components["schemas"]["Year"];
+        };
+        YearForm: {
+            /** Format: double */
+            year: number;
+            /** Format: double */
+            term: number;
+            isActive: boolean;
+        };
+        YearUpdate: {
+            id: string;
+            /** Format: double */
+            year?: number;
+            /** Format: double */
+            term?: number;
+            isActive?: boolean;
+        };
     };
     responses: never;
     parameters: never;
@@ -559,7 +585,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateClassBody"];
+                "application/json": components["schemas"]["ClassCreate"];
             };
         };
         responses: {
@@ -653,7 +679,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateClassBody"];
+                "application/json": components["schemas"]["ClassUpdate"];
             };
         };
         responses: {
@@ -756,7 +782,7 @@ export interface operations {
                     "application/json": {
                         success: boolean;
                         message: string;
-                        data?: components["schemas"]["CheckDateWithStudents"][];
+                        data?: components["schemas"]["CheckDateDetail"][];
                         error?: string;
                     };
                 };
@@ -792,7 +818,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateCheckDateBody"];
+                "application/json": components["schemas"]["CheckDateCreate"];
             };
         };
         responses: {
@@ -842,7 +868,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateCheckDateBody"];
+                "application/json": components["schemas"]["CheckDateUpdate"];
             };
         };
         responses: {
@@ -938,7 +964,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateCheckStudentBody"];
+                "application/json": components["schemas"]["CheckStudentCreate"];
             };
         };
         responses: {
@@ -1032,7 +1058,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["PatchClassMemberBody"];
+                "application/json": components["schemas"]["ClassMemberAdd"];
             };
         };
         responses: {
@@ -1081,7 +1107,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateStudentBody"];
+                "application/json": components["schemas"]["StudentCreate"];
             };
         };
         responses: {
@@ -1175,7 +1201,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateScoreAssignBody"];
+                "application/json": components["schemas"]["CreateScoreAssign"];
             };
         };
         responses: {
@@ -1271,7 +1297,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateScoreAssignBody"];
+                "application/json": components["schemas"]["UpdateScoreAssign"];
             };
         };
         responses: {
@@ -1367,7 +1393,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateScoreStudentBody"] | components["schemas"]["UpdateScoreStudentBody"];
+                "application/json": components["schemas"]["CreateScoreStudent"] | components["schemas"]["UpdateScoreStudent"];
             };
         };
         responses: {
@@ -1457,7 +1483,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateStudentBody"];
+                "application/json": components["schemas"]["StudentCreate"];
             };
         };
         responses: {
@@ -1551,7 +1577,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateStudentBody"];
+                "application/json": components["schemas"]["StudentUpdate"];
             };
         };
         responses: {
@@ -1686,7 +1712,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateYearBody"];
+                "application/json": components["schemas"]["YearCreate"];
             };
         };
         responses: {
@@ -1780,7 +1806,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["UpdateYearBody"];
+                "application/json": components["schemas"]["YearUpdate"];
             };
         };
         responses: {

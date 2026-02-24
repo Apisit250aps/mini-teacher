@@ -91,7 +91,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateClassBody'
+              $ref: '#/components/schemas/ClassCreate'
   /class/{classId}:
     put:
       operationId: Classes_update
@@ -140,7 +140,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateClassBody'
+              $ref: '#/components/schemas/ClassUpdate'
     delete:
       operationId: Classes_delete
       description: Delete a class
@@ -272,7 +272,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateCheckDateBody'
+              $ref: '#/components/schemas/CheckDateCreate'
     get:
       operationId: Check_listByClassId
       description: Get check dates by class id
@@ -300,7 +300,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/CheckDateWithStudents'
+                      $ref: '#/components/schemas/CheckDateDetail'
                   error:
                     type: string
         '400':
@@ -370,7 +370,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateCheckDateBody'
+              $ref: '#/components/schemas/CheckDateUpdate'
     delete:
       operationId: Check_delete
       description: Delete a check date
@@ -471,7 +471,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateCheckStudentBody'
+              $ref: '#/components/schemas/CheckStudentCreate'
   /class/{classId}/member:
     put:
       operationId: Classes_addOrRemoveMember
@@ -519,7 +519,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchClassMemberBody'
+              $ref: '#/components/schemas/ClassMemberAdd'
     post:
       operationId: Classes_addMember
       parameters:
@@ -566,7 +566,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateStudentBody'
+              $ref: '#/components/schemas/StudentCreate'
     get:
       operationId: Classes_getMembers
       parameters:
@@ -702,7 +702,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateScoreAssignBody'
+              $ref: '#/components/schemas/CreateScoreAssign'
   /class/{classId}/score/{scoreAssignId}:
     put:
       operationId: Scores_update
@@ -756,7 +756,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateScoreAssignBody'
+              $ref: '#/components/schemas/UpdateScoreAssign'
     delete:
       operationId: Scores_delete
       description: Delete a score assignment
@@ -905,8 +905,8 @@ paths:
           application/json:
             schema:
               anyOf:
-                - $ref: '#/components/schemas/CreateScoreStudentBody'
-                - $ref: '#/components/schemas/UpdateScoreStudentBody'
+                - $ref: '#/components/schemas/CreateScoreStudent'
+                - $ref: '#/components/schemas/UpdateScoreStudent'
   /student:
     get:
       operationId: Students_list
@@ -989,7 +989,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateStudentBody'
+              $ref: '#/components/schemas/StudentCreate'
   /student/{studentId}:
     put:
       operationId: Students_update
@@ -1038,7 +1038,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateStudentBody'
+              $ref: '#/components/schemas/StudentUpdate'
     delete:
       operationId: Students_delete
       description: Delete a student
@@ -1204,7 +1204,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateYearBody'
+              $ref: '#/components/schemas/YearCreate'
   /year/{yearId}:
     put:
       operationId: Years_update
@@ -1253,7 +1253,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateYearBody'
+              $ref: '#/components/schemas/YearUpdate'
     patch:
       operationId: Years_setActive
       description: Set active year
@@ -1427,13 +1427,20 @@ paths:
         - Years
 components:
   schemas:
+    AssignType:
+      type: string
+      enum:
+        - EXAM
+        - HOMEWORK
+        - QUIZ
+        - PROJECT
     CheckDate:
       type: object
       required:
         - id
         - classId
-        - date
         - isEditable
+        - date
         - createdAt
         - updatedAt
       properties:
@@ -1441,27 +1448,49 @@ components:
           type: string
         classId:
           type: string
-        date:
-          type: string
         isEditable:
           type: boolean
+        date:
+          type: string
         createdAt:
           type: string
           format: date-time
         updatedAt:
           type: string
           format: date-time
-    CheckDateWithStudents:
+    CheckDateCreate:
       type: object
       required:
-        - checkStudents
+        - classId
+        - date
       properties:
-        checkStudents:
-          type: array
-          items:
-            $ref: '#/components/schemas/CheckStudent'
-      allOf:
-        - $ref: '#/components/schemas/CheckDate'
+        classId:
+          type: string
+        isEditable:
+          type: boolean
+        date:
+          type: string
+    CheckDateDetail:
+      type: object
+      required:
+        - class
+      properties:
+        class:
+          $ref: '#/components/schemas/Class'
+    CheckDateUpdate:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+    CheckStatus:
+      type: string
+      enum:
+        - PRESENT
+        - ABSENT
+        - LATE
+        - LEAVE
     CheckStudent:
       type: object
       required:
@@ -1479,21 +1508,47 @@ components:
         studentId:
           type: string
         status:
-          type: string
+          $ref: '#/components/schemas/CheckStatus'
         createdAt:
           type: string
           format: date-time
         updatedAt:
           type: string
           format: date-time
+    CheckStudentCreate:
+      type: object
+      required:
+        - checkDateId
+        - studentId
+      properties:
+        checkDateId:
+          type: string
+        studentId:
+          type: string
+        status:
+          $ref: '#/components/schemas/CheckStatus'
+    CheckStudentDetail:
+      type: object
+      required:
+        - student
+      properties:
+        student:
+          $ref: '#/components/schemas/Student'
+    CheckStudentUpdate:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
     Class:
       type: object
       required:
         - id
         - year
         - name
-        - description
         - subject
+        - description
         - isActive
         - createdAt
         - updatedAt
@@ -1504,9 +1559,9 @@ components:
           type: string
         name:
           type: string
-        description:
-          type: string
         subject:
+          type: string
+        description:
           type: string
         isActive:
           type: boolean
@@ -1516,7 +1571,50 @@ components:
         updatedAt:
           type: string
           format: date-time
-    ClassMemberDetail:
+    ClassCreate:
+      type: object
+      required:
+        - year
+        - name
+        - subject
+        - description
+      properties:
+        year:
+          type: string
+        name:
+          type: string
+        subject:
+          type: string
+        description:
+          type: string
+        isActive:
+          type: boolean
+    ClassDetail:
+      type: object
+      required:
+        - members
+      properties:
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/Student'
+    ClassFormValue:
+      type: object
+      required:
+        - year
+        - name
+        - subject
+        - description
+      properties:
+        year:
+          type: string
+        name:
+          type: string
+        subject:
+          type: string
+        description:
+          type: string
+    ClassMember:
       type: object
       required:
         - id
@@ -1524,7 +1622,6 @@ components:
         - studentId
         - createdAt
         - updatedAt
-        - student
       properties:
         id:
           type: string
@@ -1538,77 +1635,47 @@ components:
         updatedAt:
           type: string
           format: date-time
-        student:
-          type: object
-          properties:
-            id:
-              type: string
-            teacher:
-              type: string
-            code:
-              type: string
-            prefix:
-              type: string
-            firstName:
-              type: string
-            lastName:
-              type: string
-            createdAt:
-              type: string
-              format: date-time
-            updatedAt:
-              type: string
-              format: date-time
-            nickname:
-              type: string
-          required:
-            - id
-            - teacher
-            - code
-            - prefix
-            - firstName
-            - lastName
-            - createdAt
-            - updatedAt
-    CreateCheckDateBody:
-      type: object
-      required:
-        - date
-      properties:
-        date:
-          type: string
-    CreateCheckStudentBody:
+    ClassMemberAdd:
       type: object
       required:
         - studentId
-        - status
       properties:
         studentId:
           type: string
-        status:
-          type: string
-    CreateClassBody:
+    ClassMemberDetail:
       type: object
       required:
-        - year
-        - name
-        - subject
+        - student
       properties:
-        year:
+        student:
+          $ref: '#/components/schemas/Student'
+    ClassUpdate:
+      type: object
+      required:
+        - id
+      properties:
+        id:
           type: string
-        name:
+    CreateClassMember:
+      type: object
+      required:
+        - classId
+        - studentId
+      properties:
+        classId:
           type: string
-        subject:
+        studentId:
           type: string
-        isActive:
+    CreateScoreAssign:
+      type: object
+      required:
+        - classId
+        - name
+      properties:
+        classId:
+          type: string
+        isEditable:
           type: boolean
-        description:
-          type: string
-    CreateScoreAssignBody:
-      type: object
-      required:
-        - name
-      properties:
         name:
           type: string
         description:
@@ -1616,70 +1683,52 @@ components:
             - type: string
             - type: 'null'
         minScore:
-          type: integer
-          format: int32
+          type: number
+          format: double
         maxScore:
-          type: integer
-          format: int32
+          type: number
+          format: double
         type:
-          type: string
-          enum:
-            - ASSIGNMENT
-            - QUIZ
-            - EXAM
+          $ref: '#/components/schemas/AssignType'
         assignDate:
-          anyOf:
-            - type: string
-              format: date-time
-            - type: 'null'
+          type: string
+          format: date-time
         finalDate:
-          anyOf:
-            - type: string
-              format: date-time
-            - type: 'null'
-    CreateScoreStudentBody:
+          type: string
+          format: date-time
+    CreateScoreStudent:
       type: object
       required:
+        - scoreAssignId
         - studentId
-        - score
       properties:
+        scoreAssignId:
+          type: string
         studentId:
           type: string
         score:
-          type: integer
-          format: int32
-    CreateStudentBody:
+          type: number
+          format: double
+    CreateUser:
       type: object
       required:
-        - prefix
-        - code
-        - firstName
-        - lastName
+        - name
+        - password
       properties:
-        prefix:
+        name:
           type: string
-        code:
+        password:
           type: string
+        isActive:
+          type: boolean
+        isTeacher:
+          type: boolean
         firstName:
           type: string
         lastName:
           type: string
-        nickname:
+        email:
           type: string
-    CreateYearBody:
-      type: object
-      required:
-        - year
-        - term
-      properties:
-        year:
-          type: integer
-          format: int32
-        term:
-          type: integer
-          format: int32
-        isActive:
-          type: boolean
     EmptyData:
       type: object
     ErrorResponse:
@@ -1695,22 +1744,18 @@ components:
           type: string
         error:
           type: string
-    PatchClassMemberBody:
-      type: object
-      properties:
-        studentId:
-          type: string
     ScoreAssign:
       type: object
       required:
         - id
         - classId
-        - name
         - isEditable
-        - description
+        - name
         - minScore
         - maxScore
         - type
+        - assignDate
+        - finalDate
         - createdAt
         - updatedAt
       properties:
@@ -1718,39 +1763,28 @@ components:
           type: string
         classId:
           type: string
-        name:
-          type: string
         isEditable:
           type: boolean
+        name:
+          type: string
         description:
           anyOf:
             - type: string
             - type: 'null'
         minScore:
-          type: integer
-          format: int32
-          default: 0
+          type: number
+          format: double
         maxScore:
-          type: integer
-          format: int32
-          default: 100
+          type: number
+          format: double
         type:
-          type: string
-          enum:
-            - ASSIGNMENT
-            - QUIZ
-            - EXAM
-          default: ASSIGNMENT
+          $ref: '#/components/schemas/AssignType'
         assignDate:
-          anyOf:
-            - type: string
-              format: date-time
-            - type: 'null'
+          type: string
+          format: date-time
         finalDate:
-          anyOf:
-            - type: string
-              format: date-time
-            - type: 'null'
+          type: string
+          format: date-time
         createdAt:
           type: string
           format: date-time
@@ -1766,8 +1800,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ScoreStudentDetail'
-      allOf:
-        - $ref: '#/components/schemas/ScoreAssign'
     ScoreStudent:
       type: object
       required:
@@ -1785,8 +1817,8 @@ components:
         studentId:
           type: string
         score:
-          type: integer
-          format: int32
+          type: number
+          format: double
         createdAt:
           type: string
           format: date-time
@@ -1796,29 +1828,8 @@ components:
     ScoreStudentDetail:
       type: object
       required:
-        - id
-        - scoreAssignId
-        - studentId
-        - score
-        - createdAt
-        - updatedAt
         - student
       properties:
-        id:
-          type: string
-        scoreAssignId:
-          type: string
-        studentId:
-          type: string
-        score:
-          type: integer
-          format: int32
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
         student:
           $ref: '#/components/schemas/Student'
     Student:
@@ -1853,70 +1864,34 @@ components:
         updatedAt:
           type: string
           format: date-time
-    UpdateCheckDateBody:
-      type: object
-      properties:
-        date:
-          type: string
-        isEditable:
-          type: boolean
-    UpdateClassBody:
-      type: object
-      properties:
-        year:
-          type: string
-        name:
-          type: string
-        subject:
-          type: string
-        isActive:
-          type: boolean
-        updatedAt:
-          type: string
-          format: date-time
-        description:
-          type: string
-    UpdateScoreAssignBody:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          anyOf:
-            - type: string
-            - type: 'null'
-        minScore:
-          type: integer
-          format: int32
-        maxScore:
-          type: integer
-          format: int32
-        type:
-          type: string
-          enum:
-            - ASSIGNMENT
-            - QUIZ
-            - EXAM
-        assignDate:
-          anyOf:
-            - type: string
-              format: date-time
-            - type: 'null'
-        finalDate:
-          anyOf:
-            - type: string
-              format: date-time
-            - type: 'null'
-    UpdateScoreStudentBody:
+    StudentCreate:
       type: object
       required:
-        - score
+        - teacher
+        - code
+        - prefix
+        - firstName
+        - lastName
       properties:
-        score:
-          type: integer
-          format: int32
-    UpdateStudentBody:
+        teacher:
+          type: string
+        code:
+          type: string
+        prefix:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        nickname:
+          type: string
+    StudentFormValue:
       type: object
+      required:
+        - prefix
+        - code
+        - firstName
+        - lastName
       properties:
         prefix:
           type: string
@@ -1928,22 +1903,80 @@ components:
           type: string
         nickname:
           type: string
-    UpdateYearBody:
+    StudentUpdate:
       type: object
+      required:
+        - id
       properties:
-        user:
+        id:
           type: string
-        year:
-          type: integer
-          format: int32
-        term:
-          type: integer
-          format: int32
+    UpdateScoreAssign:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+    UpdateScoreStudent:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+    UpdateUser:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+    User:
+      type: object
+      required:
+        - id
+        - name
+        - password
+        - isActive
+        - isTeacher
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        password:
+          type: string
         isActive:
           type: boolean
+        isTeacher:
+          type: boolean
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        lastLoginAt:
+          type: string
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
         updatedAt:
           type: string
           format: date-time
+    UserLogin:
+      type: object
+      required:
+        - name
+        - password
+      properties:
+        name:
+          type: string
+        password:
+          type: string
     Year:
       type: object
       required:
@@ -1960,11 +1993,11 @@ components:
         user:
           type: string
         year:
-          type: integer
-          format: int32
+          type: number
+          format: double
         term:
-          type: integer
-          format: int32
+          type: number
+          format: double
         isActive:
           type: boolean
         createdAt:
@@ -1973,6 +2006,18 @@ components:
         updatedAt:
           type: string
           format: date-time
+    YearCreate:
+      type: object
+      required:
+        - year
+        - term
+      properties:
+        year:
+          type: number
+          format: double
+        term:
+          type: number
+          format: double
     YearDetail:
       type: object
       required:
@@ -1982,5 +2027,33 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Class'
-      allOf:
-        - $ref: '#/components/schemas/Year'
+    YearForm:
+      type: object
+      required:
+        - year
+        - term
+        - isActive
+      properties:
+        year:
+          type: number
+          format: double
+        term:
+          type: number
+          format: double
+        isActive:
+          type: boolean
+    YearUpdate:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+        year:
+          type: number
+          format: double
+        term:
+          type: number
+          format: double
+        isActive:
+          type: boolean

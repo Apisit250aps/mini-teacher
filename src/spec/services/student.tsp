@@ -10,14 +10,14 @@ interface Students {
   @get list(): ApiResponse<Student[]> | ApiError;
 
   /** Create a student */
-  @post create(@body body: CreateStudentBody): ApiResponse<Student> | ApiError;
+  @post create(@body body: StudentCreate): ApiResponse<Student> | ApiError;
 
   /** Update a student */
   @route("{studentId}")
   @put
   update(
     @path studentId: string,
-    @body body: UpdateStudentBody,
+    @body body: StudentUpdate,
   ): ApiResponse<Student> | ApiError;
 
   /** Delete a student */

@@ -4,7 +4,7 @@ interface CheckDateRepository {
   createCheckDate(checkDate: CheckDate): Promise<CheckDate>
   updateCheckDate(id: string, checkDate: Partial<CheckDate>): Promise<CheckDate>
   deleteCheckDate(id: string): Promise<void>
-  getCheckDateById(id: string): Promise<CheckDate | null>
+  getCheckDateById(id: string): Promise<CheckDate>
   getCheckDatesByClassId(classId: string): Promise<CheckDate[]>
 }
 

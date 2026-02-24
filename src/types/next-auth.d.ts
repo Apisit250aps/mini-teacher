@@ -12,7 +12,7 @@ declare module 'next-auth' {
     name: string
     email?: string
     image?: string
-    emailVerified?: Date | null
+    emailVerified?: Date
 
     isActive: boolean
     isTeacher: boolean
@@ -43,7 +43,7 @@ declare module 'next-auth/adapters' {
 
     name?: string | null
     email: string
-    emailVerified: Date | null
+    emailVerified: Date
     image?: string | null
 
     isActive: boolean
@@ -59,7 +59,7 @@ declare module '@auth/core/adapters' {
 
     name?: string | null
     email: string
-    emailVerified: Date | null
+    emailVerified: Date
     image?: string | null
 
     isActive: boolean

@@ -2,12 +2,16 @@ import "@typespec/http";
 import "@typespec/rest";
 // models
 import "./models/common.tsp";
-// entities
-import "./models/year.tsp";
-import "./models/class.tsp";
-import "./models/student.tsp";
-import "./models/check.tsp";
-import "./models/score.tsp";
+// generated domain models (one-time prepared; manually enable when needed)
+import "./models/user.tsp";
+import "./models/years.tsp";
+import "./models/classes.tsp";
+import "./models/students.tsp";
+import "./models/class-members.tsp";
+import "./models/check-dates.tsp";
+import "./models/check-students.tsp";
+import "./models/score-assigns.tsp";
+import "./models/score-students.tsp";
 // services
 import "./services/year.tsp";
 import "./services/class.tsp";

@@ -7,9 +7,9 @@ interface User {
   firstName?: string
   lastName?: string
   email?: string
-  lastLoginAt?: Date | string | null
-  createdAt: Date | string
-  updatedAt: Date | string
+  lastLoginAt?: Date
+  createdAt: Date
+  updatedAt: Date
 }
 
 interface CreateUser {

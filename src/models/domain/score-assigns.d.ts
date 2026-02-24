@@ -11,8 +11,8 @@ interface ScoreAssign {
   minScore: number
   maxScore: number
   type: AssignType
-  assignDate: Date | null
-  finalDate: Date | null
+  assignDate: Date
+  finalDate: Date
   createdAt: Date
   updatedAt: Date
 }
@@ -29,8 +29,8 @@ interface CreateScoreAssign {
   minScore?: number
   maxScore?: number
   type?: AssignType
-  assignDate?: Date | null
-  finalDate?: Date | null
+  assignDate?: Date
+  finalDate?: Date
 }
 
 interface UpdateScoreAssign extends Partial<CreateScoreAssign> {

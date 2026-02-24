@@ -1,20 +1,34 @@
 import { Class } from './classes'
 
-type Year = {
+interface Year {
   id: string
   user: string
   year: number
   term: number
   isActive: boolean
-  createdAt: Date | string
-  updatedAt: Date | string
+  createdAt: Date
+  updatedAt: Date
 }
-type CreateYear = Omit<Year, 'id' | 'createdAt' | 'updatedAt'>
-type UpdateYear = Partial<CreateYear> & { id: string }
-type YearForm = Omit<CreateYear, 'user' | 'isActive'>
+interface YearCreate {
+  year: number
+  term: number
+}
+interface YearUpdate {
+  id: string
+  year?: number
+  term?: number
+  isActive?: boolean
+}
+
+interface YearForm {
+  year: number
+  term: number
+  isActive: boolean
+}
+
 // type YearDetail = Year & { classes: Class[] }
 interface YearDetail extends Year {
   classes: Class[]
 }
 
-export type { Year, CreateYear, UpdateYear, YearDetail, YearForm }
+export type { Year, YearCreate, YearUpdate, YearDetail, YearForm }

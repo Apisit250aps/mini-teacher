@@ -10,12 +10,12 @@ interface Years {
   @get list(): ApiResponse<YearDetail[]> | ApiError;
 
   /** Create a year */
-  @post create(@body body: CreateYearBody): ApiResponse<Year> | ApiError;
+  @post create(@body body: YearCreate): ApiResponse<Year> | ApiError;
 
   /** Update a year */
   @put update(
     @path yearId: string,
-    @body body: UpdateYearBody,
+    @body body: YearUpdate,
   ): ApiResponse<Year> | ApiError;
 
   /** Set active year */

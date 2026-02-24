@@ -15,13 +15,13 @@ interface CheckStudentDetail extends CheckStudent {
   student: Student
 }
 
-interface CreateCheckStudent {
+interface CheckStudentCreate {
   checkDateId: string
   studentId: string
   status?: CheckStatus
 }
 
-interface UpdateCheckStudent extends Partial<CreateCheckStudent> {
+interface CheckStudentUpdate extends Partial<CheckStudentCreate> {
   id: string
 }
 
@@ -29,6 +29,6 @@ export type {
   CheckStatus,
   CheckStudent,
   CheckStudentDetail,
-  CreateCheckStudent,
-  UpdateCheckStudent,
+  CheckStudentCreate,
+  CheckStudentUpdate,
 }

@@ -8,8 +8,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "gen": "npm run gen:tsp && npm run gen:spec && npm run gen:api",
     "gen:spec": "tsp compile ./src/spec/main.tsp",
-    "gen:api": "openapi-typescript ./src/spec/schema/openapi.yaml -o ./src/lib/client/api/v1.d.ts"
+    "gen:api": "openapi-typescript ./src/spec/schema/openapi.yaml -o ./src/lib/client/api/v1.d.ts",
+    "gen:tsp": "npx tsx scripts/type-convert.ts"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.11.1",
@@ -42,6 +44,7 @@
     "recharts": "^2.15.4",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.4.0",
+    "ts-node": "^10.9.2",
     "uuid": "^13.0.0",
     "vaul": "^1.1.2",
     "zod": "^4.3.6"
@@ -49,7 +52,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/lodash": "^4.17.23",
-    "@types/node": "^20",
+    "@types/node": "^20.19.33",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@typespec/compiler": "latest",

@@ -5,11 +5,11 @@ interface Class {
   subject: string
   description: string
   isActive: boolean
-  createdAt: Date | string
-  updatedAt: Date | string
+  createdAt: Date
+  updatedAt: Date
 }
 
-interface CreateClass {
+interface ClassCreate {
   year: string
   name: string
   subject: string
@@ -17,8 +17,12 @@ interface CreateClass {
   isActive?: boolean
 }
 
-interface UpdateClass extends Partial<CreateClass> {
+interface ClassUpdate extends Partial<ClassCreate> {
   id: string
+}
+
+interface ClassDetail extends Class {
+  members: Student[]
 }
 
 interface ClassFormValue {
@@ -28,4 +32,17 @@ interface ClassFormValue {
   description: string
 }
 
-export type { Class, CreateClass, UpdateClass, ClassFormValue }
+interface ClassMemberAdd {
+  studentId: string
+}
+
+
+
+export type {
+  Class,
+  ClassCreate,
+  ClassUpdate,
+  ClassDetail,
+  ClassFormValue,
+  ClassMemberAdd,
+}
