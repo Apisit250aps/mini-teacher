@@ -1,9 +1,9 @@
 import { classesCollection } from '@/lib/mongo'
-import type { Class, ClassRepository } from '@/models/domain'
-import { omit } from 'lodash'
+import type { Class } from '@/models/domain'
+import { ClassRepository } from '@/models/repositories/interface'
 
 const classRepository: ClassRepository = {
-  createClass: async (newClass) => {
+  create: async (newClass) => {
     try {
       const classes = await classesCollection()
       const result = await classes.insertOne(newClass)
@@ -16,12 +16,12 @@ const classRepository: ClassRepository = {
     }
   },
 
-  updateClass: async (id, updatedClass) => {
+  update: async (id, data) => {
     try {
       const classes = await classesCollection()
       const result = await classes.findOneAndUpdate(
         { id },
-        { $set: omit(updatedClass, ['id']) },
+        { $set: data },
         { returnDocument: 'after', projection: { _id: 0 } },
       )
       if (!result) {
@@ -33,7 +33,7 @@ const classRepository: ClassRepository = {
     }
   },
 
-  deleteClass: async (id) => {
+  delete: async (id) => {
     try {
       const classes = await classesCollection()
       const result = await classes.deleteOne({ id })
@@ -45,7 +45,7 @@ const classRepository: ClassRepository = {
     }
   },
 
-  getClassById: async (id) => {
+  getById: async (id) => {
     try {
       const classes = await classesCollection()
       const result = await classes.findOne({ id }, { projection: { _id: 0 } })
@@ -55,7 +55,7 @@ const classRepository: ClassRepository = {
     }
   },
 
-  getClassesByYear: async (yearId) => {
+  getByYearId: async (yearId) => {
     try {
       const classes = await classesCollection()
       const result = await classes
@@ -67,7 +67,7 @@ const classRepository: ClassRepository = {
     }
   },
 
-  getClassByYearAndClassId: async (yearId, classId) => {
+  getUnique: async (yearId, classId) => {
     try {
       const classes = await classesCollection()
       const result = await classes.findOne(
@@ -80,13 +80,5 @@ const classRepository: ClassRepository = {
     }
   },
 }
-
-// Named exports for backward compatibility
-export const createClass = classRepository.createClass
-export const updateClass = classRepository.updateClass
-export const deleteClass = classRepository.deleteClass
-export const getClassById = classRepository.getClassById
-export const getClassesByYear = classRepository.getClassesByYear
-export const getClassByYearAndClassId = classRepository.getClassByYearAndClassId
 
 export default classRepository

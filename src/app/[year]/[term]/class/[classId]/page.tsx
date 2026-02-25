@@ -1,6 +1,6 @@
 import ClassDetailView from '@/views/class-detail-view'
 import {
-  getClassByYearAndClassId,
+  getUnique,
   getYearsByYearTerm,
 } from '@/models/repositories/mongo'
 import { ClassProvider } from '@/hooks/app/use-class'
@@ -40,7 +40,7 @@ export default async function Page({
       />
     )
   }
-  const classRoom = await getClassByYearAndClassId(yearData.id, classId)
+  const classRoom = await getUnique(yearData.id, classId)
 
   if (!classRoom) {
     return (

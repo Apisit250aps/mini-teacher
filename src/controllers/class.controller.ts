@@ -28,7 +28,7 @@ export async function CreateClass(
       )
     }
 
-    const createdClass = await classRepository.createClass(validate.data)
+    const createdClass = await classRepository.create(validate.data)
 
     return NextResponse.json(
       {
@@ -69,7 +69,7 @@ export async function UpdateClass(
       )
     }
 
-    const updatedClass = await classRepository.updateClass(classId, validate.data)
+    const updatedClass = await classRepository.update(classId, validate.data)
     if (!updatedClass) {
       return NextResponse.json(
         {
@@ -106,7 +106,7 @@ export async function DeleteClass(
 ): Promise<NextResponse<ApiResponse<null>>> {
   try {
     const { classId } = await params
-    await classRepository.deleteClass(classId)
+    await classRepository.delete(classId)
     return NextResponse.json(
       {
         success: true,
@@ -145,7 +145,7 @@ export async function GetClassYear(
         { status: 400 },
       )
     }
-    const classes = await classRepository.getClassesByYear(yearId)
+    const classes = await classRepository.getByYearId(yearId)
     return NextResponse.json(
       {
         success: true,
@@ -172,7 +172,7 @@ export async function GetClassById(
 ): Promise<NextResponse<ApiResponse<Class>>> {
   try {
     const { classId } = await params
-    const foundClass = await classRepository.getClassById(classId)
+    const foundClass = await classRepository.getById(classId)
     if (!foundClass) {
       return NextResponse.json(
         {
