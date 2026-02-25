@@ -1,10 +1,10 @@
 import { checkDatesCollection } from '@/lib/mongo'
 import type { CheckDate } from '@/models/domain'
 import { omit } from 'lodash'
-import { CheckDateRepository } from '../interface/check-date.repository';
+import { CheckDateRepository } from '../interface/check-date.repository'
 
 const checkDateRepository: CheckDateRepository = {
-  createCheckDate: async (checkDate) => {
+  create: async (checkDate) => {
     const check_dates = await checkDatesCollection()
     const result = await check_dates.insertOne(checkDate)
     if (!result.acknowledged) {
@@ -13,7 +13,7 @@ const checkDateRepository: CheckDateRepository = {
     return checkDate
   },
 
-  updateCheckDate: async (id, checkDate) => {
+  update: async (id, checkDate) => {
     const check_dates = await checkDatesCollection()
     const update = await check_dates.findOneAndUpdate(
       { id },
@@ -26,7 +26,7 @@ const checkDateRepository: CheckDateRepository = {
     return update
   },
 
-  deleteCheckDate: async (id) => {
+  delete: async (id) => {
     const check_dates = await checkDatesCollection()
     const result = await check_dates.deleteOne({ id })
     if (result.deletedCount === 0) {
@@ -34,7 +34,7 @@ const checkDateRepository: CheckDateRepository = {
     }
   },
 
-  getCheckDateById: async (id) => {
+  getById: async (id) => {
     const check_dates = await checkDatesCollection()
     const result = await check_dates.findOne({ id }, { projection: { _id: 0 } })
     if (!result) {
@@ -43,7 +43,7 @@ const checkDateRepository: CheckDateRepository = {
     return result
   },
 
-  getCheckDatesByClassId: async (classId) => {
+  getByClassId: async (classId) => {
     const check_dates = await checkDatesCollection()
     const checked = await check_dates
       .aggregate<CheckDate>([
@@ -64,12 +64,5 @@ const checkDateRepository: CheckDateRepository = {
     return checked
   },
 }
-
-// Named exports for backward compatibility
-export const createCheckDate = checkDateRepository.createCheckDate
-export const updateCheckDate = checkDateRepository.updateCheckDate
-export const deleteCheckDate = checkDateRepository.deleteCheckDate
-export const getCheckDateById = checkDateRepository.getCheckDateById
-export const getCheckDatesByClassId = checkDateRepository.getCheckDatesByClassId
 
 export default checkDateRepository

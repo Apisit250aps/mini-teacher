@@ -46,7 +46,7 @@ export async function CreateCheckDate(
         },
       )
     }
-    const check = await checkDateRepository.createCheckDate(validate.data)
+    const check = await checkDateRepository.create(validate.data)
     return NextResponse.json(
       {
         success: true,
@@ -77,7 +77,7 @@ export async function GetCheckDates(
 ): Promise<NextResponse<ApiResponse<CheckDate[]>>> {
   try {
     const { classId } = await params
-    const checks = await checkDateRepository.getCheckDatesByClassId(classId)
+    const checks = await checkDateRepository.getByClassId(classId)
     return NextResponse.json(
       {
         success: true,
@@ -168,7 +168,7 @@ export async function UpdateCheckDate(
 ): Promise<NextResponse<ApiResponse<CheckDate>>> {
   try {
     const { classId, checkDateId } = await params
-    const checkDate = await checkDateRepository.getCheckDateById(checkDateId)
+    const checkDate = await checkDateRepository.getById(checkDateId)
     if (!checkDate || checkDate.classId !== classId) {
       return NextResponse.json(
         {
@@ -208,7 +208,7 @@ export async function UpdateCheckDate(
       )
     }
 
-    const updated = await checkDateRepository.updateCheckDate(checkDateId, {
+    const updated = await checkDateRepository.update(checkDateId, {
       ...validate.data,
       updatedAt: new Date(),
     })
@@ -243,7 +243,7 @@ export async function DeleteCheckDate(
 ): Promise<NextResponse<ApiResponse<null>>> {
   try {
     const { classId, checkDateId } = await params
-    const checkDate = await checkDateRepository.getCheckDateById(checkDateId)
+    const checkDate = await checkDateRepository.getById(checkDateId)
     if (!checkDate || checkDate.classId !== classId) {
       return NextResponse.json(
         {
@@ -256,7 +256,7 @@ export async function DeleteCheckDate(
       )
     }
 
-    await checkDateRepository.deleteCheckDate(checkDateId)
+    await checkDateRepository.delete(checkDateId)
 
     return NextResponse.json(
       {
