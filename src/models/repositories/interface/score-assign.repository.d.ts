@@ -1,11 +1,14 @@
 import type { ScoreAssign } from '@/models/domain/score-assigns'
 
 interface ScoreAssignRepository {
-  createScoreAssign(data: ScoreAssign): Promise<ScoreAssign>
-  updateScoreAssign(assignId: string, data: Partial<ScoreAssign>): Promise<ScoreAssign | null>
-  deleteScoreAssign(assignId: string): Promise<boolean>
-  getScoreAssignsByClassId(classId: string): Promise<ScoreAssign[]>
-  getScoreAssignById(classId: string, assignId: string): Promise<ScoreAssign | null>
+  create(data: ScoreAssign): Promise<ScoreAssign>
+  update(
+    id: string,
+    data: Partial<ScoreAssign>,
+  ): Promise<ScoreAssign | null>
+  delete(id: string): Promise<boolean>
+  getById(id: string): Promise<ScoreAssign | null>
+  getByClassId(classId: string): Promise<ScoreAssign[]>
 }
 
 export type { ScoreAssignRepository }

@@ -3,9 +3,11 @@ import type { ScoreAssign, ScoreStudent } from '@/models/domain'
 import {
   CreateScoreAssignSchema,
   CreateScoreStudentSchema,
+  UpdateScoreAssignSchema,
 } from '@/models/entities'
 import scoreAssignRepository from '@/models/repositories/mongo/score-assign.repo'
 import scoreStudentRepository from '@/models/repositories/mongo/score-student.repo'
+import { omitBy } from 'lodash'
 import { NextRequest, NextResponse } from 'next/server'
 
 type ClassParams = {
@@ -40,7 +42,7 @@ export async function CreateScoreAssign(
         },
       )
     }
-    const scoreAssign = await scoreAssignRepository.createScoreAssign(validate.data)
+    const scoreAssign = await scoreAssignRepository.create(validate.data)
     return NextResponse.json(
       {
         success: true,
@@ -72,7 +74,7 @@ export async function UpdateScoreAssign(
   try {
     const { scoreAssignId } = await params
     const body = await req.json()
-    const validate = await safeValidate(CreateScoreAssignSchema, {
+    const validate = await safeValidate(UpdateScoreAssignSchema, {
       ...body,
     })
     if (!validate.data) {
@@ -87,7 +89,10 @@ export async function UpdateScoreAssign(
         },
       )
     }
-    const scoreAssign = await scoreAssignRepository.updateScoreAssign(scoreAssignId, validate.data)
+    const scoreAssign = await scoreAssignRepository.update(
+      scoreAssignId,
+      omitBy(validate.data, isNaN),
+    )
     if (!scoreAssign) {
       return NextResponse.json(
         {
@@ -129,7 +134,7 @@ export async function DeleteScoreAssign(
 ): Promise<NextResponse<ApiResponse<null>>> {
   try {
     const { scoreAssignId } = await params
-    await scoreAssignRepository.deleteScoreAssign(scoreAssignId)
+    await scoreAssignRepository.delete(scoreAssignId)
     return NextResponse.json(
       {
         success: true,
@@ -159,7 +164,7 @@ export async function GetScoreAssignsByClassId(
 ): Promise<NextResponse<ApiResponse<ScoreAssign[]>>> {
   try {
     const { classId } = await params
-    const scoreAssigns = await scoreAssignRepository.getScoreAssignsByClassId(classId)
+    const scoreAssigns = await scoreAssignRepository.getByClassId(classId)
     return NextResponse.json(
       {
         success: true,
@@ -215,7 +220,10 @@ export async function PatchScoreStudent(
       validate.data.studentId,
     )
     if (existing) {
-      result = await scoreStudentRepository.updateScoreStudent(existing.id, validate.data.score)
+      result = await scoreStudentRepository.updateScoreStudent(
+        existing.id,
+        validate.data.score,
+      )
       message = 'Score student updated successfully'
       status = 200
     } else {
@@ -253,8 +261,8 @@ export async function GetScoreAssignById(
   { params }: { params: Promise<ScoreAssignParams> },
 ): Promise<NextResponse<ApiResponse<ScoreAssign>>> {
   try {
-    const { classId, scoreAssignId } = await params
-    const scoreAssign = await scoreAssignRepository.getScoreAssignById(classId, scoreAssignId)
+    const { scoreAssignId } = await params
+    const scoreAssign = await scoreAssignRepository.getById(scoreAssignId)
 
     if (!scoreAssign) {
       return NextResponse.json(

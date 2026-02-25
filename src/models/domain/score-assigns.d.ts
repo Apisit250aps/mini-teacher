@@ -7,14 +7,14 @@ interface ScoreAssign {
   classId: string
   isEditable: boolean
   name: string
-  description?: string | null
+  description: string | null
   minScore: number
   maxScore: number
   type: AssignType
-  assignDate: Date
-  finalDate: Date
-  createdAt: Date
-  updatedAt: Date
+  assignDate: Date | string | null
+  finalDate: Date | string | null
+  createdAt: Date | string
+  updatedAt: Date | string
 }
 
 interface ScoreAssignDetail extends ScoreAssign {
@@ -29,12 +29,20 @@ interface CreateScoreAssign {
   minScore?: number
   maxScore?: number
   type?: AssignType
-  assignDate?: Date
-  finalDate?: Date
+  assignDate?: Date | string | null
+  finalDate?: Date | string | null
 }
 
-interface UpdateScoreAssign extends Partial<CreateScoreAssign> {
-  id: string
+interface UpdateScoreAssign {
+  classId?: string
+  isEditable?: boolean
+  name?: string
+  description?: string | null
+  minScore?: number
+  maxScore?: number
+  type?: AssignType
+  assignDate?: Date | string | null
+  finalDate?: Date | string | null
 }
 
 export type {

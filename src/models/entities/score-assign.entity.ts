@@ -30,3 +30,5 @@ export const CreateScoreAssignSchema = BaseScoreAssign.omit({
   createdAt: zodTimestamp(),
   updatedAt: zodTimestamp(),
 })
+
+export const UpdateScoreAssignSchema = CreateScoreAssignSchema.partial()
