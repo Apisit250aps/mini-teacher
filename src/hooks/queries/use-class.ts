@@ -1,7 +1,7 @@
 import { $api } from '@/lib/client'
 import { useClassContext } from '@/hooks/app/use-class'
 import { toast } from 'sonner'
-import type { CreateClass, UpdateClass } from '@/models/domain'
+import type { ClassCreate, ClassUpdate } from '@/models/domain'
 
 export const useGetClassMembers = (classId?: string) => {
   const { activeClass } = useClassContext()
@@ -102,16 +102,13 @@ export const useClassQueries = () => {
     },
   })
 
-  const onCreate = (
-    data: Pick<CreateClass, 'year' | 'name' | 'subject'> &
-      Partial<Pick<CreateClass, 'description' | 'isActive'>>,
-  ) => {
+  const onCreate = (data: ClassCreate) => {
     return create.mutateAsync({
       body: data,
     })
   }
 
-  const onUpdate = (classId: string, data: Omit<UpdateClass, 'updatedAt'>) => {
+  const onUpdate = (classId: string, data: Omit<ClassUpdate, 'updatedAt'>) => {
     return update.mutateAsync({
       params: {
         path: {

@@ -2,7 +2,7 @@
 import { $api } from '@/lib/client'
 import { onSettledToast } from '@/lib/utils/hooks'
 import { useYearContext } from '../app/use-year'
-import type { Year } from '@/models/domain'
+import type { Year, YearUpdate } from '@/models/domain'
 import { toast } from 'sonner'
 
 export const useClassesInYear = () => {
@@ -73,7 +73,7 @@ export const useYearQueries = () => {
 
   const onUpdate = async (
     yearId: string,
-    data: Pick<Year, 'year' | 'term'>,
+    data: YearUpdate,
   ) => {
     return await update.mutateAsync(
       {
