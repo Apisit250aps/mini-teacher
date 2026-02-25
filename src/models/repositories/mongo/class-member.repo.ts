@@ -1,22 +1,20 @@
 import { classMembersCollection } from '@/lib/mongo'
-import type {
-  ClassMemberDetail,
-  ClassMemberRepository,
-} from '@/models/domain'
+import type { ClassMemberDetail } from '@/models/domain'
+import { ClassMemberRepository } from '@/models/repositories/interface'
 
 const classMemberRepository: ClassMemberRepository = {
-  addClassMember: async (classMember) => {
+  create: async (classMember) => {
     const collection = await classMembersCollection()
     await collection.insertOne(classMember)
     return classMember
   },
 
-  deleteClassMember: async (classId, studentId) => {
+  delete: async (id) => {
     const collection = await classMembersCollection()
-    await collection.deleteOne({ classId, studentId })
+    await collection.deleteOne({ id })
   },
 
-  getUniqMember: async (classId, studentId) => {
+  getUnique: async (classId, studentId) => {
     const collection = await classMembersCollection()
     const member = await collection.findOne(
       { classId, studentId },
@@ -25,7 +23,7 @@ const classMemberRepository: ClassMemberRepository = {
     return member
   },
 
-  getClassMembersByClassId: async (classId) => {
+  getByClassId: async (classId) => {
     const member = await classMembersCollection()
     const data = await member
       .aggregate<ClassMemberDetail>([
@@ -57,11 +55,5 @@ const classMemberRepository: ClassMemberRepository = {
     return data
   },
 }
-
-// Named exports for backward compatibility
-export const addClassMember = classMemberRepository.addClassMember
-export const deleteClassMember = classMemberRepository.deleteClassMember
-export const getUniqMember = classMemberRepository.getUniqMember
-export const getClassMembersByClassId = classMemberRepository.getClassMembersByClassId
 
 export default classMemberRepository
