@@ -1,23 +1,23 @@
 import z from 'zod'
-import { zodAutoUuid, zodDate, zodTimestamp, zodUuid } from '@/lib/zod/fields'
+import {
+  zodModel,
+  zodTimestamp,
+  zodUuid,
+} from '@/lib/zod/fields'
 
 const checkEnum = ['PRESENT', 'ABSENT', 'LATE', 'LEAVE'] as const
 
 const checkEnumSchema = z.enum(checkEnum).nullable().default(null)
 
-export const BaseCheckStudent = z.object({
-  id: zodAutoUuid(),
+export const BaseCheckStudent = zodModel({
   checkDateId: zodUuid(),
   studentId: zodUuid(),
   status: checkEnumSchema,
-  createdAt: zodDate(),
-  updatedAt: zodTimestamp(),
 })
 
-export const CreateCheckStudentSchema = BaseCheckStudent.omit({
-  createdAt: true,
-  updatedAt: true,
-}).extend({
+export const CreateCheckStudentSchema = BaseCheckStudent.extend({
   createdAt: zodTimestamp(),
   updatedAt: zodTimestamp(),
 })
+
+export const UpdateCheckStudentSchema = BaseCheckStudent.partial()

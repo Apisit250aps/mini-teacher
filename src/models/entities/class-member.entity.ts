@@ -15,6 +15,3 @@ export const ClassMemberSchema = BaseClassMemberSchema.extend({
   updatedAt: zodTimestamp(),
 })
 
-export const ClassMemberDetailSchema = BaseClassMemberSchema.extend({
-  student: BaseStudentSchema,
-})

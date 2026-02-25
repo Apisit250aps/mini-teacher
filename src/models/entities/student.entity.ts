@@ -1,16 +1,13 @@
-import { zodDate, zodName, zodTimestamp, zodAutoUuid, zodUuid } from '@/lib/zod/fields'
+import { zodName, zodTimestamp, zodUuid, zodModel } from '@/lib/zod/fields'
 import z from 'zod'
 
-export const BaseStudentSchema = z.object({
-  id: zodAutoUuid(),
+export const BaseStudentSchema = zodModel({
   teacher: zodUuid(),
   code: z.string(),
   prefix: zodName(),
   firstName: zodName(),
   lastName: zodName(),
   nickname: zodName().optional(),
-  createdAt: zodDate(),
-  updatedAt: zodTimestamp(),
 })
 
 export const CreateStudentSchema = BaseStudentSchema.omit({

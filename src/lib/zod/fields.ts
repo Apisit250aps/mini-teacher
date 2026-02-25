@@ -12,9 +12,16 @@ export const zodDate = () => z.date('รูปแบบวันที่ไม�
 export const zodTimestamp = () => z.date().default(() => new Date())
 
 export const zodLocaleDateString = () =>
-  z
-    .date()
-    .transform((date) => {
-      const onlyDate = new Date(date)
-      return onlyDate.toDateString()
-    })
+  z.date().transform((date) => {
+    const onlyDate = new Date(date)
+    return onlyDate.toDateString()
+  })
+
+export const zodModel = <T extends z.ZodRawShape>(shape: T) => {
+  return z.object({
+    id: zodAutoUuid(),
+    ...shape,
+    createdAt: zodDate(),
+    updatedAt: zodTimestamp(),
+  })
+}

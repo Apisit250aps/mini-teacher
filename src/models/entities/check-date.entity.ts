@@ -1,25 +1,17 @@
 import {
-  zodAutoUuid,
-  zodDate,
   zodLocaleDateString,
+  zodModel,
   zodTimestamp,
   zodUuid,
 } from '@/lib/zod/fields'
 import z from 'zod'
 
-export const BaseCheckDate = z.object({
-  id: zodAutoUuid(),
+export const BaseCheckDate = zodModel({
   classId: zodUuid(),
   isEditable: z.boolean().default(true),
   date: zodLocaleDateString(),
-  createdAt: zodDate(),
-  updatedAt: zodTimestamp(),
 })
 
-export const CreateCheckDateSchema = BaseCheckDate.omit({
-  createdAt: true,
-  updatedAt: true,
-}).extend({
+export const CreateCheckDateSchema = BaseCheckDate.extend({
   createdAt: zodTimestamp(),
-  updatedAt: zodTimestamp(),
 })
