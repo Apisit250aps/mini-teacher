@@ -4,7 +4,7 @@ import { omit } from 'lodash'
 import { CheckStudentRepository } from '../interface/check-student.repository'
 
 const checkStudentRepository: CheckStudentRepository = {
-  createCheckStudent: async (data) => {
+  create: async (data) => {
     const check_students = await checkStudentsCollection()
     const result = await check_students.insertOne(data)
     if (!result.acknowledged) {
@@ -13,7 +13,7 @@ const checkStudentRepository: CheckStudentRepository = {
     return data
   },
 
-  updateCheckStudent: async (id, data) => {
+  update: async (id, data) => {
     const check_students = await checkStudentsCollection()
     const result = await check_students.findOneAndUpdate(
       { id },
@@ -26,7 +26,7 @@ const checkStudentRepository: CheckStudentRepository = {
     return result
   },
 
-  deleteCheckStudent: async (id) => {
+  delete: async (id) => {
     const check_students = await checkStudentsCollection()
     const result = await check_students.deleteOne({ id })
     if (result.deletedCount === 0) {
@@ -34,7 +34,7 @@ const checkStudentRepository: CheckStudentRepository = {
     }
   },
 
-  getUniqueCheckStudent: async (checkDateId, studentId) => {
+  getUnique: async (checkDateId, studentId) => {
     const check_students = await checkStudentsCollection()
     const [result] = await check_students
       .aggregate<CheckStudentDetail>([
@@ -55,7 +55,7 @@ const checkStudentRepository: CheckStudentRepository = {
     return result || null
   },
 
-  getCheckStudentById: async (id) => {
+  getById: async (id) => {
     const check_students = await checkStudentsCollection()
     const [result] = await check_students
       .aggregate<CheckStudentDetail>([
@@ -77,13 +77,5 @@ const checkStudentRepository: CheckStudentRepository = {
     return result || null
   },
 }
-
-// Named exports for backward compatibility
-export const createCheckStudent = checkStudentRepository.createCheckStudent
-export const updateCheckStudent = checkStudentRepository.updateCheckStudent
-export const deleteCheckStudent = checkStudentRepository.deleteCheckStudent
-export const getUniqueCheckStudent =
-  checkStudentRepository.getUniqueCheckStudent
-export const getCheckStudentById = checkStudentRepository.getCheckStudentById
 
 export default checkStudentRepository

@@ -125,15 +125,15 @@ export async function CreateCheckStudent(
         },
       )
     }
-    const existing = await checkStudentRepository.getUniqueCheckStudent(
+    const existing = await checkStudentRepository.getUnique(
       validate.data.checkDateId,
       validate.data.studentId,
     )
     let check: CheckStudent
     if (existing) {
-      check = await checkStudentRepository.updateCheckStudent(existing.id, validate.data)
+      check = await checkStudentRepository.update(existing.id, validate.data)
     } else {
-      check = await checkStudentRepository.createCheckStudent(validate.data)
+      check = await checkStudentRepository.create(validate.data)
     }
 
     return NextResponse.json(
