@@ -1,6 +1,5 @@
 import z from 'zod'
 import { zodAutoUuid, zodDate, zodTimestamp, zodUuid } from '@/lib/zod/fields'
-import { ScoreStudentDetailSchema } from './score-student.entity'
 
 export const assignEnum = ['ASSIGNMENT', 'EXAM', 'QUIZ'] as const
 
@@ -17,10 +16,6 @@ export const BaseScoreAssign = z.object({
   finalDate: z.date().nullable().default(null),
   createdAt: zodDate(),
   updatedAt: zodTimestamp(),
-})
-
-export const ScoreAssignDetailSchema = BaseScoreAssign.extend({
-  scores: z.array(ScoreStudentDetailSchema),
 })
 
 export const CreateScoreAssignSchema = BaseScoreAssign.omit({
