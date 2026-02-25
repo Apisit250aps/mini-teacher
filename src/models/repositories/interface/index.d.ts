@@ -1,0 +1,6 @@
+export * from './check-date.repository'
+export * from './check-student.repository'
+export * from './class-member.repository'
+export * from './class.repository'
+export * from './score-assign.repository'
+export * from './score-student.repository'

@@ -1,7 +1,6 @@
 import { checkStudentsCollection } from '@/lib/mongo'
 import type { CheckStudentDetail } from '@/models/domain'
-import { omit } from 'lodash'
-import { CheckStudentRepository } from '../interface/check-student.repository'
+import { CheckStudentRepository } from '@/models/repositories/interface'
 
 const checkStudentRepository: CheckStudentRepository = {
   create: async (data) => {
@@ -17,7 +16,7 @@ const checkStudentRepository: CheckStudentRepository = {
     const check_students = await checkStudentsCollection()
     const result = await check_students.findOneAndUpdate(
       { id },
-      { $set: omit(data, ['id', 'createdAt']) },
+      { $set: data },
       { returnDocument: 'after', projection: { _id: 0 } },
     )
     if (!result) {
