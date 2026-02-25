@@ -1,9 +1,7 @@
 import { checkStudentsCollection } from '@/lib/mongo'
-import type {
-  CheckStudentDetail,
-  CheckStudentRepository,
-} from '@/models/domain'
+import type { CheckStudentDetail } from '@/models/domain'
 import { omit } from 'lodash'
+import { CheckStudentRepository } from '../interface/check-student.repository'
 
 const checkStudentRepository: CheckStudentRepository = {
   createCheckStudent: async (data) => {
@@ -84,7 +82,8 @@ const checkStudentRepository: CheckStudentRepository = {
 export const createCheckStudent = checkStudentRepository.createCheckStudent
 export const updateCheckStudent = checkStudentRepository.updateCheckStudent
 export const deleteCheckStudent = checkStudentRepository.deleteCheckStudent
-export const getUniqueCheckStudent = checkStudentRepository.getUniqueCheckStudent
+export const getUniqueCheckStudent =
+  checkStudentRepository.getUniqueCheckStudent
 export const getCheckStudentById = checkStudentRepository.getCheckStudentById
 
 export default checkStudentRepository

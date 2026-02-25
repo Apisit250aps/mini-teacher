@@ -5,8 +5,8 @@ import {
   ClassMemberSchema,
   CreateStudentSchema,
 } from '@/models/entities'
-import studentRepository from '@/models/repositories/student.repo'
-import classMemberRepository from '@/models/repositories/class-member.repo'
+import studentRepository from '@/models/repositories/mongo/student.repo'
+import classMemberRepository from '@/models/repositories/mongo/class-member.repo'
 import { NextRequest, NextResponse } from 'next/server'
 
 type ClassMemberParams = {

@@ -2,7 +2,7 @@ import ClassDetailView from '@/views/class-detail-view'
 import {
   getClassByYearAndClassId,
   getYearsByYearTerm,
-} from '@/models/repositories'
+} from '@/models/repositories/mongo'
 import { ClassProvider } from '@/hooks/app/use-class'
 import EmptyPage from '@/components/share/empty/empty-page'
 import { Album, Calendar } from 'lucide-react'

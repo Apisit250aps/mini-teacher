@@ -4,8 +4,8 @@ import {
   CreateScoreAssignSchema,
   CreateScoreStudentSchema,
 } from '@/models/entities'
-import scoreAssignRepository from '@/models/repositories/score-assign.repo'
-import scoreStudentRepository from '@/models/repositories/score-student.repo'
+import scoreAssignRepository from '@/models/repositories/mongo/score-assign.repo'
+import scoreStudentRepository from '@/models/repositories/mongo/score-student.repo'
 import { NextRequest, NextResponse } from 'next/server'
 
 type ClassParams = {

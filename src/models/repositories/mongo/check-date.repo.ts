@@ -1,6 +1,7 @@
 import { checkDatesCollection } from '@/lib/mongo'
-import type { CheckDate, CheckDateRepository } from '@/models/domain'
+import type { CheckDate } from '@/models/domain'
 import { omit } from 'lodash'
+import { CheckDateRepository } from '../interface/check-date.repository';
 
 const checkDateRepository: CheckDateRepository = {
   createCheckDate: async (checkDate) => {
@@ -35,7 +36,11 @@ const checkDateRepository: CheckDateRepository = {
 
   getCheckDateById: async (id) => {
     const check_dates = await checkDatesCollection()
-    return await check_dates.findOne({ id }, { projection: { _id: 0 } })
+    const result = await check_dates.findOne({ id }, { projection: { _id: 0 } })
+    if (!result) {
+      throw new Error('Check date not found')
+    }
+    return result
   },
 
   getCheckDatesByClassId: async (classId) => {

@@ -1,7 +1,7 @@
 import { onErrorMessage, safeValidate } from '@/lib/utils'
 import type { Class } from '@/models/domain'
 import { CreateClassSchema, UpdateClassSchema } from '@/models/entities'
-import classRepository from '@/models/repositories/class.repo'
+import classRepository from '@/models/repositories/mongo/class.repo'
 import { NextRequest, NextResponse } from 'next/server'
 
 type ClassParams = {

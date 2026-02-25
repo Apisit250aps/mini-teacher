@@ -8,7 +8,7 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from '@/components/ui/empty'
-import { getYearsByAuthUser, } from '@/models/repositories'
+import { getYearsByAuthUser, } from '@/models/repositories/mongo'
 import { GraduationCap, School } from 'lucide-react'
 import Link from 'next/link'
 import { forbidden } from 'next/navigation'

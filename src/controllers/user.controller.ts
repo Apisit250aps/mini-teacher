@@ -1,6 +1,6 @@
 import { onErrorMessage, safeValidate } from '@/lib/utils'
 import { CreateUserSchema, UpdateUserSchema } from '@/models/entities'
-import userRepository from '@/models/repositories/user.repo'
+import userRepository from '@/models/repositories/mongo/user.repo'
 import { User } from 'next-auth'
 import { NextRequest, NextResponse } from 'next/server'
 

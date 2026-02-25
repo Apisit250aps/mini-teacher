@@ -2,7 +2,7 @@ import { auth } from '@/auth'
 import { onErrorMessage, safeValidate } from '@/lib/utils'
 import type { Student } from '@/models/domain'
 import { CreateStudentSchema, UpdateStudentSchema } from '@/models/entities'
-import studentRepository from '@/models/repositories/student.repo'
+import studentRepository from '@/models/repositories/mongo/student.repo'
 import { NextResponse } from 'next/server'
 import { type NextRequest } from 'next/server'
 

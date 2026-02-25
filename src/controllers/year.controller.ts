@@ -2,7 +2,7 @@ import { auth } from '@/auth'
 import { onErrorMessage, safeValidate } from '@/lib/utils'
 import type { Year } from '@/models/domain'
 import { CreateYearSchema, UpdateYearSchema } from '@/models/entities'
-import yearRepository from '@/models/repositories/year.repo'
+import yearRepository from '@/models/repositories/mongo/year.repo'
 import { NextRequest, NextResponse } from 'next/server'
 
 type YearParams = {

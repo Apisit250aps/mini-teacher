@@ -6,7 +6,7 @@ import {
   findWithObjectId,
   oAuthCreateUser,
   updateUser,
-} from '@/models/repositories'
+} from '@/models/repositories/mongo'
 import { verify } from '@/lib/utils/encryption'
 import { usersCollection } from '@/lib/mongo'
 import Google from 'next-auth/providers/google'

@@ -4,8 +4,8 @@ import {
   CreateCheckDateSchema,
   CreateCheckStudentSchema,
 } from '@/models/entities'
-import checkDateRepository from '@/models/repositories/check-date.repo'
-import checkStudentRepository from '@/models/repositories/check-student.repo'
+import checkDateRepository from '@/models/repositories/mongo/check-date.repo'
+import checkStudentRepository from '@/models/repositories/mongo/check-student.repo'
 import { NextRequest, NextResponse } from 'next/server'
 import z from 'zod'
 
