@@ -9,7 +9,9 @@
     "start": "next start",
     "lint": "eslint",
     "gen:spec": "tsp compile ./src/spec/main.tsp",
-    "gen:api": "openapi-typescript ./src/spec/schema/openapi.yaml -o ./src/lib/client/api/v1.d.ts"
+    "gen:api": "openapi-typescript ./src/spec/schema/openapi.yaml -o ./src/lib/client/api/v1.d.ts",
+    "gen:prisma": "prisma generate",
+    "db:push": "prisma db push"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.11.1",

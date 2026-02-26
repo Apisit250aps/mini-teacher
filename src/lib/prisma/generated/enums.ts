@@ -9,7 +9,23 @@
 * 🟢 You can import this file directly.
 */
 
+export const CheckStatus = {
+  DEFAULT: 'DEFAULT',
+  PRESENT: 'PRESENT',
+  ABSENT: 'ABSENT',
+  LATE: 'LATE',
+  LEAVE: 'LEAVE'
+} as const
+
+export type CheckStatus = (typeof CheckStatus)[keyof typeof CheckStatus]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const AssignType = {
+  ASSIGNMENT: 'ASSIGNMENT',
+  HOMEWORK: 'HOMEWORK',
+  QUIZ: 'QUIZ',
+  EXAM: 'EXAM',
+  PROJECT: 'PROJECT'
+} as const
+
+export type AssignType = (typeof AssignType)[keyof typeof AssignType]

@@ -52,7 +52,15 @@ export const ModelName = {
   User: 'User',
   Account: 'Account',
   Session: 'Session',
-  VerificationToken: 'VerificationToken'
+  VerificationToken: 'VerificationToken',
+  Year: 'Year',
+  Class: 'Class',
+  Student: 'Student',
+  ClassMember: 'ClassMember',
+  CheckDate: 'CheckDate',
+  CheckStudent: 'CheckStudent',
+  Assignment: 'Assignment',
+  Score: 'Score'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -63,11 +71,16 @@ export type ModelName = (typeof ModelName)[keyof typeof ModelName]
 
 export const UserScalarFieldEnum = {
   id: 'id',
-  uid: 'uid',
   name: 'name',
+  password: 'password',
   email: 'email',
   emailVerified: 'emailVerified',
   image: 'image',
+  isActive: 'isActive',
+  isTeacher: 'isTeacher',
+  isAdmin: 'isAdmin',
+  firstName: 'firstName',
+  lastName: 'lastName',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -115,6 +128,116 @@ export const VerificationTokenScalarFieldEnum = {
 } as const
 
 export type VerificationTokenScalarFieldEnum = (typeof VerificationTokenScalarFieldEnum)[keyof typeof VerificationTokenScalarFieldEnum]
+
+
+export const YearScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  year: 'year',
+  term: 'term',
+  description: 'description',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type YearScalarFieldEnum = (typeof YearScalarFieldEnum)[keyof typeof YearScalarFieldEnum]
+
+
+export const ClassScalarFieldEnum = {
+  id: 'id',
+  yearId: 'yearId',
+  name: 'name',
+  subject: 'subject',
+  description: 'description',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ClassScalarFieldEnum = (typeof ClassScalarFieldEnum)[keyof typeof ClassScalarFieldEnum]
+
+
+export const StudentScalarFieldEnum = {
+  id: 'id',
+  teacherId: 'teacherId',
+  code: 'code',
+  prefix: 'prefix',
+  firstName: 'firstName',
+  lastName: 'lastName',
+  nickname: 'nickname',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeof StudentScalarFieldEnum]
+
+
+export const ClassMemberScalarFieldEnum = {
+  id: 'id',
+  classId: 'classId',
+  studentId: 'studentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  userId: 'userId'
+} as const
+
+export type ClassMemberScalarFieldEnum = (typeof ClassMemberScalarFieldEnum)[keyof typeof ClassMemberScalarFieldEnum]
+
+
+export const CheckDateScalarFieldEnum = {
+  id: 'id',
+  classId: 'classId',
+  date: 'date',
+  description: 'description',
+  isEditable: 'isEditable',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CheckDateScalarFieldEnum = (typeof CheckDateScalarFieldEnum)[keyof typeof CheckDateScalarFieldEnum]
+
+
+export const CheckStudentScalarFieldEnum = {
+  id: 'id',
+  checkDateId: 'checkDateId',
+  studentId: 'studentId',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CheckStudentScalarFieldEnum = (typeof CheckStudentScalarFieldEnum)[keyof typeof CheckStudentScalarFieldEnum]
+
+
+export const AssignmentScalarFieldEnum = {
+  id: 'id',
+  classId: 'classId',
+  title: 'title',
+  description: 'description',
+  minScore: 'minScore',
+  maxScore: 'maxScore',
+  type: 'type',
+  assignDate: 'assignDate',
+  dueDate: 'dueDate',
+  isEditable: 'isEditable',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AssignmentScalarFieldEnum = (typeof AssignmentScalarFieldEnum)[keyof typeof AssignmentScalarFieldEnum]
+
+
+export const ScoreScalarFieldEnum = {
+  id: 'id',
+  assignmentId: 'assignmentId',
+  studentId: 'studentId',
+  score: 'score',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ScoreScalarFieldEnum = (typeof ScoreScalarFieldEnum)[keyof typeof ScoreScalarFieldEnum]
 
 
 export const SortOrder = {

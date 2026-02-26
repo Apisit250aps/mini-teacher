@@ -37,3 +37,43 @@ export type Session = Prisma.SessionModel
  * 
  */
 export type VerificationToken = Prisma.VerificationTokenModel
+/**
+ * Model Year
+ * 
+ */
+export type Year = Prisma.YearModel
+/**
+ * Model Class
+ * 
+ */
+export type Class = Prisma.ClassModel
+/**
+ * Model Student
+ * 
+ */
+export type Student = Prisma.StudentModel
+/**
+ * Model ClassMember
+ * 
+ */
+export type ClassMember = Prisma.ClassMemberModel
+/**
+ * Model CheckDate
+ * 
+ */
+export type CheckDate = Prisma.CheckDateModel
+/**
+ * Model CheckStudent
+ * 
+ */
+export type CheckStudent = Prisma.CheckStudentModel
+/**
+ * Model Assignment
+ * 
+ */
+export type Assignment = Prisma.AssignmentModel
+/**
+ * Model Score
+ * 
+ */
+export type Score = Prisma.ScoreModel

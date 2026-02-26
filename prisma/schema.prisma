@@ -14,24 +14,43 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum CheckStatus {
+  DEFAULT
+  PRESENT
+  ABSENT
+  LATE
+  LEAVE
+}
+
+enum AssignType {
+  ASSIGNMENT
+  HOMEWORK
+  QUIZ
+  EXAM
+  PROJECT
+}
+
 model User {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
   name          String?
-  email         String?   @unique
+  password      String?       @db.String
+  email         String?       @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
   // role and permissions
-  isActive      Boolean   @default(true)
-  isTeacher     Boolean   @default(true)
-  isAdmin       Boolean   @default(false)
+  isActive      Boolean       @default(true)
+  isTeacher     Boolean       @default(true)
+  isAdmin       Boolean       @default(false)
   // additional fields
   firstName     String?
   lastName      String?
   // timestamps
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  years         Year[]
+  classMembers  ClassMember[]
 
   @@map("users")
 }
@@ -80,4 +99,152 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+model Year {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @db.ObjectId
+  year        Int
+  term        Int
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  owner   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  classes Class[]
+
+  @@unique([year, term, userId])
+  @@index([year, term], name: "year_term_index")
+  @@map("years")
+}
+
+model Class {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  yearId      String   @db.ObjectId
+  name        String
+  subject     String
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  year         Year          @relation(fields: [yearId], references: [id], onDelete: Cascade)
+  classMembers ClassMember[]
+  checkDates   CheckDate[]
+  assignments  Assignment[]
+
+  @@index([yearId], name: "year_id_index")
+  @@map("classes")
+}
+
+model Student {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  teacherId     String         @db.ObjectId
+  code          String
+  prefix        String?
+  firstName     String
+  lastName      String
+  nickname      String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  classMembers  ClassMember[]
+  checkStudents CheckStudent[]
+  scores        Score[]
+
+  @@unique([teacherId, code])
+  @@index([teacherId], name: "teacher_id_index")
+  @@index([code], name: "code_index")
+  @@map("students")
+}
+
+model ClassMember {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  classId   String   @db.ObjectId
+  studentId String   @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  class   Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  user    User?   @relation(fields: [userId], references: [id])
+  userId  String? @db.ObjectId
+
+  @@unique([classId, studentId])
+  @@index([classId], name: "class_id_index")
+  @@index([studentId], name: "student_id_index")
+  @@map("class_members")
+}
+
+model CheckDate {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  classId     String   @db.ObjectId
+  date        DateTime
+  description String?
+  isEditable  Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  class         Class          @relation(fields: [classId], references: [id], onDelete: Cascade)
+  checkStudents CheckStudent[]
+
+  @@index([classId], name: "check_date_class_id_index")
+  @@map("check_dates")
+}
+
+model CheckStudent {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  checkDateId String      @db.ObjectId
+  studentId   String      @db.ObjectId
+  status      CheckStatus @default(DEFAULT)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  checkDate CheckDate @relation(fields: [checkDateId], references: [id], onDelete: Cascade)
+  student   Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([checkDateId, studentId])
+  @@index([checkDateId], name: "check_student_check_date_id_index")
+  @@index([studentId], name: "check_student_student_id_index")
+  @@map("check_students")
+}
+
+model Assignment {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  classId     String     @db.ObjectId
+  title       String
+  description String?
+  minScore    Int        @default(0)
+  maxScore    Int        @default(10)
+  type        AssignType @default(ASSIGNMENT)
+  assignDate  DateTime?
+  dueDate     DateTime?
+
+  isEditable Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  class  Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
+  scores Score[]
+
+  @@index([classId], name: "assignment_class_id_index")
+  @@map("assignments")
+}
+
+model Score {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  assignmentId String   @db.ObjectId
+  studentId    String   @db.ObjectId
+  score        Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  assignment Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  student    Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([assignmentId, studentId])
+  @@index([assignmentId], name: "score_assignment_id_index")
+  @@index([studentId], name: "score_student_id_index")
+  @@map("scores")
 }
