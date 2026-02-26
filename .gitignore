@@ -183,3 +183,4 @@ backup/
 # 
 .env.docker
 .env.local 
+/prisma/src/lib/prisma
