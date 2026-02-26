@@ -1,5 +1,6 @@
 import { yearsCollection } from '@/lib/mongo'
-import type { YearDetail, YearRepository } from '@/models/domain'
+import type { YearDetail } from '@/models/domain'
+import { YearRepository } from '@/models/repositories/interface/year.repository';
 import { v7 as uuidv7 } from 'uuid'
 
 const yearRepository: YearRepository = {
