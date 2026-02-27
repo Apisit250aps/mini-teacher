@@ -1,7 +1,0 @@
-export * from '@/controllers/user.controller'
-export * from '@/controllers/year.controller'
-export * from '@/controllers/class.controller'
-export * from '@/controllers/student.controller'
-export * from '@/controllers/class-member.controller'
-export * from '@/controllers/check.controller'
-export * from '@/controllers/score.controller'
