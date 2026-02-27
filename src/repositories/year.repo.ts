@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma'
-import { YearRepo } from './types/year'
+import { YearRepository } from './types/year'
 
-const YearRepository: YearRepo = {
+const yearRepository: YearRepository = {
   create: async (data) => {
     const year = await prisma.year.create({ data: data })
     return year
@@ -30,6 +30,16 @@ const YearRepository: YearRepo = {
     })
     return year
   },
+  getUnique: async (userId, year, term) => {
+    const result = await prisma.year.findFirst({
+      where: {
+        ownerId: userId,
+        year: year,
+        term: term,
+      },
+    })
+    return result
+  },
 }
 
-export default YearRepository
+export default yearRepository
