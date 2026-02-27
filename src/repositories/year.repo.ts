@@ -1,32 +1,35 @@
-import { prisma } from '@/lib/prisma';
-import { YearRepository } from './types/year'
+import { prisma } from '@/lib/prisma'
+import { YearRepo } from './types/year'
 
-const yearRepository: YearRepository = {
+const YearRepository: YearRepo = {
   create: async (data) => {
-    const year = await prisma.year.create({ data: data });
-    // Implementation for creating a year in the database
-    // Example: return await prisma.year.create({ data: year });
-    return year // Placeholder return
-  },
-  findAll: async () => {
-    // Implementation for finding all years with their classes in the database
-    // Example: return await prisma.year.findMany({ include: { classes: true } });
-    return [] // Placeholder return
-  },
-  findById: async (id) => {
-    // Implementation for finding a year by ID with its classes in the database
-    // Example: return await prisma.year.findUnique({ where: { id }, include: { classes: true } });
-    return null // Placeholder return
+    const year = await prisma.year.create({ data: data })
+    return year
   },
   update: async (id, data) => {
-    const result = await prisma.year.update({ where: { id }, data: data });
-    return result // Placeholder return
+    const result = await prisma.year.update({ where: { id }, data: data })
+    return result
   },
   delete: async (id) => {
-    // Implementation for deleting a year from the database
-    // Example: await prisma.year.delete({ where: { id } });
-    await prisma.year.delete({ where: { id } });
+    await prisma.year.delete({ where: { id } })
+  },
+  getAll: async (filter) => {
+    const years = await prisma.year.findMany({
+      ...filter,
+      orderBy: { createdAt: 'desc' },
+      include: {
+        classes: true,
+      },
+    })
+    return years
+  },
+  getById: async (id) => {
+    const year = await prisma.year.findUnique({
+      where: { id },
+      include: { classes: true, owner: true },
+    })
+    return year
   },
 }
 
-export default yearRepository
+export default YearRepository
