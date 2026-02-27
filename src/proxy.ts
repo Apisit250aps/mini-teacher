@@ -3,7 +3,7 @@ import { useMiddlewares } from '@/lib/middlewares'
 import { NextAuthRequest } from 'next-auth'
 
 const debugMiddlewares = (req: NextAuthRequest) => {
-  const debug = false
+  const debug = !false
   if (debug) {
     console.log('auth', req.auth)
   }

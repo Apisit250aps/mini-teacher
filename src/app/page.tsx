@@ -19,8 +19,7 @@ export default async function Home() {
     forbidden()
   }
   
-  const years = await getYearsByAuthUser(session.user.id)
-
+  
   return (
     <div className="h-full">
       <Empty className="bg-muted/30 h-dvh">
@@ -35,12 +34,7 @@ export default async function Home() {
           </EmptyDescription>
         </EmptyHeader>
         <EmptyContent>
-          <Button variant="outline" asChild>
-            <Link href={`/${years[years.length - 1].year}/${years[years.length - 1].term}/class`}>
-              <GraduationCap />
-              ไปที่หน้าห้องเรียน
-            </Link>
-          </Button>
+          
         </EmptyContent>
       </Empty>
     </div>

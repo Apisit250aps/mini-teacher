@@ -10,8 +10,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
 }
 
 enum CheckStatus {
@@ -31,9 +30,9 @@ enum AssignType {
 }
 
 model User {
-  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  id            String        @id @default(uuid()) @db.Uuid
   name          String?
-  password      String?       @db.String
+  password      String?
   email         String?       @unique
   emailVerified DateTime?
   image         String?
@@ -56,17 +55,17 @@ model User {
 }
 
 model Account {
-  id                String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId            String  @db.ObjectId
+  id                String  @id @default(uuid()) @db.Uuid
+  userId            String  @db.Uuid
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.String
-  access_token      String? @db.String
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.String
+  id_token          String?
   session_state     String?
 
   createdAt DateTime @default(now())
@@ -79,9 +78,9 @@ model Account {
 }
 
 model Session {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  id           String   @id @default(uuid()) @db.Uuid
   sessionToken String   @unique
-  userId       String   @db.ObjectId
+  userId       String   @db.Uuid
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -92,7 +91,7 @@ model Session {
 }
 
 model VerificationToken {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  id         String   @id @default(uuid()) @db.Uuid
   identifier String
   token      String
   expires    DateTime
@@ -102,8 +101,8 @@ model VerificationToken {
 }
 
 model Year {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String   @db.ObjectId
+  id          String   @id @default(uuid()) @db.Uuid
+  userId      String   @db.Uuid
   year        Int
   term        Int
   description String?
@@ -120,8 +119,8 @@ model Year {
 }
 
 model Class {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  yearId      String   @db.ObjectId
+  id          String   @id @default(uuid()) @db.Uuid
+  yearId      String   @db.Uuid
   name        String
   subject     String
   description String?
@@ -139,8 +138,8 @@ model Class {
 }
 
 model Student {
-  id            String         @id @default(auto()) @map("_id") @db.ObjectId
-  teacherId     String         @db.ObjectId
+  id            String         @id @default(uuid()) @db.Uuid
+  teacherId     String         @db.Uuid
   code          String
   prefix        String?
   firstName     String
@@ -159,16 +158,16 @@ model Student {
 }
 
 model ClassMember {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  classId   String   @db.ObjectId
-  studentId String   @db.ObjectId
+  id        String   @id @default(uuid()) @db.Uuid
+  classId   String   @db.Uuid
+  studentId String   @db.Uuid
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   class   Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
   student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
   user    User?   @relation(fields: [userId], references: [id])
-  userId  String? @db.ObjectId
+  userId  String? @db.Uuid
 
   @@unique([classId, studentId])
   @@index([classId], name: "class_id_index")
@@ -177,8 +176,8 @@ model ClassMember {
 }
 
 model CheckDate {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  classId     String   @db.ObjectId
+  id          String   @id @default(uuid()) @db.Uuid
+  classId     String   @db.Uuid
   date        DateTime
   description String?
   isEditable  Boolean  @default(true)
@@ -193,9 +192,9 @@ model CheckDate {
 }
 
 model CheckStudent {
-  id          String      @id @default(auto()) @map("_id") @db.ObjectId
-  checkDateId String      @db.ObjectId
-  studentId   String      @db.ObjectId
+  id          String      @id @default(uuid()) @db.Uuid
+  checkDateId String      @db.Uuid
+  studentId   String      @db.Uuid
   status      CheckStatus @default(DEFAULT)
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
@@ -210,8 +209,8 @@ model CheckStudent {
 }
 
 model Assignment {
-  id          String     @id @default(auto()) @map("_id") @db.ObjectId
-  classId     String     @db.ObjectId
+  id          String     @id @default(uuid()) @db.Uuid
+  classId     String     @db.Uuid
   title       String
   description String?
   minScore    Int        @default(0)
@@ -233,9 +232,9 @@ model Assignment {
 }
 
 model Score {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  assignmentId String   @db.ObjectId
-  studentId    String   @db.ObjectId
+  id           String   @id @default(uuid()) @db.Uuid
+  assignmentId String   @db.Uuid
+  studentId    String   @db.Uuid
   score        Int
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

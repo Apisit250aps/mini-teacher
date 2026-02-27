@@ -15,8 +15,5 @@ import "./services/student.tsp";
 import "./services/check.tsp";
 import "./services/score.tsp";
 
-using TypeSpec.Http;
-using TypeSpec.Rest;
-
 @service(#{ title: "Mini Teacher Service" })
 namespace MiniTeacherService;

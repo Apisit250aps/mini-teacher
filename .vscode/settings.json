@@ -2,5 +2,5 @@
   "cSpell.ignoreRegExpList": [
     "/[\\u0E00-\\u0E7F]/g"
   ],
-  "prisma.pinToPrisma6": true
+  "prisma.pinToPrisma6": false
 }

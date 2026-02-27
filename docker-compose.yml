@@ -3,29 +3,27 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      args:
-        MONGODB_URI: ${MONGODB_URI}
     ports:
       - '3000:3000'
     env_file:
       - .env
     depends_on:
-      - mongo
+      - postgres
     volumes:
       - ./backup:/backup
     restart: always
 
-  mongo:
-    image: mongo:latest
-    container_name: mongo
+  postgres:
+    image: postgres:latest
+    container_name: postgres
     volumes:
-      - mongo-data:/data/db
+      - postgres-data:/var/lib/postgresql/data
       - ./backup:/backup
     env_file:
       - .env
-    expose:
-      - '27017'
+    ports:
+      - '5430:5432'
     restart: unless-stopped
 
 volumes:
-  mongo-data:
+  postgres-data:
