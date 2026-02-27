@@ -1,15 +1,15 @@
-import { Prisma } from '@prisma'
+import { Year } from '@prisma'
 
 type YearRepository = {
-  getAll: (filter: Prisma.YearFindManyArgs) => Promise<Prisma.Year[]>
-  getById: (id: string) => Promise<Prisma.Year | null>
+  getAll: (filter: Prisma.YearFindManyArgs) => Promise<Year[]>
+  getById: (id: string) => Promise<Year | null>
   getUnique: (
     userId: string,
     year: number,
     term: number,
-  ) => Promise<Prisma.Year | null>
-  create: (year: Prisma.YearCreateInput) => Promise<Prisma.Year>
-  update: (id: string, year: Prisma.YearUpdateInput) => Promise<Prisma.Year>
+  ) => Promise<Year | null>
+  create: (year: YearCreateInput) => Promise<Year>
+  update: (id: string, year: YearUpdateInput) => Promise<Year>
   delete: (id: string) => Promise<void>
 }
 
