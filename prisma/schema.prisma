@@ -9,6 +9,15 @@ generator client {
   output   = "./generated"
 }
 
+generator tsp {
+  provider      = "npx tsx scripts/generator-tsp.ts"
+  output        = "../src/spec/models/prisma-models.tsp"
+  outputDir     = "../src/spec/models"
+  namespace     = "MiniTeacherService.PrismaModels"
+  emitRelations = "true"
+  includeDbMap  = "true"
+}
+
 datasource db {
   provider = "postgresql"
 }

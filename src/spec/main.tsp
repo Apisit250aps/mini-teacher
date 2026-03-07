@@ -2,6 +2,8 @@ import "@typespec/http";
 import "@typespec/rest";
 // models
 import "./models/common.tsp";
+// prisma
+import "./models/prisma-models.tsp";
 // entities
 import "./models/year.tsp";
 import "./models/class.tsp";
