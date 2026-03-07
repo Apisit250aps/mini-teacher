@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import type { UserRepository } from './types/user'
+import type { UserRepository } from '@/domain/user'
 
 const userRepository: UserRepository = {
   getById: async (id) => {

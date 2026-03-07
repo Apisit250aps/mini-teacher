@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import type { YearRepository } from './types/year'
+import type { YearRepository } from '@/domain/year'
 
 const yearRepository: YearRepository = {
   create: async (data) => {
