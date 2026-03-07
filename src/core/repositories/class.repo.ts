@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import type { ClassRepository } from '@/domain/class'
+import type { ClassRepository } from '@/core/domain/class'
 
 const classRepository: ClassRepository = {
   create: async (data) => {

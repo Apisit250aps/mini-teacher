@@ -1,4 +1,4 @@
-import ClassDetailView from '@/views/class-detail-view'
+import ClassDetailView from '@/presentations/views/class-detail-view'
 import {
   getClassByYearAndClassId,
   getYearsByYearTerm,
