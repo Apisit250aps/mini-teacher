@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import type { CheckDateRepository } from '@/core/domain/check-date'
+import type { CheckDateRepository } from '@/core/domain/repositories/check-date'
 
 const checkDateRepository: CheckDateRepository = {
   create: async (data) => {

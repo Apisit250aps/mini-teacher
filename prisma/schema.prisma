@@ -11,11 +11,19 @@ generator client {
 
 generator tsp {
   provider      = "npx tsx scripts/generator-tsp.ts"
-  output        = "../src/spec/models/prisma-models.tsp"
-  outputDir     = "../src/spec/models"
+  output        = "../src/lib/spec/models/prisma-models.tsp"
+  outputDir     = "../src/lib/spec/models"
   namespace     = "MiniTeacherService.PrismaModels"
   emitRelations = "true"
   includeDbMap  = "true"
+}
+
+generator entities {
+  provider      = "npx tsx scripts/generator-entities.ts"
+  output        = "../src/core/domain/entities/index.d.ts"
+  outputDir     = "../src/core/domain/entities"
+  emitRelations = "false"
+  entitySuffix  = ""
 }
 
 datasource db {

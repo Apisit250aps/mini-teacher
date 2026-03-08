@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import type { ScoreStudentRepository } from '@/core/domain/score-student'
+import type { ScoreStudentRepository } from '@/core/domain/repositories/score-student'
 
 const scoreStudentRepository: ScoreStudentRepository = {
   create: async (data) => {

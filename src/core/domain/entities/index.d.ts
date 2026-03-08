@@ -1,0 +1,15 @@
+// Auto-generated from prisma/schema.prisma. Do not edit manually.
+
+export type * from './enums'
+export type { User } from './user'
+export type { Account } from './account'
+export type { Session } from './session'
+export type { VerificationToken } from './verification-token'
+export type { Year } from './year'
+export type { Class } from './class'
+export type { Student } from './student'
+export type { ClassMember } from './class-member'
+export type { CheckDate } from './check-date'
+export type { CheckStudent } from './check-student'
+export type { Assignment } from './assignment'
+export type { Score } from './score'
