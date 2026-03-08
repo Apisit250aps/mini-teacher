@@ -1,0 +1,39 @@
+import { checkStudentUseCase } from '@/core/usecases'
+import { toErrorResponse } from '@/lib/utils/error'
+import { ok, okOnlyMessage } from '@/app/api/_utils'
+import type { NextAuthRequest } from 'next-auth'
+
+type Context = {
+  params: Promise<{ id: string }>
+}
+
+export async function GET(_: NextAuthRequest, context: Context) {
+  try {
+    const { id } = await context.params
+    const data = await checkStudentUseCase.getById(id)
+    return ok('ดึงข้อมูลเช็กชื่อนักเรียนสำเร็จ', data)
+  } catch (error) {
+    return toErrorResponse(error)
+  }
+}
+
+export async function PATCH(request: NextAuthRequest, context: Context) {
+  try {
+    const { id } = await context.params
+    const payload = await request.json()
+    const data = await checkStudentUseCase.update(id, payload)
+    return ok('แก้ไขข้อมูลเช็กชื่อนักเรียนสำเร็จ', data)
+  } catch (error) {
+    return toErrorResponse(error)
+  }
+}
+
+export async function DELETE(_: NextAuthRequest, context: Context) {
+  try {
+    const { id } = await context.params
+    await checkStudentUseCase.delete(id)
+    return okOnlyMessage('ลบข้อมูลเช็กชื่อนักเรียนสำเร็จ')
+  } catch (error) {
+    return toErrorResponse(error)
+  }
+}
