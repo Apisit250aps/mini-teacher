@@ -2,17 +2,39 @@ import { prisma } from '@/lib/prisma'
 import type { Prisma } from '@prisma'
 import type { StudentRepository } from '@/core/domain/repositories/student'
 
+const ensureTeacherExists = async (teacherId: string): Promise<void> => {
+  const existing = await prisma.user.findUnique({ where: { id: teacherId } })
+  if (!existing) {
+    throw new Error(`Teacher not found for teacherId: ${teacherId}`)
+  }
+}
+
 const studentRepository: StudentRepository = {
   create: async (data) => {
+    await ensureTeacherExists(data.teacherId)
+
     const result = await prisma.student.create({
-      data: data as Prisma.StudentUncheckedCreateInput,
+      data: {
+        teacherId: data.teacherId,
+        code: data.code,
+        prefix: data.prefix,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        nickname: data.nickname,
+      },
     })
     return result
   },
   update: async (id, data) => {
     const result = await prisma.student.update({
       where: { id },
-      data: data as Prisma.StudentUncheckedUpdateInput,
+      data: {
+        code: data.code,
+        prefix: data.prefix,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        nickname: data.nickname,
+      },
     })
     return result
   },

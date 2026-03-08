@@ -2,17 +2,44 @@ import { prisma } from '@/lib/prisma'
 import type { Prisma } from '@prisma'
 import type { CheckStudentRepository } from '@/core/domain/repositories/check-student'
 
+const ensureCheckDateExists = async (checkDateId: string): Promise<void> => {
+  const existing = await prisma.checkDate.findUnique({
+    where: { id: checkDateId },
+  })
+  if (!existing) {
+    throw new Error(`CheckDate not found for checkDateId: ${checkDateId}`)
+  }
+}
+
+const ensureStudentExists = async (studentId: string): Promise<void> => {
+  const existing = await prisma.student.findUnique({ where: { id: studentId } })
+  if (!existing) {
+    throw new Error(`Student not found for studentId: ${studentId}`)
+  }
+}
+
 const checkStudentRepository: CheckStudentRepository = {
   create: async (data) => {
+    await Promise.all([
+      ensureCheckDateExists(data.checkDateId),
+      ensureStudentExists(data.studentId),
+    ])
+
     const result = await prisma.checkStudent.create({
-      data: data as Prisma.CheckStudentUncheckedCreateInput,
+      data: {
+        checkDateId: data.checkDateId,
+        studentId: data.studentId,
+        status: data.status,
+      },
     })
     return result
   },
   update: async (id, data) => {
     const result = await prisma.checkStudent.update({
       where: { id },
-      data: data as Prisma.CheckStudentUncheckedUpdateInput,
+      data: {
+        status: data.status,
+      },
     })
     return result
   },

@@ -2,17 +2,44 @@ import { prisma } from '@/lib/prisma'
 import type { Prisma } from '@prisma'
 import type { ScoreStudentRepository } from '@/core/domain/repositories/score-student'
 
+const ensureAssignmentExists = async (assignmentId: string): Promise<void> => {
+  const existing = await prisma.assignment.findUnique({
+    where: { id: assignmentId },
+  })
+  if (!existing) {
+    throw new Error(`Assignment not found for assignmentId: ${assignmentId}`)
+  }
+}
+
+const ensureStudentExists = async (studentId: string): Promise<void> => {
+  const existing = await prisma.student.findUnique({ where: { id: studentId } })
+  if (!existing) {
+    throw new Error(`Student not found for studentId: ${studentId}`)
+  }
+}
+
 const scoreStudentRepository: ScoreStudentRepository = {
   create: async (data) => {
+    await Promise.all([
+      ensureAssignmentExists(data.assignmentId),
+      ensureStudentExists(data.studentId),
+    ])
+
     const result = await prisma.score.create({
-      data: data as Prisma.ScoreUncheckedCreateInput,
+      data: {
+        assignmentId: data.assignmentId,
+        studentId: data.studentId,
+        score: data.score,
+      },
     })
     return result
   },
   update: async (id, data) => {
     const result = await prisma.score.update({
       where: { id },
-      data: data as Prisma.ScoreUncheckedUpdateInput,
+      data: {
+        score: data.score,
+      },
     })
     return result
   },

@@ -1,5 +1,4 @@
 import { prisma } from '@/lib/prisma'
-import type { Prisma } from '@prisma'
 import type { UserRepository } from '@/core/domain/repositories/user'
 
 const userRepository: UserRepository = {
@@ -19,14 +18,36 @@ const userRepository: UserRepository = {
   },
   create: async (data) => {
     const user = await prisma.user.create({
-      data: data as Prisma.UserUncheckedCreateInput,
+      data: {
+        name: data.name,
+        password: data.password,
+        email: data.email,
+        emailVerified: data.emailVerified,
+        image: data.image,
+        isActive: data.isActive,
+        isTeacher: data.isTeacher,
+        isAdmin: data.isAdmin,
+        firstName: data.firstName,
+        lastName: data.lastName,
+      },
     })
     return user
   },
   update: async (id, data) => {
     const user = await prisma.user.update({
       where: { id },
-      data: data as Prisma.UserUncheckedUpdateInput,
+      data: {
+        name: data.name,
+        password: data.password,
+        email: data.email,
+        emailVerified: data.emailVerified,
+        image: data.image,
+        isActive: data.isActive,
+        isTeacher: data.isTeacher,
+        isAdmin: data.isAdmin,
+        firstName: data.firstName,
+        lastName: data.lastName,
+      },
     })
     return user
   },

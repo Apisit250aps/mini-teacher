@@ -2,17 +2,42 @@ import { prisma } from '@/lib/prisma'
 import type { Prisma } from '@prisma'
 import type { ClassRepository } from '@/core/domain/repositories/class'
 
+const ensureYearExists = async (yearId: string): Promise<void> => {
+  const existing = await prisma.year.findUnique({ where: { id: yearId } })
+  if (!existing) {
+    throw new Error(`Year not found for yearId: ${yearId}`)
+  }
+}
+
 const classRepository: ClassRepository = {
   create: async (data) => {
+    await ensureYearExists(data.yearId)
+
     const result = await prisma.class.create({
-      data: data as Prisma.ClassUncheckedCreateInput,
+      data: {
+        yearId: data.yearId,
+        name: data.name,
+        subject: data.subject,
+        description: data.description,
+        isActive: data.isActive,
+      },
     })
     return result
   },
   update: async (id, data) => {
+    if (data.yearId) {
+      await ensureYearExists(data.yearId)
+    }
+
     const result = await prisma.class.update({
       where: { id },
-      data: data as Prisma.ClassUncheckedUpdateInput,
+      data: {
+        yearId: data.yearId,
+        name: data.name,
+        subject: data.subject,
+        description: data.description,
+        isActive: data.isActive,
+      },
     })
     return result
   },

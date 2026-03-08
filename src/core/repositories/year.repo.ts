@@ -2,17 +2,37 @@ import { prisma } from '@/lib/prisma'
 import type { Prisma } from '@prisma'
 import type { YearRepository } from '@/core/domain/repositories/year'
 
+const ensureUserExists = async (userId: string): Promise<void> => {
+  const existing = await prisma.user.findUnique({ where: { id: userId } })
+  if (!existing) {
+    throw new Error(`User not found for userId: ${userId}`)
+  }
+}
+
 const yearRepository: YearRepository = {
   create: async (data) => {
+    await ensureUserExists(data.userId)
+
     const year = await prisma.year.create({
-      data: data as Prisma.YearUncheckedCreateInput,
+      data: {
+        userId: data.userId,
+        year: data.year,
+        term: data.term,
+        description: data.description,
+        isActive: data.isActive,
+      },
     })
     return year
   },
   update: async (id, data) => {
     const result = await prisma.year.update({
       where: { id },
-      data: data as Prisma.YearUncheckedUpdateInput,
+      data: {
+        year: data.year,
+        term: data.term,
+        description: data.description,
+        isActive: data.isActive,
+      },
     })
     return result
   },

@@ -2,17 +2,35 @@ import { prisma } from '@/lib/prisma'
 import type { Prisma } from '@prisma'
 import type { CheckDateRepository } from '@/core/domain/repositories/check-date'
 
+const ensureClassExists = async (classId: string): Promise<void> => {
+  const existing = await prisma.class.findUnique({ where: { id: classId } })
+  if (!existing) {
+    throw new Error(`Class not found for classId: ${classId}`)
+  }
+}
+
 const checkDateRepository: CheckDateRepository = {
   create: async (data) => {
+    await ensureClassExists(data.classId)
+
     const result = await prisma.checkDate.create({
-      data: data as Prisma.CheckDateUncheckedCreateInput,
+      data: {
+        classId: data.classId,
+        date: data.date,
+        description: data.description,
+        isEditable: data.isEditable,
+      },
     })
     return result
   },
   update: async (id, data) => {
     const result = await prisma.checkDate.update({
       where: { id },
-      data: data as Prisma.CheckDateUncheckedUpdateInput,
+      data: {
+        date: data.date,
+        description: data.description,
+        isEditable: data.isEditable,
+      },
     })
     return result
   },

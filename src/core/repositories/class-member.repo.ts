@@ -2,10 +2,44 @@ import { prisma } from '@/lib/prisma'
 import type { Prisma } from '@prisma'
 import type { ClassMemberRepository } from '@/core/domain/repositories/class-member'
 
+const ensureClassExists = async (classId: string): Promise<void> => {
+  const existing = await prisma.class.findUnique({ where: { id: classId } })
+  if (!existing) {
+    throw new Error(`Class not found for classId: ${classId}`)
+  }
+}
+
+const ensureStudentExists = async (studentId: string): Promise<void> => {
+  const existing = await prisma.student.findUnique({ where: { id: studentId } })
+  if (!existing) {
+    throw new Error(`Student not found for studentId: ${studentId}`)
+  }
+}
+
+const ensureUserExists = async (userId: string): Promise<void> => {
+  const existing = await prisma.user.findUnique({ where: { id: userId } })
+  if (!existing) {
+    throw new Error(`User not found for userId: ${userId}`)
+  }
+}
+
 const classMemberRepository: ClassMemberRepository = {
   create: async (data) => {
+    const guards: Array<Promise<void>> = [
+      ensureClassExists(data.classId),
+      ensureStudentExists(data.studentId),
+    ]
+    if (data.userId) {
+      guards.push(ensureUserExists(data.userId))
+    }
+    await Promise.all(guards)
+
     const result = await prisma.classMember.create({
-      data: data as Prisma.ClassMemberUncheckedCreateInput,
+      data: {
+        classId: data.classId,
+        studentId: data.studentId,
+        userId: data.userId,
+      },
     })
     return result
   },
