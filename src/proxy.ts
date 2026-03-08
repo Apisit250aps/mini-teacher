@@ -1,6 +1,7 @@
 import { auth } from '@/auth'
 import { useMiddlewares } from '@/lib/middlewares'
 import { NextAuthRequest } from 'next-auth'
+import { signAuth } from './lib/middlewares/auth'
 
 const debugMiddlewares = (req: NextAuthRequest) => {
   const debug = !false
@@ -12,8 +13,8 @@ const debugMiddlewares = (req: NextAuthRequest) => {
 export default auth((req) =>
   useMiddlewares(req, [
     {
-      prefix: '/',
-      middlewares: [debugMiddlewares],
+      prefix: '/*',
+      middlewares: [debugMiddlewares, signAuth],
     },
   ]),
 )
