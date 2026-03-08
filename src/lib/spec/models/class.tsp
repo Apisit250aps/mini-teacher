@@ -1,51 +1,47 @@
 namespace MiniTeacherService;
 
-model Class {
-  id: string;
-  year: string;
-  name: string;
-  subject: string;
-  isActive: boolean;
-  createdAt: utcDateTime;
-  updatedAt: utcDateTime;
+model ClassData is PrismaModels.Class;
+
+model ClassMemberData is PrismaModels.ClassMember;
+
+model ClassMemberWithStudent extends ClassMemberData {
+  student: PrismaModels.Student;
 }
 
-model CreateClassBody {
-  year: string;
+model ClassWithMembers extends ClassData {
+  classMembers: ClassMemberWithStudent[];
+}
+
+model ClassWithDetails extends ClassData {
+  year: PrismaModels.Year;
+  classMembers: ClassMemberWithStudent[];
+  checkDates: PrismaModels.CheckDate[];
+  assignments: PrismaModels.Assignment[];
+}
+
+model ClassCreateBody {
+  yearId: string;
   name: string;
   subject: string;
+  description?: string | null;
   isActive?: boolean;
-  description?: string;
 }
 
-model UpdateClassBody {
-  year?: string;
+model ClassUpdateBody {
+  yearId?: string;
   name?: string;
   subject?: string;
+  description?: string | null;
   isActive?: boolean;
-  updatedAt?: utcDateTime;
-  description?: string;
 }
 
-model PatchClassMemberBody {
-  studentId?: string;
-}
-
-model ClassMemberDetail {
-  id: string;
+model ClassMemberCreateBody {
   classId: string;
   studentId: string;
-  createdAt: utcDateTime;
-  updatedAt: utcDateTime;
-  student: {
-    id: string;
-    teacher: string;
-    code: string;
-    prefix: string;
-    firstName: string;
-    lastName: string;
-    createdAt: utcDateTime;
-    updatedAt: utcDateTime;
-    nickname?: string;
-  };
+  userId?: string | null;
+}
+
+model ClassMemberDeleteBody {
+  classId?: string;
+  studentId?: string;
 }

@@ -1,68 +1,46 @@
 namespace MiniTeacherService;
 
-model ScoreAssign {
-  id: string;
+model ScoreAssignData is PrismaModels.Assignment;
+
+model ScoreStudentData is PrismaModels.Score;
+
+model ScoreStudentWithStudent extends ScoreStudentData {
+  student: PrismaModels.Student;
+}
+
+model ScoreAssignWithScores extends ScoreAssignData {
+  scores: ScoreStudentWithStudent[];
+}
+
+model ScoreAssignCreateBody {
   classId: string;
-  name: string;
-  isEditable: boolean;
-  description: string | null;
-  minScore: int32 = 0;
-  maxScore: int32 = 100;
-  type: "ASSIGNMENT" | "QUIZ" | "EXAM" = "ASSIGNMENT";
-  assignDate?: utcDateTime | null;
-  finalDate?: utcDateTime | null;
-  createdAt: utcDateTime;
-  updatedAt: utcDateTime;
-}
-
-model ScoreAssignDetail extends ScoreAssign {
-  scores: ScoreStudentDetail[];
-}
-
-model ScoreStudent {
-  id: string;
-  scoreAssignId: string;
-  studentId: string;
-  score: int32;
-  createdAt: utcDateTime;
-  updatedAt: utcDateTime;
-}
-
-model ScoreStudentDetail {
-  id: string;
-  scoreAssignId: string;
-  studentId: string;
-  score: int32;
-  createdAt: utcDateTime;
-  updatedAt: utcDateTime;
-  student: Student;
-}
-
-model CreateScoreAssignBody {
-  name: string;
+  title: string;
   description?: string | null;
   minScore?: int32;
   maxScore?: int32;
-  type?: "ASSIGNMENT" | "QUIZ" | "EXAM";
+  type?: PrismaModels.AssignType;
   assignDate?: utcDateTime | null;
-  finalDate?: utcDateTime | null;
+  dueDate?: utcDateTime | null;
+  isEditable?: boolean;
 }
 
-model UpdateScoreAssignBody {
-  name?: string;
+model ScoreAssignUpdateBody {
+  title?: string;
   description?: string | null;
   minScore?: int32;
   maxScore?: int32;
-  type?: "ASSIGNMENT" | "QUIZ" | "EXAM";
+  type?: PrismaModels.AssignType;
   assignDate?: utcDateTime | null;
-  finalDate?: utcDateTime | null;
+  dueDate?: utcDateTime | null;
+  isEditable?: boolean;
 }
 
-model CreateScoreStudentBody {
+model ScoreStudentCreateBody {
+  assignmentId: string;
   studentId: string;
   score: int32;
 }
 
-model UpdateScoreStudentBody {
+model ScoreStudentUpdateBody {
   score: int32;
 }

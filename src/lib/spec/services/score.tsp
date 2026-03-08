@@ -1,51 +1,72 @@
 using TypeSpec.Http;
 using TypeSpec.Rest;
 
-namespace MiniTeacherService.ScoresApi;
+namespace MiniTeacherService.ScoreApi;
 
-@route("class/{classId}/score")
-@tag("Scores")
-interface Scores {
-  /** List score assignments in a class */
-  @get list(@path classId: string): ApiResponse<ScoreAssignDetail[]> | ApiError;
-
-  /** Create a score assignment */
+@route("/score-assign")
+@tag("Score Assigns")
+interface ScoreAssigns {
   @post create(
-    @path classId: string,
-    @body body: CreateScoreAssignBody,
-  ): ApiResponse<ScoreAssign> | ApiError;
+    @body body: ScoreAssignCreateBody,
+  ): ApiResponse<ScoreAssignData> | ApiError;
 
-  /** Update a score assignment */
-  @route("{scoreAssignId}")
-  @put
+  #suppress "@typespec/http/patch-implicit-optional" ""
+  @route("{id}")
+  @patch
   update(
-    @path classId: string,
-    @path scoreAssignId: string,
-    @body body: UpdateScoreAssignBody,
-  ): ApiResponse<ScoreAssign> | ApiError;
+    @path id: string,
+    @body body: ScoreAssignUpdateBody,
+  ): ApiResponse<ScoreAssignData> | ApiError;
 
-  /** Delete a score assignment */
-  @route("{scoreAssignId}")
+  @route("{id}")
   @delete
-  delete(
-    @path classId: string,
-    @path scoreAssignId: string,
-  ): ApiResponse<EmptyData> | ApiError;
+  delete(@path id: string): ApiResponse<EmptyData> | ApiError;
 
-  /** Get a score assignment by id */
-  @route("{scoreAssignId}")
+  @route("by-class/{classId}")
+  @get
+  getByClassId(
+    @path classId: string,
+    @query filter?: string,
+  ): ApiResponse<ScoreAssignWithScores[]> | ApiError;
+
+  @route("by-class/{classId}/{assignId}")
   @get
   getById(
     @path classId: string,
-    @path scoreAssignId: string,
-  ): ApiResponse<ScoreAssignDetail> | ApiError;
+    @path assignId: string,
+  ): ApiResponse<ScoreAssignWithScores> | ApiError;
+}
 
-  /** Create or update a score for a student */
-  @route("{scoreAssignId}/student")
-  @put
-  upsertScoreStudent(
-    @path classId: string,
-    @path scoreAssignId: string,
-    @body body: CreateScoreStudentBody | UpdateScoreStudentBody,
-  ): ApiResponse<ScoreStudent> | ApiError;
+@route("/score-student")
+@tag("Score Students")
+interface ScoreStudents {
+  @post create(
+    @body body: ScoreStudentCreateBody,
+  ): ApiResponse<ScoreStudentData> | ApiError;
+
+  #suppress "@typespec/http/patch-implicit-optional" ""
+  @route("{id}")
+  @patch
+  update(
+    @path id: string,
+    @body body: ScoreStudentUpdateBody,
+  ): ApiResponse<ScoreStudentData> | ApiError;
+
+  @route("{id}")
+  @delete
+  delete(@path id: string): ApiResponse<EmptyData> | ApiError;
+
+  @route("unique")
+  @get
+  getUnique(
+    @query assignmentId: string,
+    @query studentId: string,
+  ): ApiResponse<ScoreStudentData | null> | ApiError;
+
+  @route("by-assignment/{assignmentId}")
+  @get
+  getByAssignmentId(
+    @path assignmentId: string,
+    @query filter?: string,
+  ): ApiResponse<ScoreStudentWithStudent[]> | ApiError;
 }

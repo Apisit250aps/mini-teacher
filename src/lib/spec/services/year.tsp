@@ -6,29 +6,42 @@ namespace MiniTeacherService.YearsApi;
 @route("/year")
 @tag("Years")
 interface Years {
-  /** List years */
-  @get list(): ApiResponse<YearDetail[]> | ApiError;
+  @get list(@query filter?: string): ApiResponse<YearWithClasses[]> | ApiError;
 
-  /** Create a year */
-  @post create(@body body: CreateYearBody): ApiResponse<Year> | ApiError;
+  @post create(@body body: YearCreateBody): ApiResponse<YearData> | ApiError;
 
-  /** Update a year */
-  @put update(
-    @path yearId: string,
-    @body body: UpdateYearBody,
-  ): ApiResponse<Year> | ApiError;
+  @route("{id}")
+  @get
+  getById(@path id: string): ApiResponse<YearWithOwnerAndClasses> | ApiError;
 
-  /** Set active year */
-  @patch setActive(@path yearId: string): ApiResponse<EmptyData> | ApiError;
+  #suppress "@typespec/http/patch-implicit-optional" ""
+  @route("{id}")
+  @patch
+  update(
+    @path id: string,
+    @body body: YearUpdateBody,
+  ): ApiResponse<YearData> | ApiError;
 
-  /** Delete a year */
-  @delete delete(@path yearId: string): ApiResponse<EmptyData> | ApiError;
+  @route("{id}")
+  @delete
+  delete(@path id: string): ApiResponse<EmptyData> | ApiError;
 
-  /** Get a year by id */
-  @route("{yearId}")
-  @get getById(@path yearId: string): ApiResponse<Year> | ApiError;
+  @route("active")
+  @get
+  getActiveByUser(
+    @query userId: string,
+  ): ApiResponse<YearData | null> | ApiError;
 
-  /** Get classes in a year */
-  @route("{yearId}/class")
-  @get getClasses(@path yearId: string): ApiResponse<Class[]> | ApiError;
+  #suppress "@typespec/http/patch-implicit-optional" ""
+  @route("active")
+  @patch
+  setActive(@body body: SetActiveYearBody): ApiResponse<EmptyData> | ApiError;
+
+  @route("unique")
+  @get
+  getUnique(
+    @query userId: string,
+    @query year: int32,
+    @query term: int32,
+  ): ApiResponse<YearData | null> | ApiError;
 }

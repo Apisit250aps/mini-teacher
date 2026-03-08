@@ -1,14 +1,42 @@
 import { $api } from '@/lib/client'
 import { useClassContext } from '@/hooks/app/use-class'
+import { useYearContext } from '@/hooks/app/use-year'
 import { toast } from 'sonner'
-import { CreateClass, UpdateClass } from '@/models'
+
+type LegacyClassMemberMutationArgs = {
+  params: {
+    path: {
+      classId: string
+    }
+  }
+  body: {
+    studentId?: string
+  }
+}
+
+type LegacyAddMemberArgs = {
+  params: {
+    path: {
+      classId: string
+    }
+  }
+  body: {
+    studentId?: string
+    teacherId?: string
+    code?: string
+    prefix?: string | null
+    firstName?: string
+    lastName?: string
+    nickname?: string | null
+  }
+}
 
 export const useGetClassMembers = (classId?: string) => {
   const { activeClass } = useClassContext()
 
   const query = $api.useQuery(
     'get',
-    '/class/{classId}/member',
+    '/class-member/by-class/{classId}',
     {
       params: {
         path: {
@@ -34,6 +62,8 @@ export const useGetClassMembers = (classId?: string) => {
 }
 
 export const useClassQueries = () => {
+  const { activeYear } = useYearContext()
+
   const create = $api.useMutation('post', '/class', {
     onSettled(data, _error, _variables, _onMutateResult, context) {
       if (!data) return
@@ -47,7 +77,7 @@ export const useClassQueries = () => {
       context.client.refetchQueries({})
     },
   })
-  const update = $api.useMutation('put', '/class/{classId}', {
+  const update = $api.useMutation('patch', '/class/{id}', {
     onSettled(data, _error, _variables, _onMutateResult, context) {
       if (!data) return
       if (!data.success) {
@@ -60,21 +90,7 @@ export const useClassQueries = () => {
       context.client.refetchQueries({})
     },
   })
-  const remove = $api.useMutation('delete', '/class/{classId}', {
-    onSettled(data, _error, _variables, _onMutateResult, context) {
-      if (!data) return
-      if (!data.success) {
-        toast.error(data.message, {
-          description: data.error,
-        })
-        return
-      }
-      toast.success(data.message)
-      context.client.refetchQueries({})
-    },
-  })
-
-  const addOrRemoveMember = $api.useMutation('put', '/class/{classId}/member', {
+  const remove = $api.useMutation('delete', '/class/{id}', {
     onSettled(data, _error, _variables, _onMutateResult, context) {
       if (!data) return
       if (!data.success) {
@@ -88,7 +104,7 @@ export const useClassQueries = () => {
     },
   })
 
-  const addMember = $api.useMutation('post', '/class/{classId}/member', {
+  const removeClassMember = $api.useMutation('delete', '/class-member', {
     onSettled(data, _error, _variables, _onMutateResult, context) {
       if (!data) return
       if (!data.success) {
@@ -102,17 +118,47 @@ export const useClassQueries = () => {
     },
   })
 
-  const onCreate = (data: Omit<CreateClass, 'id' | 'isActive' | 'createdAt' | 'updatedAt'>) => {
+  const addClassMember = $api.useMutation('post', '/class-member', {
+    onSettled(data, _error, _variables, _onMutateResult, context) {
+      if (!data) return
+      if (!data.success) {
+        toast.error(data.message, {
+          description: data.error,
+        })
+        return
+      }
+      toast.success(data.message)
+      context.client.refetchQueries({})
+    },
+  })
+  const createStudent = $api.useMutation('post', '/student')
+
+  const onCreate = (data: {
+    yearId: string
+    name: string
+    subject: string
+    description?: string | null
+    isActive?: boolean
+  }) => {
     return create.mutateAsync({
       body: data,
     })
   }
 
-  const onUpdate = (classId: string, data: Omit<UpdateClass, 'updatedAt'>) => {
+  const onUpdate = (
+    classId: string,
+    data: {
+      yearId?: string
+      name?: string
+      subject?: string
+      description?: string | null
+      isActive?: boolean
+    },
+  ) => {
     return update.mutateAsync({
       params: {
         path: {
-          classId: classId,
+          id: classId,
         },
       },
       body: data,
@@ -123,10 +169,66 @@ export const useClassQueries = () => {
     return remove.mutateAsync({
       params: {
         path: {
-          classId: classId,
+          id: classId,
         },
       },
     })
+  }
+
+  const addOrRemoveMember = {
+    mutateAsync: (
+      args: LegacyClassMemberMutationArgs,
+      options?: Parameters<typeof removeClassMember.mutateAsync>[1],
+    ) =>
+      removeClassMember.mutateAsync(
+        {
+          body: {
+            classId: args.params.path.classId,
+            studentId: args.body.studentId,
+          },
+        },
+        options,
+      ),
+    isPending: removeClassMember.isPending,
+  }
+
+  const addMember = {
+    mutateAsync: async (
+      args: LegacyAddMemberArgs,
+      options?: Parameters<typeof addClassMember.mutateAsync>[1],
+    ) => {
+      let studentId = args.body.studentId
+
+      if (!studentId) {
+        const createdStudent = await createStudent.mutateAsync({
+          body: {
+            teacherId: args.body.teacherId ?? (activeYear.userId as string),
+            code: args.body.code ?? '',
+            prefix: args.body.prefix,
+            firstName: args.body.firstName ?? '',
+            lastName: args.body.lastName ?? '',
+            nickname: args.body.nickname,
+          },
+        })
+
+        if (!createdStudent.success || !createdStudent.data?.id) {
+          throw new Error(createdStudent.message)
+        }
+
+        studentId = createdStudent.data.id
+      }
+
+      return addClassMember.mutateAsync(
+        {
+          body: {
+            classId: args.params.path.classId,
+            studentId,
+          },
+        },
+        options,
+      )
+    },
+    isPending: addClassMember.isPending,
   }
 
   return {

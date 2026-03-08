@@ -6,46 +6,54 @@ namespace MiniTeacherService.ClassesApi;
 @route("/class")
 @tag("Classes")
 interface Classes {
-  /** List classes in a year */
-  @get list(): ApiResponse<Class[]> | ApiError;
+  @post create(@body body: ClassCreateBody): ApiResponse<ClassData> | ApiError;
 
-  /** Create a class */
-  @post create(@body body: CreateClassBody): ApiResponse<Class> | ApiError;
+  @route("{id}")
+  @get
+  getById(@path id: string): ApiResponse<ClassWithDetails> | ApiError;
 
-  /** Update a class */
-  @route("{classId}")
-  @put
+  #suppress "@typespec/http/patch-implicit-optional" ""
+  @route("{id}")
+  @patch
   update(
-    @path classId: string,
-    @body body: UpdateClassBody,
-  ): ApiResponse<Class> | ApiError;
+    @path id: string,
+    @body body: ClassUpdateBody,
+  ): ApiResponse<ClassData> | ApiError;
 
-  /** Delete a class */
-  @route("{classId}")
+  @route("{id}")
   @delete
-  delete(@path classId: string): ApiResponse<EmptyData> | ApiError;
+  delete(@path id: string): ApiResponse<EmptyData> | ApiError;
 
-  @route("{classId}")
+  @route("by-year/{yearId}")
   @get
-  getById(@path classId: string): ApiResponse<Class> | ApiError;
+  getByYearId(
+    @path yearId: string,
+    @query filter?: string,
+  ): ApiResponse<ClassWithMembers[]> | ApiError;
 
-  @route("{classId}/member")
-  @put
-  addOrRemoveMember(
+  @route("by-year/{yearId}/{classId}")
+  @get
+  getByYearAndClassId(
+    @path yearId: string,
     @path classId: string,
-    @body body: PatchClassMemberBody,
+  ): ApiResponse<ClassWithDetails> | ApiError;
+}
+
+@route("/class-member")
+@tag("Class Members")
+interface ClassMembers {
+  @post create(
+    @body body: ClassMemberCreateBody,
+  ): ApiResponse<ClassMemberData> | ApiError;
+
+  @delete delete(
+    @body body: ClassMemberDeleteBody,
   ): ApiResponse<EmptyData> | ApiError;
 
-  @route("{classId}/member")
-  @post
-  addMember(
-    @path classId: string,
-    @body body: CreateStudentBody,
-  ): ApiResponse<EmptyData> | ApiError;
-
-  @route("{classId}/member")
+  @route("by-class/{classId}")
   @get
-  getMembers(
+  getByClassId(
     @path classId: string,
-  ): ApiResponse<ClassMemberDetail[]> | ApiError;
+    @query filter?: string,
+  ): ApiResponse<ClassMemberWithStudent[]> | ApiError;
 }

@@ -1,29 +1,38 @@
 namespace MiniTeacherService;
 
-model Student {
-  id: string;
-  teacher: string;
-  code: string;
-  prefix: string;
-  firstName: string;
-  lastName: string;
-  nickname?: string;
-  createdAt: utcDateTime;
-  updatedAt: utcDateTime;
+model StudentData is PrismaModels.Student;
+
+model StudentClassMemberWithClass extends PrismaModels.ClassMember {
+  class: PrismaModels.Class;
 }
 
-model CreateStudentBody {
-  prefix: string;
-  code: string;
-  firstName: string;
-  lastName: string;
-  nickname?: string;
+model StudentCheckWithDate extends PrismaModels.CheckStudent {
+  checkDate: PrismaModels.CheckDate;
 }
 
-model UpdateStudentBody {
-  prefix?: string;
+model StudentScoreWithAssignment extends PrismaModels.Score {
+  assignment: PrismaModels.Assignment;
+}
+
+model StudentWithRelations extends StudentData {
+  classMembers: StudentClassMemberWithClass[];
+  checkStudents: StudentCheckWithDate[];
+  scores: StudentScoreWithAssignment[];
+}
+
+model StudentCreateBody {
+  teacherId: string;
+  code: string;
+  prefix?: string | null;
+  firstName: string;
+  lastName: string;
+  nickname?: string | null;
+}
+
+model StudentUpdateBody {
   code?: string;
+  prefix?: string | null;
   firstName?: string;
   lastName?: string;
-  nickname?: string;
+  nickname?: string | null;
 }

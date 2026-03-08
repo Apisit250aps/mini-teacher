@@ -1,29 +1,32 @@
 namespace MiniTeacherService;
 
-model Year {
-  id: string;
-  user: string;
-  year: int32;
-  term: int32;
-  isActive: boolean;
-  createdAt: utcDateTime;
-  updatedAt: utcDateTime;
+model YearData is PrismaModels.Year;
+
+model YearWithClasses extends YearData {
+  classes: PrismaModels.Class[];
 }
 
-model YearDetail extends Year {
-  classes: Class[];
+model YearWithOwnerAndClasses extends YearData {
+  owner: PrismaModels.User;
+  classes: PrismaModels.Class[];
 }
 
-model CreateYearBody {
+model YearCreateBody {
+  userId: string;
   year: int32;
   term: int32;
+  description?: string | null;
   isActive?: boolean;
 }
 
-model UpdateYearBody {
-  user?: string;
+model YearUpdateBody {
   year?: int32;
   term?: int32;
+  description?: string | null;
   isActive?: boolean;
-  updatedAt?: utcDateTime;
+}
+
+model SetActiveYearBody {
+  userId?: string;
+  yearId?: string;
 }

@@ -2,14 +2,13 @@
 import { $api } from '@/lib/client'
 import { onSettledToast } from '@/lib/utils/hooks'
 import { useYearContext } from '../app/use-year'
-import { Year } from '@/models'
 import { toast } from 'sonner'
 
 export const useClassesInYear = () => {
   const { activeYear } = useYearContext()
   const classes = $api.useQuery(
     'get',
-    '/year/{yearId}/class',
+    '/class/by-year/{yearId}',
     {
       params: {
         path: {
@@ -52,12 +51,18 @@ export const useYearQueries = () => {
       },
     },
   )
-  const active = $api.useMutation('patch', '/year/{yearId}')
+  const active = $api.useMutation('patch', '/year/active')
   const create = $api.useMutation('post', '/year')
-  const update = $api.useMutation('put', '/year/{yearId}')
-  const remove = $api.useMutation('delete', '/year/{yearId}')
+  const update = $api.useMutation('patch', '/year/{id}')
+  const remove = $api.useMutation('delete', '/year/{id}')
 
-  const onCreate = async (data: Pick<Year, 'year' | 'term'>) => {
+  const onCreate = async (data: {
+    userId?: string
+    year: number
+    term: number
+    description?: string | null
+    isActive?: boolean
+  }) => {
     return await create.mutateAsync(
       {
         body: data,
@@ -73,12 +78,17 @@ export const useYearQueries = () => {
 
   const onUpdate = async (
     yearId: string,
-    data: Pick<Year, 'year' | 'term'>,
+    data: {
+      year?: number
+      term?: number
+      description?: string | null
+      isActive?: boolean
+    },
   ) => {
     return await update.mutateAsync(
       {
         params: {
-          path: { yearId },
+          path: { id: yearId },
         },
         body: data,
       },
@@ -95,7 +105,7 @@ export const useYearQueries = () => {
     return await remove.mutateAsync(
       {
         params: {
-          path: { yearId },
+          path: { id: yearId },
         },
       },
       {
@@ -107,10 +117,11 @@ export const useYearQueries = () => {
     )
   }
 
-  const onActive = async (yearId: string) => {
+  const onActive = async (yearId: string, userId?: string) => {
     await active.mutateAsync({
-      params: {
-        path: { yearId },
+      body: {
+        yearId,
+        userId,
       },
     })
   }

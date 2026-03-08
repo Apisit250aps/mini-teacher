@@ -6,28 +6,30 @@ namespace MiniTeacherService.StudentsApi;
 @route("/student")
 @tag("Students")
 interface Students {
-  /** List students in a class */
-  @get list(): ApiResponse<Student[]> | ApiError;
+  @post create(
+    @body body: StudentCreateBody,
+  ): ApiResponse<StudentData> | ApiError;
 
-  /** Create a student */
-  @post create(@body body: CreateStudentBody): ApiResponse<Student> | ApiError;
-
-  /** Update a student */
-  @route("{studentId}")
-  @put
-  update(
-    @path studentId: string,
-    @body body: UpdateStudentBody,
-  ): ApiResponse<Student> | ApiError;
-
-  /** Delete a student */
-  @route("{studentId}")
-  @delete
-  delete(@path studentId: string): ApiResponse<EmptyData> | ApiError;
-
-  @route("{studentId}")
+  @route("{id}")
   @get
-  getById(@path studentId: string): ApiResponse<Student> | ApiError;
+  getById(@path id: string): ApiResponse<StudentWithRelations> | ApiError;
 
-  
+  #suppress "@typespec/http/patch-implicit-optional" ""
+  @route("{id}")
+  @patch
+  update(
+    @path id: string,
+    @body body: StudentUpdateBody,
+  ): ApiResponse<StudentData> | ApiError;
+
+  @route("{id}")
+  @delete
+  delete(@path id: string): ApiResponse<EmptyData> | ApiError;
+
+  @route("by-teacher/{teacherId}")
+  @get
+  getAllByTeacher(
+    @path teacherId: string,
+    @query filter?: string,
+  ): ApiResponse<StudentData[]> | ApiError;
 }

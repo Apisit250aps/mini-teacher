@@ -3,16 +3,19 @@ info:
   title: Mini Teacher Service
   version: 0.0.0
 tags:
+  - name: Users
   - name: Years
   - name: Classes
+  - name: Class Members
   - name: Students
-  - name: Check
-  - name: Scores
+  - name: Check Dates
+  - name: Check Students
+  - name: Score Assigns
+  - name: Score Students
 paths:
-  /class:
-    get:
-      operationId: Classes_list
-      description: List classes in a year
+  /check-date:
+    post:
+      operationId: CheckDates_create
       parameters: []
       responses:
         '200':
@@ -30,13 +33,29 @@ paths:
                   message:
                     type: string
                   data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Class'
+                    $ref: '#/components/schemas/CheckDateData'
                   error:
                     type: string
         '400':
           description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
           content:
             application/json:
               schema:
@@ -48,240 +67,28 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
-        - Classes
-    post:
-      operationId: Classes_create
-      description: Create a class
-      parameters: []
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/Class'
-                  error:
-                    type: string
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      tags:
-        - Classes
+        - Check Dates
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateClassBody'
-  /class/{classId}:
-    put:
-      operationId: Classes_update
-      description: Update a class
-      parameters:
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/Class'
-                  error:
-                    type: string
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      tags:
-        - Classes
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateClassBody'
-    delete:
-      operationId: Classes_delete
-      description: Delete a class
-      parameters:
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/EmptyData'
-                  error:
-                    type: string
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      tags:
-        - Classes
+              $ref: '#/components/schemas/CheckDateCreateBody'
+  /check-date/by-class/{classId}:
     get:
-      operationId: Classes_getById
+      operationId: CheckDates_getByClassId
       parameters:
         - name: classId
           in: path
           required: true
           schema:
             type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/Class'
-                  error:
-                    type: string
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      tags:
-        - Classes
-  /class/{classId}/check:
-    post:
-      operationId: Check_create
-      description: Create a check date
-      parameters:
-        - name: classId
-          in: path
-          required: true
+        - name: filter
+          in: query
+          required: false
           schema:
             type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/CheckDate'
-                  error:
-                    type: string
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      tags:
-        - Check
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateCheckDateBody'
-    get:
-      operationId: Check_listByClassId
-      description: Get check dates by class id
-      parameters:
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
@@ -309,6 +116,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: Server error
           content:
@@ -316,18 +141,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
-        - Check
-  /class/{classId}/check/{checkDateId}:
-    put:
-      operationId: Check_update
-      description: Update a check date
+        - Check Dates
+  /check-date/{id}:
+    get:
+      operationId: CheckDates_getById
       parameters:
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: checkDateId
+        - name: id
           in: path
           required: true
           schema:
@@ -348,11 +167,29 @@ paths:
                   message:
                     type: string
                   data:
-                    $ref: '#/components/schemas/CheckDate'
+                    $ref: '#/components/schemas/CheckDateWithStudents'
                   error:
                     type: string
         '400':
           description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
           content:
             application/json:
               schema:
@@ -364,23 +201,76 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
-        - Check
+        - Check Dates
+    patch:
+      operationId: CheckDates_update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/CheckDateData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Check Dates
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateCheckDateBody'
+              $ref: '#/components/schemas/CheckDateUpdateBody'
     delete:
-      operationId: Check_delete
-      description: Delete a check date
+      operationId: CheckDates_delete
       parameters:
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: checkDateId
+        - name: id
           in: path
           required: true
           schema:
@@ -410,50 +300,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
+        '401':
+          description: Access is unauthorized.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-      tags:
-        - Check
-  /class/{classId}/check/{checkDateId}/student:
-    put:
-      operationId: Check_checkStudent
-      description: Update a check student
-      parameters:
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: checkDateId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
+        '404':
+          description: The server cannot find the requested resource.
           content:
             application/json:
               schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/CheckStudent'
-                  error:
-                    type: string
-        '400':
-          description: The server could not understand the request due to invalid syntax.
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
           content:
             application/json:
               schema:
@@ -465,452 +325,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
-        - Check
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateCheckStudentBody'
-  /class/{classId}/member:
-    put:
-      operationId: Classes_addOrRemoveMember
-      parameters:
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/EmptyData'
-                  error:
-                    type: string
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      tags:
-        - Classes
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchClassMemberBody'
+        - Check Dates
+  /check-student:
     post:
-      operationId: Classes_addMember
-      parameters:
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/EmptyData'
-                  error:
-                    type: string
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      tags:
-        - Classes
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateStudentBody'
-    get:
-      operationId: Classes_getMembers
-      parameters:
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ClassMemberDetail'
-                  error:
-                    type: string
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      tags:
-        - Classes
-  /class/{classId}/score:
-    get:
-      operationId: Scores_list
-      description: List score assignments in a class
-      parameters:
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ScoreAssignDetail'
-                  error:
-                    type: string
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      tags:
-        - Scores
-    post:
-      operationId: Scores_create
-      description: Create a score assignment
-      parameters:
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/ScoreAssign'
-                  error:
-                    type: string
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      tags:
-        - Scores
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CreateScoreAssignBody'
-  /class/{classId}/score/{scoreAssignId}:
-    put:
-      operationId: Scores_update
-      description: Update a score assignment
-      parameters:
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: scoreAssignId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/ScoreAssign'
-                  error:
-                    type: string
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      tags:
-        - Scores
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateScoreAssignBody'
-    delete:
-      operationId: Scores_delete
-      description: Delete a score assignment
-      parameters:
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: scoreAssignId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/EmptyData'
-                  error:
-                    type: string
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      tags:
-        - Scores
-    get:
-      operationId: Scores_getById
-      description: Get a score assignment by id
-      parameters:
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: scoreAssignId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/ScoreAssignDetail'
-                  error:
-                    type: string
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      tags:
-        - Scores
-  /class/{classId}/score/{scoreAssignId}/student:
-    put:
-      operationId: Scores_upsertScoreStudent
-      description: Create or update a score for a student
-      parameters:
-        - name: classId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: scoreAssignId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/ScoreStudent'
-                  error:
-                    type: string
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      tags:
-        - Scores
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              anyOf:
-                - $ref: '#/components/schemas/CreateScoreStudentBody'
-                - $ref: '#/components/schemas/UpdateScoreStudentBody'
-  /student:
-    get:
-      operationId: Students_list
-      description: List students in a class
+      operationId: CheckStudents_create
       parameters: []
       responses:
         '200':
@@ -928,13 +346,29 @@ paths:
                   message:
                     type: string
                   data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Student'
+                    $ref: '#/components/schemas/CheckStudentData'
                   error:
                     type: string
         '400':
           description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
           content:
             application/json:
               schema:
@@ -946,10 +380,1546 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
-        - Students
+        - Check Students
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckStudentCreateBody'
+  /check-student/by-check-date/{checkDateId}:
+    get:
+      operationId: CheckStudents_getByCheckDateId
+      parameters:
+        - name: checkDateId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: filter
+          in: query
+          required: false
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CheckStudentWithRelations'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Check Students
+  /check-student/unique:
+    get:
+      operationId: CheckStudents_getUnique
+      parameters:
+        - name: checkDateId
+          in: query
+          required: true
+          schema:
+            type: string
+          explode: false
+        - name: studentId
+          in: query
+          required: true
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    anyOf:
+                      - $ref: '#/components/schemas/CheckStudentWithRelations'
+                      - type: 'null'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Check Students
+  /check-student/{id}:
+    get:
+      operationId: CheckStudents_getById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/CheckStudentWithRelations'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Check Students
+    patch:
+      operationId: CheckStudents_update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/CheckStudentData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Check Students
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckStudentUpdateBody'
+    delete:
+      operationId: CheckStudents_delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/EmptyData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Check Students
+  /class:
+    post:
+      operationId: Classes_create
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/ClassData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Classes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassCreateBody'
+  /class-member:
+    post:
+      operationId: ClassMembers_create
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/ClassMemberData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Class Members
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassMemberCreateBody'
+    delete:
+      operationId: ClassMembers_delete
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/EmptyData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Class Members
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassMemberDeleteBody'
+  /class-member/by-class/{classId}:
+    get:
+      operationId: ClassMembers_getByClassId
+      parameters:
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: filter
+          in: query
+          required: false
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ClassMemberWithStudent'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Class Members
+  /class/by-year/{yearId}:
+    get:
+      operationId: Classes_getByYearId
+      parameters:
+        - name: yearId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: filter
+          in: query
+          required: false
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ClassWithMembers'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Classes
+  /class/by-year/{yearId}/{classId}:
+    get:
+      operationId: Classes_getByYearAndClassId
+      parameters:
+        - name: yearId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/ClassWithDetails'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Classes
+  /class/{id}:
+    get:
+      operationId: Classes_getById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/ClassWithDetails'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Classes
+    patch:
+      operationId: Classes_update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/ClassData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Classes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassUpdateBody'
+    delete:
+      operationId: Classes_delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/EmptyData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Classes
+  /score-assign:
+    post:
+      operationId: ScoreAssigns_create
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/ScoreAssignData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Score Assigns
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScoreAssignCreateBody'
+  /score-assign/by-class/{classId}:
+    get:
+      operationId: ScoreAssigns_getByClassId
+      parameters:
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: filter
+          in: query
+          required: false
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ScoreAssignWithScores'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Score Assigns
+  /score-assign/by-class/{classId}/{assignId}:
+    get:
+      operationId: ScoreAssigns_getById
+      parameters:
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: assignId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/ScoreAssignWithScores'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Score Assigns
+  /score-assign/{id}:
+    patch:
+      operationId: ScoreAssigns_update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/ScoreAssignData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Score Assigns
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScoreAssignUpdateBody'
+    delete:
+      operationId: ScoreAssigns_delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/EmptyData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Score Assigns
+  /score-student:
+    post:
+      operationId: ScoreStudents_create
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/ScoreStudentData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Score Students
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScoreStudentCreateBody'
+  /score-student/by-assignment/{assignmentId}:
+    get:
+      operationId: ScoreStudents_getByAssignmentId
+      parameters:
+        - name: assignmentId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: filter
+          in: query
+          required: false
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ScoreStudentWithStudent'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Score Students
+  /score-student/unique:
+    get:
+      operationId: ScoreStudents_getUnique
+      parameters:
+        - name: assignmentId
+          in: query
+          required: true
+          schema:
+            type: string
+          explode: false
+        - name: studentId
+          in: query
+          required: true
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    anyOf:
+                      - $ref: '#/components/schemas/ScoreStudentData'
+                      - type: 'null'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Score Students
+  /score-student/{id}:
+    patch:
+      operationId: ScoreStudents_update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/ScoreStudentData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Score Students
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScoreStudentUpdateBody'
+    delete:
+      operationId: ScoreStudents_delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/EmptyData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Score Students
+  /student:
     post:
       operationId: Students_create
-      description: Create a student
       parameters: []
       responses:
         '200':
@@ -967,11 +1937,29 @@ paths:
                   message:
                     type: string
                   data:
-                    $ref: '#/components/schemas/Student'
+                    $ref: '#/components/schemas/StudentData'
                   error:
                     type: string
         '400':
           description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
           content:
             application/json:
               schema:
@@ -989,17 +1977,22 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateStudentBody'
-  /student/{studentId}:
-    put:
-      operationId: Students_update
-      description: Update a student
+              $ref: '#/components/schemas/StudentCreateBody'
+  /student/by-teacher/{teacherId}:
+    get:
+      operationId: Students_getAllByTeacher
       parameters:
-        - name: studentId
+        - name: teacherId
           in: path
           required: true
           schema:
             type: string
+        - name: filter
+          in: query
+          required: false
+          schema:
+            type: string
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
@@ -1016,11 +2009,31 @@ paths:
                   message:
                     type: string
                   data:
-                    $ref: '#/components/schemas/Student'
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/StudentData'
                   error:
                     type: string
         '400':
           description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
           content:
             application/json:
               schema:
@@ -1033,58 +2046,11 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Students
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateStudentBody'
-    delete:
-      operationId: Students_delete
-      description: Delete a student
-      parameters:
-        - name: studentId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The request has succeeded.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - success
-                  - message
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
-                  data:
-                    $ref: '#/components/schemas/EmptyData'
-                  error:
-                    type: string
-        '400':
-          description: The server could not understand the request due to invalid syntax.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-      tags:
-        - Students
+  /student/{id}:
     get:
       operationId: Students_getById
       parameters:
-        - name: studentId
+        - name: id
           in: path
           required: true
           schema:
@@ -1105,11 +2071,29 @@ paths:
                   message:
                     type: string
                   data:
-                    $ref: '#/components/schemas/Student'
+                    $ref: '#/components/schemas/StudentWithRelations'
                   error:
                     type: string
         '400':
           description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
           content:
             application/json:
               schema:
@@ -1122,11 +2106,446 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Students
+    patch:
+      operationId: Students_update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/StudentData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Students
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentUpdateBody'
+    delete:
+      operationId: Students_delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/EmptyData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Students
+  /user:
+    post:
+      operationId: Users_create
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/UserData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateBody'
+  /user/by-email:
+    get:
+      operationId: Users_getByEmail
+      parameters:
+        - name: email
+          in: query
+          required: true
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/UserWithYears'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Users
+  /user/{id}:
+    get:
+      operationId: Users_getById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/UserWithYears'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Users
+    patch:
+      operationId: Users_update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/UserData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateBody'
+    delete:
+      operationId: Users_delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/EmptyData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Users
   /year:
     get:
       operationId: Years_list
-      description: List years
-      parameters: []
+      parameters:
+        - name: filter
+          in: query
+          required: false
+          schema:
+            type: string
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
@@ -1145,11 +2564,29 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/YearDetail'
+                      $ref: '#/components/schemas/YearWithClasses'
                   error:
                     type: string
         '400':
           description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
           content:
             application/json:
               schema:
@@ -1164,7 +2601,6 @@ paths:
         - Years
     post:
       operationId: Years_create
-      description: Create a year
       parameters: []
       responses:
         '200':
@@ -1182,11 +2618,29 @@ paths:
                   message:
                     type: string
                   data:
-                    $ref: '#/components/schemas/Year'
+                    $ref: '#/components/schemas/YearData'
                   error:
                     type: string
         '400':
           description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
           content:
             application/json:
               schema:
@@ -1204,17 +2658,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateYearBody'
-  /year/{yearId}:
-    put:
-      operationId: Years_update
-      description: Update a year
+              $ref: '#/components/schemas/YearCreateBody'
+  /year/active:
+    get:
+      operationId: Years_getActiveByUser
       parameters:
-        - name: yearId
-          in: path
+        - name: userId
+          in: query
           required: true
           schema:
             type: string
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
@@ -1231,11 +2685,31 @@ paths:
                   message:
                     type: string
                   data:
-                    $ref: '#/components/schemas/Year'
+                    anyOf:
+                      - $ref: '#/components/schemas/YearData'
+                      - type: 'null'
                   error:
                     type: string
         '400':
           description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
           content:
             application/json:
               schema:
@@ -1248,21 +2722,9 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Years
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateYearBody'
     patch:
       operationId: Years_setActive
-      description: Set active year
-      parameters:
-        - name: yearId
-          in: path
-          required: true
-          schema:
-            type: string
+      parameters: []
       responses:
         '200':
           description: The request has succeeded.
@@ -1288,6 +2750,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: Server error
           content:
@@ -1296,15 +2776,36 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Years
-    delete:
-      operationId: Years_delete
-      description: Delete a year
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetActiveYearBody'
+  /year/unique:
+    get:
+      operationId: Years_getUnique
       parameters:
-        - name: yearId
-          in: path
+        - name: userId
+          in: query
           required: true
           schema:
             type: string
+          explode: false
+        - name: year
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+          explode: false
+        - name: term
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int32
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
@@ -1321,11 +2822,31 @@ paths:
                   message:
                     type: string
                   data:
-                    $ref: '#/components/schemas/EmptyData'
+                    anyOf:
+                      - $ref: '#/components/schemas/YearData'
+                      - type: 'null'
                   error:
                     type: string
         '400':
           description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
           content:
             application/json:
               schema:
@@ -1338,11 +2859,11 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Years
+  /year/{id}:
     get:
       operationId: Years_getById
-      description: Get a year by id
       parameters:
-        - name: yearId
+        - name: id
           in: path
           required: true
           schema:
@@ -1363,11 +2884,29 @@ paths:
                   message:
                     type: string
                   data:
-                    $ref: '#/components/schemas/Year'
+                    $ref: '#/components/schemas/YearWithOwnerAndClasses'
                   error:
                     type: string
         '400':
           description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
           content:
             application/json:
               schema:
@@ -1380,12 +2919,10 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Years
-  /year/{yearId}/class:
-    get:
-      operationId: Years_getClasses
-      description: Get classes in a year
+    patch:
+      operationId: Years_update
       parameters:
-        - name: yearId
+        - name: id
           in: path
           required: true
           schema:
@@ -1406,13 +2943,94 @@ paths:
                   message:
                     type: string
                   data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Class'
+                    $ref: '#/components/schemas/YearData'
                   error:
                     type: string
         '400':
           description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Years
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/YearUpdateBody'
+    delete:
+      operationId: Years_delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/EmptyData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
           content:
             application/json:
               schema:
@@ -1427,7 +3045,24 @@ paths:
         - Years
 components:
   schemas:
-    CheckDate:
+    CheckDateCreateBody:
+      type: object
+      required:
+        - classId
+        - date
+      properties:
+        classId:
+          type: string
+        date:
+          type: string
+          format: date-time
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
+        isEditable:
+          type: boolean
+    CheckDateData:
       type: object
       required:
         - id
@@ -1443,6 +3078,11 @@ components:
           type: string
         date:
           type: string
+          format: date-time
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
         isEditable:
           type: boolean
         createdAt:
@@ -1451,6 +3091,27 @@ components:
         updatedAt:
           type: string
           format: date-time
+        class:
+          anyOf:
+            - $ref: '#/components/schemas/PrismaModels.Class'
+            - type: 'null'
+        checkStudents:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.CheckStudent'
+      description: 'DB table: check_dates'
+    CheckDateUpdateBody:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date-time
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
+        isEditable:
+          type: boolean
     CheckDateWithStudents:
       type: object
       required:
@@ -1459,10 +3120,22 @@ components:
         checkStudents:
           type: array
           items:
-            $ref: '#/components/schemas/CheckStudent'
+            $ref: '#/components/schemas/CheckStudentWithStudent'
       allOf:
-        - $ref: '#/components/schemas/CheckDate'
-    CheckStudent:
+        - $ref: '#/components/schemas/CheckDateData'
+    CheckStudentCreateBody:
+      type: object
+      required:
+        - checkDateId
+        - studentId
+      properties:
+        checkDateId:
+          type: string
+        studentId:
+          type: string
+        status:
+          $ref: '#/components/schemas/PrismaModels.CheckStatus'
+    CheckStudentData:
       type: object
       required:
         - id
@@ -1479,18 +3152,72 @@ components:
         studentId:
           type: string
         status:
-          type: string
+          $ref: '#/components/schemas/PrismaModels.CheckStatus'
         createdAt:
           type: string
           format: date-time
         updatedAt:
           type: string
           format: date-time
-    Class:
+        checkDate:
+          anyOf:
+            - $ref: '#/components/schemas/PrismaModels.CheckDate'
+            - type: 'null'
+        student:
+          anyOf:
+            - $ref: '#/components/schemas/PrismaModels.Student'
+            - type: 'null'
+      description: 'DB table: check_students'
+    CheckStudentUpdateBody:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/PrismaModels.CheckStatus'
+    CheckStudentWithRelations:
+      type: object
+      required:
+        - student
+        - checkDate
+      properties:
+        student:
+          $ref: '#/components/schemas/PrismaModels.Student'
+        checkDate:
+          $ref: '#/components/schemas/PrismaModels.CheckDate'
+      allOf:
+        - $ref: '#/components/schemas/CheckStudentData'
+    CheckStudentWithStudent:
+      type: object
+      required:
+        - student
+      properties:
+        student:
+          $ref: '#/components/schemas/PrismaModels.Student'
+      allOf:
+        - $ref: '#/components/schemas/CheckStudentData'
+    ClassCreateBody:
+      type: object
+      required:
+        - yearId
+        - name
+        - subject
+      properties:
+        yearId:
+          type: string
+        name:
+          type: string
+        subject:
+          type: string
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
+        isActive:
+          type: boolean
+    ClassData:
       type: object
       required:
         - id
-        - year
+        - yearId
         - name
         - subject
         - isActive
@@ -1499,12 +3226,16 @@ components:
       properties:
         id:
           type: string
-        year:
+        yearId:
           type: string
         name:
           type: string
         subject:
           type: string
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
         isActive:
           type: boolean
         createdAt:
@@ -1513,7 +3244,38 @@ components:
         updatedAt:
           type: string
           format: date-time
-    ClassMemberDetail:
+        year:
+          anyOf:
+            - $ref: '#/components/schemas/PrismaModels.Year'
+            - type: 'null'
+        classMembers:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.ClassMember'
+        checkDates:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.CheckDate'
+        assignments:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.Assignment'
+      description: 'DB table: classes'
+    ClassMemberCreateBody:
+      type: object
+      required:
+        - classId
+        - studentId
+      properties:
+        classId:
+          type: string
+        studentId:
+          type: string
+        userId:
+          anyOf:
+            - type: string
+            - type: 'null'
+    ClassMemberData:
       type: object
       required:
         - id
@@ -1521,7 +3283,6 @@ components:
         - studentId
         - createdAt
         - updatedAt
-        - student
       properties:
         id:
           type: string
@@ -1535,148 +3296,89 @@ components:
         updatedAt:
           type: string
           format: date-time
+        class:
+          anyOf:
+            - $ref: '#/components/schemas/PrismaModels.Class'
+            - type: 'null'
         student:
-          type: object
-          properties:
-            id:
-              type: string
-            teacher:
-              type: string
-            code:
-              type: string
-            prefix:
-              type: string
-            firstName:
-              type: string
-            lastName:
-              type: string
-            createdAt:
-              type: string
-              format: date-time
-            updatedAt:
-              type: string
-              format: date-time
-            nickname:
-              type: string
-          required:
-            - id
-            - teacher
-            - code
-            - prefix
-            - firstName
-            - lastName
-            - createdAt
-            - updatedAt
-    CreateCheckDateBody:
+          anyOf:
+            - $ref: '#/components/schemas/PrismaModels.Student'
+            - type: 'null'
+        user:
+          anyOf:
+            - $ref: '#/components/schemas/PrismaModels.User'
+            - type: 'null'
+        userId:
+          anyOf:
+            - type: string
+            - type: 'null'
+      description: 'DB table: class_members'
+    ClassMemberDeleteBody:
       type: object
-      required:
-        - date
       properties:
-        date:
+        classId:
           type: string
-    CreateCheckStudentBody:
-      type: object
-      required:
-        - studentId
-        - status
-      properties:
         studentId:
           type: string
-        status:
-          type: string
-    CreateClassBody:
+    ClassMemberWithStudent:
       type: object
       required:
-        - year
-        - name
-        - subject
+        - student
       properties:
-        year:
+        student:
+          $ref: '#/components/schemas/PrismaModels.Student'
+      allOf:
+        - $ref: '#/components/schemas/ClassMemberData'
+    ClassUpdateBody:
+      type: object
+      properties:
+        yearId:
           type: string
         name:
           type: string
         subject:
           type: string
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
         isActive:
           type: boolean
-        description:
-          type: string
-    CreateScoreAssignBody:
-      type: object
-      required:
-        - name
-      properties:
-        name:
-          type: string
-        description:
-          anyOf:
-            - type: string
-            - type: 'null'
-        minScore:
-          type: integer
-          format: int32
-        maxScore:
-          type: integer
-          format: int32
-        type:
-          type: string
-          enum:
-            - ASSIGNMENT
-            - QUIZ
-            - EXAM
-        assignDate:
-          anyOf:
-            - type: string
-              format: date-time
-            - type: 'null'
-        finalDate:
-          anyOf:
-            - type: string
-              format: date-time
-            - type: 'null'
-    CreateScoreStudentBody:
-      type: object
-      required:
-        - studentId
-        - score
-      properties:
-        studentId:
-          type: string
-        score:
-          type: integer
-          format: int32
-    CreateStudentBody:
-      type: object
-      required:
-        - prefix
-        - code
-        - firstName
-        - lastName
-      properties:
-        prefix:
-          type: string
-        code:
-          type: string
-        firstName:
-          type: string
-        lastName:
-          type: string
-        nickname:
-          type: string
-    CreateYearBody:
+    ClassWithDetails:
       type: object
       required:
         - year
-        - term
+        - classMembers
+        - checkDates
+        - assignments
       properties:
         year:
-          type: integer
-          format: int32
-        term:
-          type: integer
-          format: int32
-        isActive:
-          type: boolean
+          $ref: '#/components/schemas/PrismaModels.Year'
+        classMembers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClassMemberWithStudent'
+        checkDates:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.CheckDate'
+        assignments:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.Assignment'
+      allOf:
+        - $ref: '#/components/schemas/ClassData'
+    ClassWithMembers:
+      type: object
+      required:
+        - classMembers
+      properties:
+        classMembers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClassMemberWithStudent'
+      allOf:
+        - $ref: '#/components/schemas/ClassData'
     EmptyData:
       type: object
     ErrorResponse:
@@ -1692,22 +3394,85 @@ components:
           type: string
         error:
           type: string
-    PatchClassMemberBody:
+    PrismaModels.Account:
       type: object
+      required:
+        - id
+        - userId
+        - type
+        - provider
+        - providerAccountId
+        - createdAt
+        - updatedAt
       properties:
-        studentId:
+        id:
           type: string
-    ScoreAssign:
+        userId:
+          type: string
+        type:
+          type: string
+        provider:
+          type: string
+        providerAccountId:
+          type: string
+        refresh_token:
+          anyOf:
+            - type: string
+            - type: 'null'
+        access_token:
+          anyOf:
+            - type: string
+            - type: 'null'
+        expires_at:
+          anyOf:
+            - type: integer
+              format: int32
+            - type: 'null'
+        token_type:
+          anyOf:
+            - type: string
+            - type: 'null'
+        scope:
+          anyOf:
+            - type: string
+            - type: 'null'
+        id_token:
+          anyOf:
+            - type: string
+            - type: 'null'
+        session_state:
+          anyOf:
+            - type: string
+            - type: 'null'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        user:
+          anyOf:
+            - $ref: '#/components/schemas/PrismaModels.User'
+            - type: 'null'
+      description: 'DB table: accounts'
+    PrismaModels.AssignType:
+      type: string
+      enum:
+        - ASSIGNMENT
+        - HOMEWORK
+        - QUIZ
+        - EXAM
+        - PROJECT
+    PrismaModels.Assignment:
       type: object
       required:
         - id
         - classId
-        - name
-        - isEditable
-        - description
+        - title
         - minScore
         - maxScore
         - type
+        - isEditable
         - createdAt
         - updatedAt
       properties:
@@ -1715,10 +3480,8 @@ components:
           type: string
         classId:
           type: string
-        name:
+        title:
           type: string
-        isEditable:
-          type: boolean
         description:
           anyOf:
             - type: string
@@ -1726,27 +3489,259 @@ components:
         minScore:
           type: integer
           format: int32
-          default: 0
         maxScore:
           type: integer
           format: int32
-          default: 100
         type:
-          type: string
-          enum:
-            - ASSIGNMENT
-            - QUIZ
-            - EXAM
-          default: ASSIGNMENT
+          $ref: '#/components/schemas/PrismaModels.AssignType'
         assignDate:
           anyOf:
             - type: string
               format: date-time
             - type: 'null'
-        finalDate:
+        dueDate:
           anyOf:
             - type: string
               format: date-time
+            - type: 'null'
+        isEditable:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        class:
+          anyOf:
+            - $ref: '#/components/schemas/PrismaModels.Class'
+            - type: 'null'
+        scores:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.Score'
+      description: 'DB table: assignments'
+    PrismaModels.CheckDate:
+      type: object
+      required:
+        - id
+        - classId
+        - date
+        - isEditable
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        classId:
+          type: string
+        date:
+          type: string
+          format: date-time
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
+        isEditable:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        class:
+          anyOf:
+            - $ref: '#/components/schemas/PrismaModels.Class'
+            - type: 'null'
+        checkStudents:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.CheckStudent'
+      description: 'DB table: check_dates'
+    PrismaModels.CheckStatus:
+      type: string
+      enum:
+        - DEFAULT
+        - PRESENT
+        - ABSENT
+        - LATE
+        - LEAVE
+    PrismaModels.CheckStudent:
+      type: object
+      required:
+        - id
+        - checkDateId
+        - studentId
+        - status
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        checkDateId:
+          type: string
+        studentId:
+          type: string
+        status:
+          $ref: '#/components/schemas/PrismaModels.CheckStatus'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        checkDate:
+          anyOf:
+            - $ref: '#/components/schemas/PrismaModels.CheckDate'
+            - type: 'null'
+        student:
+          anyOf:
+            - $ref: '#/components/schemas/PrismaModels.Student'
+            - type: 'null'
+      description: 'DB table: check_students'
+    PrismaModels.Class:
+      type: object
+      required:
+        - id
+        - yearId
+        - name
+        - subject
+        - isActive
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        yearId:
+          type: string
+        name:
+          type: string
+        subject:
+          type: string
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        year:
+          anyOf:
+            - $ref: '#/components/schemas/PrismaModels.Year'
+            - type: 'null'
+        classMembers:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.ClassMember'
+        checkDates:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.CheckDate'
+        assignments:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.Assignment'
+      description: 'DB table: classes'
+    PrismaModels.ClassMember:
+      type: object
+      required:
+        - id
+        - classId
+        - studentId
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        classId:
+          type: string
+        studentId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        class:
+          anyOf:
+            - $ref: '#/components/schemas/PrismaModels.Class'
+            - type: 'null'
+        student:
+          anyOf:
+            - $ref: '#/components/schemas/PrismaModels.Student'
+            - type: 'null'
+        user:
+          anyOf:
+            - $ref: '#/components/schemas/PrismaModels.User'
+            - type: 'null'
+        userId:
+          anyOf:
+            - type: string
+            - type: 'null'
+      description: 'DB table: class_members'
+    PrismaModels.Score:
+      type: object
+      required:
+        - id
+        - assignmentId
+        - studentId
+        - score
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        assignmentId:
+          type: string
+        studentId:
+          type: string
+        score:
+          type: integer
+          format: int32
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        assignment:
+          anyOf:
+            - $ref: '#/components/schemas/PrismaModels.Assignment'
+            - type: 'null'
+        student:
+          anyOf:
+            - $ref: '#/components/schemas/PrismaModels.Student'
+            - type: 'null'
+      description: 'DB table: scores'
+    PrismaModels.Session:
+      type: object
+      required:
+        - id
+        - sessionToken
+        - userId
+        - expires
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        sessionToken:
+          type: string
+        userId:
+          type: string
+        expires:
+          type: string
+          format: date-time
+        user:
+          anyOf:
+            - $ref: '#/components/schemas/PrismaModels.User'
             - type: 'null'
         createdAt:
           type: string
@@ -1754,77 +3749,13 @@ components:
         updatedAt:
           type: string
           format: date-time
-    ScoreAssignDetail:
-      type: object
-      required:
-        - scores
-      properties:
-        scores:
-          type: array
-          items:
-            $ref: '#/components/schemas/ScoreStudentDetail'
-      allOf:
-        - $ref: '#/components/schemas/ScoreAssign'
-    ScoreStudent:
+      description: 'DB table: sessions'
+    PrismaModels.Student:
       type: object
       required:
         - id
-        - scoreAssignId
-        - studentId
-        - score
-        - createdAt
-        - updatedAt
-      properties:
-        id:
-          type: string
-        scoreAssignId:
-          type: string
-        studentId:
-          type: string
-        score:
-          type: integer
-          format: int32
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-    ScoreStudentDetail:
-      type: object
-      required:
-        - id
-        - scoreAssignId
-        - studentId
-        - score
-        - createdAt
-        - updatedAt
-        - student
-      properties:
-        id:
-          type: string
-        scoreAssignId:
-          type: string
-        studentId:
-          type: string
-        score:
-          type: integer
-          format: int32
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-        student:
-          $ref: '#/components/schemas/Student'
-    Student:
-      type: object
-      required:
-        - id
-        - teacher
+        - teacherId
         - code
-        - prefix
         - firstName
         - lastName
         - createdAt
@@ -1832,120 +3763,134 @@ components:
       properties:
         id:
           type: string
-        teacher:
+        teacherId:
           type: string
         code:
           type: string
         prefix:
-          type: string
+          anyOf:
+            - type: string
+            - type: 'null'
         firstName:
           type: string
         lastName:
           type: string
         nickname:
-          type: string
+          anyOf:
+            - type: string
+            - type: 'null'
         createdAt:
           type: string
           format: date-time
         updatedAt:
           type: string
           format: date-time
-    UpdateCheckDateBody:
-      type: object
-      properties:
-        date:
-          type: string
-        isEditable:
-          type: boolean
-    UpdateClassBody:
-      type: object
-      properties:
-        year:
-          type: string
-        name:
-          type: string
-        subject:
-          type: string
-        isActive:
-          type: boolean
-        updatedAt:
-          type: string
-          format: date-time
-        description:
-          type: string
-    UpdateScoreAssignBody:
-      type: object
-      properties:
-        name:
-          type: string
-        description:
-          anyOf:
-            - type: string
-            - type: 'null'
-        minScore:
-          type: integer
-          format: int32
-        maxScore:
-          type: integer
-          format: int32
-        type:
-          type: string
-          enum:
-            - ASSIGNMENT
-            - QUIZ
-            - EXAM
-        assignDate:
-          anyOf:
-            - type: string
-              format: date-time
-            - type: 'null'
-        finalDate:
-          anyOf:
-            - type: string
-              format: date-time
-            - type: 'null'
-    UpdateScoreStudentBody:
-      type: object
-      required:
-        - score
-      properties:
-        score:
-          type: integer
-          format: int32
-    UpdateStudentBody:
-      type: object
-      properties:
-        prefix:
-          type: string
-        code:
-          type: string
-        firstName:
-          type: string
-        lastName:
-          type: string
-        nickname:
-          type: string
-    UpdateYearBody:
-      type: object
-      properties:
-        user:
-          type: string
-        year:
-          type: integer
-          format: int32
-        term:
-          type: integer
-          format: int32
-        isActive:
-          type: boolean
-        updatedAt:
-          type: string
-          format: date-time
-    Year:
+        classMembers:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.ClassMember'
+        checkStudents:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.CheckStudent'
+        scores:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.Score'
+      description: 'DB table: students'
+    PrismaModels.User:
       type: object
       required:
         - id
-        - user
+        - isActive
+        - isTeacher
+        - isAdmin
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        name:
+          anyOf:
+            - type: string
+            - type: 'null'
+        password:
+          anyOf:
+            - type: string
+            - type: 'null'
+        email:
+          anyOf:
+            - type: string
+            - type: 'null'
+        emailVerified:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        image:
+          anyOf:
+            - type: string
+            - type: 'null'
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.Account'
+        sessions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.Session'
+        isActive:
+          type: boolean
+        isTeacher:
+          type: boolean
+        isAdmin:
+          type: boolean
+        firstName:
+          anyOf:
+            - type: string
+            - type: 'null'
+        lastName:
+          anyOf:
+            - type: string
+            - type: 'null'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        years:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.Year'
+        classMembers:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.ClassMember'
+      description: 'DB table: users'
+    PrismaModels.VerificationToken:
+      type: object
+      required:
+        - id
+        - identifier
+        - token
+        - expires
+      properties:
+        id:
+          type: string
+        identifier:
+          type: string
+        token:
+          type: string
+        expires:
+          type: string
+          format: date-time
+      description: 'DB table: verification_tokens'
+    PrismaModels.Year:
+      type: object
+      required:
+        - id
+        - userId
         - year
         - term
         - isActive
@@ -1954,7 +3899,7 @@ components:
       properties:
         id:
           type: string
-        user:
+        userId:
           type: string
         year:
           type: integer
@@ -1962,6 +3907,10 @@ components:
         term:
           type: integer
           format: int32
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
         isActive:
           type: boolean
         createdAt:
@@ -1970,7 +3919,592 @@ components:
         updatedAt:
           type: string
           format: date-time
-    YearDetail:
+        owner:
+          anyOf:
+            - $ref: '#/components/schemas/PrismaModels.User'
+            - type: 'null'
+        classes:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.Class'
+      description: 'DB table: years'
+    ScoreAssignCreateBody:
+      type: object
+      required:
+        - classId
+        - title
+      properties:
+        classId:
+          type: string
+        title:
+          type: string
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
+        minScore:
+          type: integer
+          format: int32
+        maxScore:
+          type: integer
+          format: int32
+        type:
+          $ref: '#/components/schemas/PrismaModels.AssignType'
+        assignDate:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        dueDate:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        isEditable:
+          type: boolean
+    ScoreAssignData:
+      type: object
+      required:
+        - id
+        - classId
+        - title
+        - minScore
+        - maxScore
+        - type
+        - isEditable
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        classId:
+          type: string
+        title:
+          type: string
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
+        minScore:
+          type: integer
+          format: int32
+        maxScore:
+          type: integer
+          format: int32
+        type:
+          $ref: '#/components/schemas/PrismaModels.AssignType'
+        assignDate:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        dueDate:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        isEditable:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        class:
+          anyOf:
+            - $ref: '#/components/schemas/PrismaModels.Class'
+            - type: 'null'
+        scores:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.Score'
+      description: 'DB table: assignments'
+    ScoreAssignUpdateBody:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
+        minScore:
+          type: integer
+          format: int32
+        maxScore:
+          type: integer
+          format: int32
+        type:
+          $ref: '#/components/schemas/PrismaModels.AssignType'
+        assignDate:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        dueDate:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        isEditable:
+          type: boolean
+    ScoreAssignWithScores:
+      type: object
+      required:
+        - scores
+      properties:
+        scores:
+          type: array
+          items:
+            $ref: '#/components/schemas/ScoreStudentWithStudent'
+      allOf:
+        - $ref: '#/components/schemas/ScoreAssignData'
+    ScoreStudentCreateBody:
+      type: object
+      required:
+        - assignmentId
+        - studentId
+        - score
+      properties:
+        assignmentId:
+          type: string
+        studentId:
+          type: string
+        score:
+          type: integer
+          format: int32
+    ScoreStudentData:
+      type: object
+      required:
+        - id
+        - assignmentId
+        - studentId
+        - score
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        assignmentId:
+          type: string
+        studentId:
+          type: string
+        score:
+          type: integer
+          format: int32
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        assignment:
+          anyOf:
+            - $ref: '#/components/schemas/PrismaModels.Assignment'
+            - type: 'null'
+        student:
+          anyOf:
+            - $ref: '#/components/schemas/PrismaModels.Student'
+            - type: 'null'
+      description: 'DB table: scores'
+    ScoreStudentUpdateBody:
+      type: object
+      required:
+        - score
+      properties:
+        score:
+          type: integer
+          format: int32
+    ScoreStudentWithStudent:
+      type: object
+      required:
+        - student
+      properties:
+        student:
+          $ref: '#/components/schemas/PrismaModels.Student'
+      allOf:
+        - $ref: '#/components/schemas/ScoreStudentData'
+    SetActiveYearBody:
+      type: object
+      properties:
+        userId:
+          type: string
+        yearId:
+          type: string
+    StudentCheckWithDate:
+      type: object
+      required:
+        - checkDate
+      properties:
+        checkDate:
+          $ref: '#/components/schemas/PrismaModels.CheckDate'
+      allOf:
+        - $ref: '#/components/schemas/PrismaModels.CheckStudent'
+    StudentClassMemberWithClass:
+      type: object
+      required:
+        - class
+      properties:
+        class:
+          $ref: '#/components/schemas/PrismaModels.Class'
+      allOf:
+        - $ref: '#/components/schemas/PrismaModels.ClassMember'
+    StudentCreateBody:
+      type: object
+      required:
+        - teacherId
+        - code
+        - firstName
+        - lastName
+      properties:
+        teacherId:
+          type: string
+        code:
+          type: string
+        prefix:
+          anyOf:
+            - type: string
+            - type: 'null'
+        firstName:
+          type: string
+        lastName:
+          type: string
+        nickname:
+          anyOf:
+            - type: string
+            - type: 'null'
+    StudentData:
+      type: object
+      required:
+        - id
+        - teacherId
+        - code
+        - firstName
+        - lastName
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        teacherId:
+          type: string
+        code:
+          type: string
+        prefix:
+          anyOf:
+            - type: string
+            - type: 'null'
+        firstName:
+          type: string
+        lastName:
+          type: string
+        nickname:
+          anyOf:
+            - type: string
+            - type: 'null'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        classMembers:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.ClassMember'
+        checkStudents:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.CheckStudent'
+        scores:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.Score'
+      description: 'DB table: students'
+    StudentScoreWithAssignment:
+      type: object
+      required:
+        - assignment
+      properties:
+        assignment:
+          $ref: '#/components/schemas/PrismaModels.Assignment'
+      allOf:
+        - $ref: '#/components/schemas/PrismaModels.Score'
+    StudentUpdateBody:
+      type: object
+      properties:
+        code:
+          type: string
+        prefix:
+          anyOf:
+            - type: string
+            - type: 'null'
+        firstName:
+          type: string
+        lastName:
+          type: string
+        nickname:
+          anyOf:
+            - type: string
+            - type: 'null'
+    StudentWithRelations:
+      type: object
+      required:
+        - classMembers
+        - checkStudents
+        - scores
+      properties:
+        classMembers:
+          type: array
+          items:
+            $ref: '#/components/schemas/StudentClassMemberWithClass'
+        checkStudents:
+          type: array
+          items:
+            $ref: '#/components/schemas/StudentCheckWithDate'
+        scores:
+          type: array
+          items:
+            $ref: '#/components/schemas/StudentScoreWithAssignment'
+      allOf:
+        - $ref: '#/components/schemas/StudentData'
+    UserCreateBody:
+      type: object
+      properties:
+        name:
+          anyOf:
+            - type: string
+            - type: 'null'
+        password:
+          anyOf:
+            - type: string
+            - type: 'null'
+        email:
+          anyOf:
+            - type: string
+            - type: 'null'
+        emailVerified:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        image:
+          anyOf:
+            - type: string
+            - type: 'null'
+        isActive:
+          type: boolean
+        isTeacher:
+          type: boolean
+        isAdmin:
+          type: boolean
+        firstName:
+          anyOf:
+            - type: string
+            - type: 'null'
+        lastName:
+          anyOf:
+            - type: string
+            - type: 'null'
+    UserData:
+      type: object
+      required:
+        - id
+        - isActive
+        - isTeacher
+        - isAdmin
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        name:
+          anyOf:
+            - type: string
+            - type: 'null'
+        password:
+          anyOf:
+            - type: string
+            - type: 'null'
+        email:
+          anyOf:
+            - type: string
+            - type: 'null'
+        emailVerified:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        image:
+          anyOf:
+            - type: string
+            - type: 'null'
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.Account'
+        sessions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.Session'
+        isActive:
+          type: boolean
+        isTeacher:
+          type: boolean
+        isAdmin:
+          type: boolean
+        firstName:
+          anyOf:
+            - type: string
+            - type: 'null'
+        lastName:
+          anyOf:
+            - type: string
+            - type: 'null'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        years:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.Year'
+        classMembers:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.ClassMember'
+      description: 'DB table: users'
+    UserUpdateBody:
+      type: object
+      properties:
+        name:
+          anyOf:
+            - type: string
+            - type: 'null'
+        password:
+          anyOf:
+            - type: string
+            - type: 'null'
+        email:
+          anyOf:
+            - type: string
+            - type: 'null'
+        emailVerified:
+          anyOf:
+            - type: string
+              format: date-time
+            - type: 'null'
+        image:
+          anyOf:
+            - type: string
+            - type: 'null'
+        isActive:
+          type: boolean
+        isTeacher:
+          type: boolean
+        isAdmin:
+          type: boolean
+        firstName:
+          anyOf:
+            - type: string
+            - type: 'null'
+        lastName:
+          anyOf:
+            - type: string
+            - type: 'null'
+    UserWithYears:
+      type: object
+      required:
+        - years
+      properties:
+        years:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.Year'
+      allOf:
+        - $ref: '#/components/schemas/UserData'
+    YearCreateBody:
+      type: object
+      required:
+        - userId
+        - year
+        - term
+      properties:
+        userId:
+          type: string
+        year:
+          type: integer
+          format: int32
+        term:
+          type: integer
+          format: int32
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
+        isActive:
+          type: boolean
+    YearData:
+      type: object
+      required:
+        - id
+        - userId
+        - year
+        - term
+        - isActive
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        year:
+          type: integer
+          format: int32
+        term:
+          type: integer
+          format: int32
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        owner:
+          anyOf:
+            - $ref: '#/components/schemas/PrismaModels.User'
+            - type: 'null'
+        classes:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.Class'
+      description: 'DB table: years'
+    YearUpdateBody:
+      type: object
+      properties:
+        year:
+          type: integer
+          format: int32
+        term:
+          type: integer
+          format: int32
+        description:
+          anyOf:
+            - type: string
+            - type: 'null'
+        isActive:
+          type: boolean
+    YearWithClasses:
       type: object
       required:
         - classes
@@ -1978,6 +4512,20 @@ components:
         classes:
           type: array
           items:
-            $ref: '#/components/schemas/Class'
+            $ref: '#/components/schemas/PrismaModels.Class'
       allOf:
-        - $ref: '#/components/schemas/Year'
+        - $ref: '#/components/schemas/YearData'
+    YearWithOwnerAndClasses:
+      type: object
+      required:
+        - owner
+        - classes
+      properties:
+        owner:
+          $ref: '#/components/schemas/PrismaModels.User'
+        classes:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.Class'
+      allOf:
+        - $ref: '#/components/schemas/YearData'

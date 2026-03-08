@@ -1,44 +1,73 @@
 using TypeSpec.Http;
+using TypeSpec.Rest;
 
-namespace MiniTeacherService.ChecksApi;
+namespace MiniTeacherService.CheckApi;
 
-@route("class/{classId}/check")
-@tag("Check")
-interface Check {
-  /** Create a check date */
+@route("/check-date")
+@tag("Check Dates")
+interface CheckDates {
   @post create(
-    @path classId: string,
-    @body body: CreateCheckDateBody,
-  ): ApiResponse<CheckDate> | ApiError;
+    @body body: CheckDateCreateBody,
+  ): ApiResponse<CheckDateData> | ApiError;
 
-  /** Update a check date */
-  @route("{checkDateId}")
-  @put
+  @route("{id}")
+  @get
+  getById(@path id: string): ApiResponse<CheckDateWithStudents> | ApiError;
+
+  #suppress "@typespec/http/patch-implicit-optional" ""
+  @route("{id}")
+  @patch
   update(
-    @path classId: string,
-    @path checkDateId: string,
-    @body body: UpdateCheckDateBody,
-  ): ApiResponse<CheckDate> | ApiError;
+    @path id: string,
+    @body body: CheckDateUpdateBody,
+  ): ApiResponse<CheckDateData> | ApiError;
 
-  /** Delete a check date */
-  @route("{checkDateId}")
+  @route("{id}")
   @delete
-  delete(
-    @path classId: string,
-    @path checkDateId: string,
-  ): ApiResponse<EmptyData> | ApiError;
+  delete(@path id: string): ApiResponse<EmptyData> | ApiError;
 
-  /** Get check dates by class id */
-  @get listByClassId(
+  @route("by-class/{classId}")
+  @get
+  getByClassId(
     @path classId: string,
+    @query filter?: string,
   ): ApiResponse<CheckDateWithStudents[]> | ApiError;
+}
 
-  /** Update a check student */
-  @route("{checkDateId}/student")
-  @put
-  checkStudent(
-    @path classId: string,
+@route("/check-student")
+@tag("Check Students")
+interface CheckStudents {
+  @post create(
+    @body body: CheckStudentCreateBody,
+  ): ApiResponse<CheckStudentData> | ApiError;
+
+  @route("{id}")
+  @get
+  getById(@path id: string): ApiResponse<CheckStudentWithRelations> | ApiError;
+
+  #suppress "@typespec/http/patch-implicit-optional" ""
+  @route("{id}")
+  @patch
+  update(
+    @path id: string,
+    @body body: CheckStudentUpdateBody,
+  ): ApiResponse<CheckStudentData> | ApiError;
+
+  @route("{id}")
+  @delete
+  delete(@path id: string): ApiResponse<EmptyData> | ApiError;
+
+  @route("unique")
+  @get
+  getUnique(
+    @query checkDateId: string,
+    @query studentId: string,
+  ): ApiResponse<CheckStudentWithRelations | null> | ApiError;
+
+  @route("by-check-date/{checkDateId}")
+  @get
+  getByCheckDateId(
     @path checkDateId: string,
-    @body body: CreateCheckStudentBody,
-  ): ApiResponse<CheckStudent> | ApiError;
+    @query filter?: string,
+  ): ApiResponse<CheckStudentWithRelations[]> | ApiError;
 }
