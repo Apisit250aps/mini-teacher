@@ -4,7 +4,7 @@ type ScoreWithStudent = Prisma.ScoreGetPayload<{
   include: { student: true }
 }>
 
-type ScoreStudentRepository = {
+interface ScoreStudentRepository {
   create: (data: Prisma.ScoreCreateInput) => Promise<Score>
   update: (id: string, score: number) => Promise<Score>
   delete: (id: string) => Promise<void>

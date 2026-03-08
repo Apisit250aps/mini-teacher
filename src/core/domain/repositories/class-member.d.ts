@@ -4,7 +4,7 @@ type ClassMemberWithStudent = Prisma.ClassMemberGetPayload<{
   include: { student: true }
 }>
 
-type ClassMemberRepository = {
+interface ClassMemberRepository {
   create: (data: Prisma.ClassMemberCreateInput) => Promise<ClassMember>
   delete: (classId: string, studentId: string) => Promise<void>
   getUnique: (classId: string, studentId: string) => Promise<ClassMember | null>

@@ -8,7 +8,7 @@ type StudentWithRelations = Prisma.StudentGetPayload<{
   }
 }>
 
-type StudentRepository = {
+interface StudentRepository {
   create: (data: Prisma.StudentCreateInput) => Promise<Student>
   update: (id: string, data: Prisma.StudentUpdateInput) => Promise<Student>
   delete: (id: string) => Promise<void>

@@ -13,7 +13,7 @@ type ClassWithDetails = Prisma.ClassGetPayload<{
   }
 }>
 
-type ClassRepository = {
+interface ClassRepository {
   create: (data: Prisma.ClassCreateInput) => Promise<Class>
   update: (id: string, data: Prisma.ClassUpdateInput) => Promise<Class>
   delete: (id: string) => Promise<void>

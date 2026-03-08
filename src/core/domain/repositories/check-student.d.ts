@@ -4,7 +4,7 @@ type CheckStudentWithRelations = Prisma.CheckStudentGetPayload<{
   include: { student: true; checkDate: true }
 }>
 
-type CheckStudentRepository = {
+interface CheckStudentRepository {
   create: (data: Prisma.CheckStudentCreateInput) => Promise<CheckStudent>
   update: (
     id: string,

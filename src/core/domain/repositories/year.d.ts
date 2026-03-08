@@ -8,7 +8,7 @@ type YearWithOwnerAndClasses = Prisma.YearGetPayload<{
   include: { classes: true; owner: true }
 }>
 
-type YearRepository = {
+interface YearRepository {
   getAll: (filter?: Prisma.YearFindManyArgs) => Promise<YearWithClasses[]>
   getById: (id: string) => Promise<YearWithOwnerAndClasses | null>
   getUnique: (

@@ -4,7 +4,7 @@ type CheckDateWithStudents = Prisma.CheckDateGetPayload<{
   include: { checkStudents: { include: { student: true } } }
 }>
 
-type CheckDateRepository = {
+interface CheckDateRepository {
   create: (data: Prisma.CheckDateCreateInput) => Promise<CheckDate>
   update: (id: string, data: Prisma.CheckDateUpdateInput) => Promise<CheckDate>
   delete: (id: string) => Promise<void>

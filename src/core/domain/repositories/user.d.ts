@@ -4,7 +4,7 @@ type UserWithYears = Prisma.UserGetPayload<{
   include: { years: true }
 }>
 
-type UserRepository = {
+interface UserRepository {
   getById: (id: string) => Promise<UserWithYears | null>
   getByEmail: (email: string) => Promise<UserWithYears | null>
   create: (data: Prisma.UserCreateInput) => Promise<User>

@@ -4,7 +4,7 @@ type ScoreAssignWithScores = Prisma.AssignmentGetPayload<{
   include: { scores: { include: { student: true } } }
 }>
 
-type ScoreAssignRepository = {
+interface ScoreAssignRepository {
   create: (data: Prisma.AssignmentCreateInput) => Promise<Assignment>
   update: (
     id: string,
