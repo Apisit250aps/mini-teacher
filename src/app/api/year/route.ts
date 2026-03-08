@@ -2,10 +2,11 @@ import { yearUseCase } from '@/core/usecases'
 import { toErrorResponse } from '@/lib/utils/error'
 import { getJsonSearchParam, ok } from '@/app/api/_utils'
 import type { NextAuthRequest } from 'next-auth'
+import { YearQuery } from '@/core/domain/data';
 
 export async function GET(request: NextAuthRequest) {
   try {
-    const filter = getJsonSearchParam(request, 'filter')
+    const filter = getJsonSearchParam<YearQuery>(request, 'filter')
     const data = await yearUseCase.getAll(filter)
     return ok('ดึงรายการปีการศึกษาสำเร็จ', data)
   } catch (error) {

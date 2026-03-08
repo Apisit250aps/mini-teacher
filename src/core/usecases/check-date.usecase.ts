@@ -4,6 +4,7 @@ import type {
   CheckDateUpdateData,
 } from '@/core/domain/data/check-date'
 import type { CheckDateRepository } from '@/core/domain/repositories/check-date'
+import type { CheckDateUseCase } from '@/core/domain/usecases/check-date'
 import {
   checkDateCreateSchema,
   checkDateQuerySchema,
@@ -11,24 +12,6 @@ import {
 } from '@/core/domain/schema/check-date.schema'
 import { AppError } from '@/lib/utils/error'
 import { ensureFoundOrThrow, parseOrThrow, parseUuidOrThrow } from './_shared'
-
-export interface CheckDateUseCase {
-  create: (
-    data: unknown,
-  ) => Promise<Awaited<ReturnType<CheckDateRepository['create']>>>
-  update: (
-    id: unknown,
-    data: unknown,
-  ) => Promise<Awaited<ReturnType<CheckDateRepository['update']>>>
-  delete: (id: unknown) => Promise<void>
-  getById: (
-    id: unknown,
-  ) => Promise<Awaited<ReturnType<CheckDateRepository['getById']>>>
-  getByClassId: (
-    classId: unknown,
-    filter?: unknown,
-  ) => Promise<Awaited<ReturnType<CheckDateRepository['getByClassId']>>>
-}
 
 export const createCheckDateUseCase = (
   repository: CheckDateRepository,

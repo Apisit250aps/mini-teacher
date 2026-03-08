@@ -1,28 +1,12 @@
 import type { UserCreateData, UserUpdateData } from '@/core/domain/data/user'
 import type { UserRepository } from '@/core/domain/repositories/user'
+import type { UserUseCase } from '@/core/domain/usecases/user'
 import {
   userCreateSchema,
   userUpdateSchema,
 } from '@/core/domain/schema/user.schema'
 import { AppError } from '@/lib/utils/error'
 import { ensureFoundOrThrow, parseOrThrow, parseUuidOrThrow } from './_shared'
-
-export interface UserUseCase {
-  create: (
-    data: unknown,
-  ) => Promise<Awaited<ReturnType<UserRepository['create']>>>
-  update: (
-    id: unknown,
-    data: unknown,
-  ) => Promise<Awaited<ReturnType<UserRepository['update']>>>
-  delete: (id: unknown) => Promise<void>
-  getById: (
-    id: unknown,
-  ) => Promise<Awaited<ReturnType<UserRepository['getById']>>>
-  getByEmail: (
-    email: unknown,
-  ) => Promise<Awaited<ReturnType<UserRepository['getByEmail']>>>
-}
 
 export const createUserUseCase = (repository: UserRepository): UserUseCase => ({
   create: async (data) => {

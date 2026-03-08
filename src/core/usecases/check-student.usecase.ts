@@ -4,6 +4,7 @@ import type {
   CheckStudentUpdateData,
 } from '@/core/domain/data/check-student'
 import type { CheckStudentRepository } from '@/core/domain/repositories/check-student'
+import type { CheckStudentUseCase } from '@/core/domain/usecases/check-student'
 import {
   checkStudentCreateSchema,
   checkStudentQuerySchema,
@@ -11,28 +12,6 @@ import {
 } from '@/core/domain/schema/check-student.schema'
 import { AppError } from '@/lib/utils/error'
 import { ensureFoundOrThrow, parseOrThrow, parseUuidOrThrow } from './_shared'
-
-export interface CheckStudentUseCase {
-  create: (
-    data: unknown,
-  ) => Promise<Awaited<ReturnType<CheckStudentRepository['create']>>>
-  update: (
-    id: unknown,
-    data: unknown,
-  ) => Promise<Awaited<ReturnType<CheckStudentRepository['update']>>>
-  delete: (id: unknown) => Promise<void>
-  getById: (
-    id: unknown,
-  ) => Promise<Awaited<ReturnType<CheckStudentRepository['getById']>>>
-  getUnique: (
-    checkDateId: unknown,
-    studentId: unknown,
-  ) => Promise<Awaited<ReturnType<CheckStudentRepository['getUnique']>>>
-  getByCheckDateId: (
-    checkDateId: unknown,
-    filter?: unknown,
-  ) => Promise<Awaited<ReturnType<CheckStudentRepository['getByCheckDateId']>>>
-}
 
 export const createCheckStudentUseCase = (
   repository: CheckStudentRepository,

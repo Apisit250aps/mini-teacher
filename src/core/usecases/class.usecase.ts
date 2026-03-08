@@ -4,6 +4,7 @@ import type {
   ClassUpdateData,
 } from '@/core/domain/data/class'
 import type { ClassRepository } from '@/core/domain/repositories/class'
+import type { ClassUseCase } from '@/core/domain/usecases/class'
 import {
   classCreateSchema,
   classQuerySchema,
@@ -11,28 +12,6 @@ import {
 } from '@/core/domain/schema/class.schema'
 import { AppError } from '@/lib/utils/error'
 import { ensureFoundOrThrow, parseOrThrow, parseUuidOrThrow } from './_shared'
-
-export interface ClassUseCase {
-  create: (
-    data: unknown,
-  ) => Promise<Awaited<ReturnType<ClassRepository['create']>>>
-  update: (
-    id: unknown,
-    data: unknown,
-  ) => Promise<Awaited<ReturnType<ClassRepository['update']>>>
-  delete: (id: unknown) => Promise<void>
-  getById: (
-    id: unknown,
-  ) => Promise<Awaited<ReturnType<ClassRepository['getById']>>>
-  getByYearId: (
-    yearId: unknown,
-    filter?: unknown,
-  ) => Promise<Awaited<ReturnType<ClassRepository['getByYearId']>>>
-  getByYearAndClassId: (
-    yearId: unknown,
-    classId: unknown,
-  ) => Promise<Awaited<ReturnType<ClassRepository['getByYearAndClassId']>>>
-}
 
 export const createClassUseCase = (
   repository: ClassRepository,

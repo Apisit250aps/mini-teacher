@@ -4,6 +4,7 @@ import type {
   YearUpdateData,
 } from '@/core/domain/data/year'
 import type { YearRepository } from '@/core/domain/repositories/year'
+import type { YearUseCase } from '@/core/domain/usecases/year'
 import {
   yearCreateSchema,
   yearQuerySchema,
@@ -11,32 +12,6 @@ import {
 } from '@/core/domain/schema/year.schema'
 import { AppError } from '@/lib/utils/error'
 import { ensureFoundOrThrow, parseOrThrow, parseUuidOrThrow } from './_shared'
-
-export interface YearUseCase {
-  create: (
-    data: unknown,
-  ) => Promise<Awaited<ReturnType<YearRepository['create']>>>
-  update: (
-    id: unknown,
-    data: unknown,
-  ) => Promise<Awaited<ReturnType<YearRepository['update']>>>
-  delete: (id: unknown) => Promise<void>
-  getAll: (
-    filter?: unknown,
-  ) => Promise<Awaited<ReturnType<YearRepository['getAll']>>>
-  getById: (
-    id: unknown,
-  ) => Promise<Awaited<ReturnType<YearRepository['getById']>>>
-  getUnique: (
-    userId: unknown,
-    year: unknown,
-    term: unknown,
-  ) => Promise<Awaited<ReturnType<YearRepository['getUnique']>>>
-  setActive: (userId: unknown, yearId: unknown) => Promise<void>
-  getActiveByUser: (
-    userId: unknown,
-  ) => Promise<Awaited<ReturnType<YearRepository['getActiveByUser']>>>
-}
 
 export const createYearUseCase = (repository: YearRepository): YearUseCase => ({
   create: async (data) => {

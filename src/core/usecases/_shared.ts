@@ -2,7 +2,7 @@ import z from 'zod'
 import { AppError } from '@/lib/utils/error'
 import { uuidSchema } from '@/core/domain/schema/common'
 
-export const parseOrThrow = <T>(schema: z.ZodType<T>, payload: unknown): T => {
+export const parseOrThrow = <T>(schema: z.ZodType<T>, payload: T): T => {
   const result = schema.safeParse(payload)
   if (!result.success) {
     throw new AppError(
@@ -13,7 +13,7 @@ export const parseOrThrow = <T>(schema: z.ZodType<T>, payload: unknown): T => {
   return result.data
 }
 
-export const parseUuidOrThrow = (value: unknown, fieldName = 'id'): string => {
+export const parseUuidOrThrow = (value: string, fieldName = 'id'): string => {
   const parsed = parseOrThrow(uuidSchema, value)
   if (!parsed) {
     throw new AppError(`รูปแบบ ${fieldName} ไม่ถูกต้อง`, 'VALIDATE_ERROR')

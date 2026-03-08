@@ -4,6 +4,7 @@ import type {
   ScoreAssignUpdateData,
 } from '@/core/domain/data/score-assign'
 import type { ScoreAssignRepository } from '@/core/domain/repositories/score-assign'
+import type { ScoreAssignUseCase } from '@/core/domain/usecases/score-assign'
 import {
   assignmentCreateSchema,
   assignmentUpdateSchema,
@@ -11,25 +12,6 @@ import {
 } from '@/core/domain/schema'
 import { AppError } from '@/lib/utils/error'
 import { ensureFoundOrThrow, parseOrThrow, parseUuidOrThrow } from './_shared'
-
-export interface ScoreAssignUseCase {
-  create: (
-    data: unknown,
-  ) => Promise<Awaited<ReturnType<ScoreAssignRepository['create']>>>
-  update: (
-    id: unknown,
-    data: unknown,
-  ) => Promise<Awaited<ReturnType<ScoreAssignRepository['update']>>>
-  delete: (id: unknown) => Promise<void>
-  getByClassId: (
-    classId: unknown,
-    filter?: unknown,
-  ) => Promise<Awaited<ReturnType<ScoreAssignRepository['getByClassId']>>>
-  getById: (
-    classId: unknown,
-    assignId: unknown,
-  ) => Promise<Awaited<ReturnType<ScoreAssignRepository['getById']>>>
-}
 
 const scoreAssignQuerySchema = querySchema
 

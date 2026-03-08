@@ -4,6 +4,7 @@ import type {
   StudentUpdateData,
 } from '@/core/domain/data/student'
 import type { StudentRepository } from '@/core/domain/repositories/student'
+import type { StudentUseCase } from '@/core/domain/usecases/student'
 import {
   studentCreateSchema,
   studentQuerySchema,
@@ -11,24 +12,6 @@ import {
 } from '@/core/domain/schema/student.schema'
 import { AppError } from '@/lib/utils/error'
 import { ensureFoundOrThrow, parseOrThrow, parseUuidOrThrow } from './_shared'
-
-export interface StudentUseCase {
-  create: (
-    data: unknown,
-  ) => Promise<Awaited<ReturnType<StudentRepository['create']>>>
-  update: (
-    id: unknown,
-    data: unknown,
-  ) => Promise<Awaited<ReturnType<StudentRepository['update']>>>
-  delete: (id: unknown) => Promise<void>
-  getById: (
-    id: unknown,
-  ) => Promise<Awaited<ReturnType<StudentRepository['getById']>>>
-  getAllByTeacher: (
-    teacherId: unknown,
-    filter?: unknown,
-  ) => Promise<Awaited<ReturnType<StudentRepository['getAllByTeacher']>>>
-}
 
 export const createStudentUseCase = (
   repository: StudentRepository,

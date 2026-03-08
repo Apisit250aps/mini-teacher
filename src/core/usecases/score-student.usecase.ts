@@ -4,6 +4,7 @@ import type {
   ScoreStudentUpdateData,
 } from '@/core/domain/data/score-student'
 import type { ScoreStudentRepository } from '@/core/domain/repositories/score-student'
+import type { ScoreStudentUseCase } from '@/core/domain/usecases/score-student'
 import {
   scoreCreateSchema,
   scoreQuerySchema,
@@ -11,25 +12,6 @@ import {
 } from '@/core/domain/schema/score.schema'
 import { AppError } from '@/lib/utils/error'
 import { parseOrThrow, parseUuidOrThrow } from './_shared'
-
-export interface ScoreStudentUseCase {
-  create: (
-    data: unknown,
-  ) => Promise<Awaited<ReturnType<ScoreStudentRepository['create']>>>
-  update: (
-    id: unknown,
-    data: unknown,
-  ) => Promise<Awaited<ReturnType<ScoreStudentRepository['update']>>>
-  delete: (id: unknown) => Promise<void>
-  getUnique: (
-    assignmentId: unknown,
-    studentId: unknown,
-  ) => Promise<Awaited<ReturnType<ScoreStudentRepository['getUnique']>>>
-  getByAssignmentId: (
-    assignmentId: unknown,
-    filter?: unknown,
-  ) => Promise<Awaited<ReturnType<ScoreStudentRepository['getByAssignmentId']>>>
-}
 
 export const createScoreStudentUseCase = (
   repository: ScoreStudentRepository,

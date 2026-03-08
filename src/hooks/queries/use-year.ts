@@ -65,7 +65,9 @@ export const useYearQueries = () => {
   }) => {
     return await create.mutateAsync(
       {
-        body: data,
+        body: {
+          ...data,
+        },
       },
       {
         onSettled: (data, error, _var, _, context) => {

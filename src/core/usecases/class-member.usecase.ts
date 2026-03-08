@@ -3,27 +3,13 @@ import type {
   ClassMemberQuery,
 } from '@/core/domain/data/class-member'
 import type { ClassMemberRepository } from '@/core/domain/repositories/class-member'
+import type { ClassMemberUseCase } from '@/core/domain/usecases/class-member'
 import {
   classMemberCreateSchema,
   classMemberQuerySchema,
 } from '@/core/domain/schema/class-member.schema'
 import { AppError } from '@/lib/utils/error'
 import { parseOrThrow, parseUuidOrThrow } from './_shared'
-
-export interface ClassMemberUseCase {
-  create: (
-    data: unknown,
-  ) => Promise<Awaited<ReturnType<ClassMemberRepository['create']>>>
-  delete: (classId: unknown, studentId: unknown) => Promise<void>
-  getUnique: (
-    classId: unknown,
-    studentId: unknown,
-  ) => Promise<Awaited<ReturnType<ClassMemberRepository['getUnique']>>>
-  getByClassId: (
-    classId: unknown,
-    filter?: unknown,
-  ) => Promise<Awaited<ReturnType<ClassMemberRepository['getByClassId']>>>
-}
 
 export const createClassMemberUseCase = (
   repository: ClassMemberRepository,
