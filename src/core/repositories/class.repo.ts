@@ -1,15 +1,18 @@
 import { prisma } from '@/lib/prisma'
+import type { Prisma } from '@prisma'
 import type { ClassRepository } from '@/core/domain/repositories/class'
 
 const classRepository: ClassRepository = {
   create: async (data) => {
-    const result = await prisma.class.create({ data })
+    const result = await prisma.class.create({
+      data: data as Prisma.ClassUncheckedCreateInput,
+    })
     return result
   },
   update: async (id, data) => {
     const result = await prisma.class.update({
       where: { id },
-      data,
+      data: data as Prisma.ClassUncheckedUpdateInput,
     })
     return result
   },
@@ -34,12 +37,14 @@ const classRepository: ClassRepository = {
   },
   getByYearId: async (yearId, filter = {}) => {
     const result = await prisma.class.findMany({
-      ...filter,
+      ...(filter as unknown as Prisma.ClassFindManyArgs),
       where: {
-        ...(filter.where ?? {}),
+        ...((filter.where ?? {}) as Prisma.ClassWhereInput),
         yearId,
       },
-      orderBy: filter.orderBy ?? { createdAt: 'asc' },
+      orderBy: (filter.orderBy as Prisma.ClassOrderByWithRelationInput) ?? {
+        createdAt: 'asc',
+      },
       include: {
         classMembers: {
           include: {

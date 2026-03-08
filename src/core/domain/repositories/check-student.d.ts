@@ -1,15 +1,14 @@
-import type { CheckStudent, Prisma } from '@prisma'
-
-type CheckStudentWithRelations = Prisma.CheckStudentGetPayload<{
-  include: { student: true; checkDate: true }
-}>
+import type { CheckStudent } from '../entities/check-student'
+import type {
+  CheckStudentCreateData,
+  CheckStudentQuery,
+  CheckStudentUpdateData,
+  CheckStudentWithRelations,
+} from '../data/check-student'
 
 interface CheckStudentRepository {
-  create: (data: Prisma.CheckStudentCreateInput) => Promise<CheckStudent>
-  update: (
-    id: string,
-    data: Prisma.CheckStudentUpdateInput,
-  ) => Promise<CheckStudent>
+  create: (data: CheckStudentCreateData) => Promise<CheckStudent>
+  update: (id: string, data: CheckStudentUpdateData) => Promise<CheckStudent>
   delete: (id: string) => Promise<void>
   getById: (id: string) => Promise<CheckStudentWithRelations | null>
   getUnique: (
@@ -18,7 +17,7 @@ interface CheckStudentRepository {
   ) => Promise<CheckStudentWithRelations | null>
   getByCheckDateId: (
     checkDateId: string,
-    filter?: Prisma.CheckStudentFindManyArgs,
+    filter?: CheckStudentQuery,
   ) => Promise<CheckStudentWithRelations[]>
 }
 

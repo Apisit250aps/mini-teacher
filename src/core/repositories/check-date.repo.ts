@@ -1,15 +1,18 @@
 import { prisma } from '@/lib/prisma'
+import type { Prisma } from '@prisma'
 import type { CheckDateRepository } from '@/core/domain/repositories/check-date'
 
 const checkDateRepository: CheckDateRepository = {
   create: async (data) => {
-    const result = await prisma.checkDate.create({ data })
+    const result = await prisma.checkDate.create({
+      data: data as Prisma.CheckDateUncheckedCreateInput,
+    })
     return result
   },
   update: async (id, data) => {
     const result = await prisma.checkDate.update({
       where: { id },
-      data,
+      data: data as Prisma.CheckDateUncheckedUpdateInput,
     })
     return result
   },
@@ -31,12 +34,14 @@ const checkDateRepository: CheckDateRepository = {
   },
   getByClassId: async (classId, filter = {}) => {
     const result = await prisma.checkDate.findMany({
-      ...filter,
+      ...(filter as unknown as Prisma.CheckDateFindManyArgs),
       where: {
-        ...(filter.where ?? {}),
+        ...((filter.where ?? {}) as Prisma.CheckDateWhereInput),
         classId,
       },
-      orderBy: filter.orderBy ?? { date: 'asc' },
+      orderBy: (filter.orderBy as Prisma.CheckDateOrderByWithRelationInput) ?? {
+        date: 'asc',
+      },
       include: {
         checkStudents: {
           include: {

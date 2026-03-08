@@ -1,16 +1,17 @@
-import type { ClassMember, Prisma } from '@prisma'
-
-type ClassMemberWithStudent = Prisma.ClassMemberGetPayload<{
-  include: { student: true }
-}>
+import type { ClassMember } from '../entities/class-member'
+import type {
+  ClassMemberCreateData,
+  ClassMemberQuery,
+  ClassMemberWithStudent,
+} from '../data/class-member'
 
 interface ClassMemberRepository {
-  create: (data: Prisma.ClassMemberCreateInput) => Promise<ClassMember>
+  create: (data: ClassMemberCreateData) => Promise<ClassMember>
   delete: (classId: string, studentId: string) => Promise<void>
   getUnique: (classId: string, studentId: string) => Promise<ClassMember | null>
   getByClassId: (
     classId: string,
-    filter?: Prisma.ClassMemberFindManyArgs,
+    filter?: ClassMemberQuery,
   ) => Promise<ClassMemberWithStudent[]>
 }
 

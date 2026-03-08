@@ -1,13 +1,19 @@
 import { prisma } from '@/lib/prisma'
+import type { Prisma } from '@prisma'
 import type { YearRepository } from '@/core/domain/repositories/year'
 
 const yearRepository: YearRepository = {
   create: async (data) => {
-    const year = await prisma.year.create({ data })
+    const year = await prisma.year.create({
+      data: data as Prisma.YearUncheckedCreateInput,
+    })
     return year
   },
   update: async (id, data) => {
-    const result = await prisma.year.update({ where: { id }, data })
+    const result = await prisma.year.update({
+      where: { id },
+      data: data as Prisma.YearUncheckedUpdateInput,
+    })
     return result
   },
   delete: async (id) => {
@@ -15,7 +21,7 @@ const yearRepository: YearRepository = {
   },
   getAll: async (filter = {}) => {
     const years = await prisma.year.findMany({
-      ...filter,
+      ...(filter as unknown as Prisma.YearFindManyArgs),
       orderBy: { createdAt: 'desc' },
       include: {
         classes: true,

@@ -1,17 +1,19 @@
-import type { Prisma, Score } from '@prisma'
-
-type ScoreWithStudent = Prisma.ScoreGetPayload<{
-  include: { student: true }
-}>
+import type { Score } from '../entities/score'
+import type {
+  ScoreStudentCreateData,
+  ScoreStudentQuery,
+  ScoreStudentUpdateData,
+  ScoreWithStudent,
+} from '../data/score-student'
 
 interface ScoreStudentRepository {
-  create: (data: Prisma.ScoreCreateInput) => Promise<Score>
-  update: (id: string, score: number) => Promise<Score>
+  create: (data: ScoreStudentCreateData) => Promise<Score>
+  update: (id: string, data: ScoreStudentUpdateData) => Promise<Score>
   delete: (id: string) => Promise<void>
   getUnique: (assignmentId: string, studentId: string) => Promise<Score | null>
   getByAssignmentId: (
     assignmentId: string,
-    filter?: Prisma.ScoreFindManyArgs,
+    filter?: ScoreStudentQuery,
   ) => Promise<ScoreWithStudent[]>
 }
 

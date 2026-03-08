@@ -1,23 +1,22 @@
-import type { Prisma, Year } from '@prisma'
-
-type YearWithClasses = Prisma.YearGetPayload<{
-  include: { classes: true }
-}>
-
-type YearWithOwnerAndClasses = Prisma.YearGetPayload<{
-  include: { classes: true; owner: true }
-}>
+import type { Year } from '../entities/year'
+import type {
+  YearCreateData,
+  YearQuery,
+  YearUpdateData,
+  YearWithClasses,
+  YearWithOwnerAndClasses,
+} from '../data/year'
 
 interface YearRepository {
-  getAll: (filter?: Prisma.YearFindManyArgs) => Promise<YearWithClasses[]>
+  getAll: (filter?: YearQuery) => Promise<YearWithClasses[]>
   getById: (id: string) => Promise<YearWithOwnerAndClasses | null>
   getUnique: (
     userId: string,
     year: number,
     term: number,
   ) => Promise<Year | null>
-  create: (data: Prisma.YearCreateInput) => Promise<Year>
-  update: (id: string, data: Prisma.YearUpdateInput) => Promise<Year>
+  create: (data: YearCreateData) => Promise<Year>
+  update: (id: string, data: YearUpdateData) => Promise<Year>
   delete: (id: string) => Promise<void>
   setActive: (userId: string, yearId: string) => Promise<void>
   getActiveByUser: (userId: string) => Promise<Year | null>

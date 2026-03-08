@@ -1,19 +1,18 @@
-import type { Assignment, Prisma } from '@prisma'
-
-type ScoreAssignWithScores = Prisma.AssignmentGetPayload<{
-  include: { scores: { include: { student: true } } }
-}>
+import type { Assignment } from '../entities/assignment'
+import type {
+  ScoreAssignCreateData,
+  ScoreAssignQuery,
+  ScoreAssignUpdateData,
+  ScoreAssignWithScores,
+} from '../data/score-assign'
 
 interface ScoreAssignRepository {
-  create: (data: Prisma.AssignmentCreateInput) => Promise<Assignment>
-  update: (
-    id: string,
-    data: Prisma.AssignmentUpdateInput,
-  ) => Promise<Assignment>
+  create: (data: ScoreAssignCreateData) => Promise<Assignment>
+  update: (id: string, data: ScoreAssignUpdateData) => Promise<Assignment>
   delete: (id: string) => Promise<void>
   getByClassId: (
     classId: string,
-    filter?: Prisma.AssignmentFindManyArgs,
+    filter?: ScoreAssignQuery,
   ) => Promise<ScoreAssignWithScores[]>
   getById: (
     classId: string,

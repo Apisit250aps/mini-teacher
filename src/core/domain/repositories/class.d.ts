@@ -1,26 +1,20 @@
-import type { Class, Prisma } from '@prisma'
-
-type ClassWithMembers = Prisma.ClassGetPayload<{
-  include: { classMembers: { include: { student: true } } }
-}>
-
-type ClassWithDetails = Prisma.ClassGetPayload<{
-  include: {
-    year: true
-    classMembers: { include: { student: true } }
-    checkDates: true
-    assignments: true
-  }
-}>
+import type { Class } from '../entities/class'
+import type {
+  ClassCreateData,
+  ClassQuery,
+  ClassUpdateData,
+  ClassWithDetails,
+  ClassWithMembers,
+} from '../data/class'
 
 interface ClassRepository {
-  create: (data: Prisma.ClassCreateInput) => Promise<Class>
-  update: (id: string, data: Prisma.ClassUpdateInput) => Promise<Class>
+  create: (data: ClassCreateData) => Promise<Class>
+  update: (id: string, data: ClassUpdateData) => Promise<Class>
   delete: (id: string) => Promise<void>
   getById: (id: string) => Promise<ClassWithDetails | null>
   getByYearId: (
     yearId: string,
-    filter?: Prisma.ClassFindManyArgs,
+    filter?: ClassQuery,
   ) => Promise<ClassWithMembers[]>
   getByYearAndClassId: (
     yearId: string,

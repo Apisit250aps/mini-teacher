@@ -1,15 +1,18 @@
 import { prisma } from '@/lib/prisma'
+import type { Prisma } from '@prisma'
 import type { ScoreAssignRepository } from '@/core/domain/repositories/score-assign'
 
 const scoreAssignRepository: ScoreAssignRepository = {
   create: async (data) => {
-    const result = await prisma.assignment.create({ data })
+    const result = await prisma.assignment.create({
+      data: data as Prisma.AssignmentUncheckedCreateInput,
+    })
     return result
   },
   update: async (id, data) => {
     const result = await prisma.assignment.update({
       where: { id },
-      data,
+      data: data as Prisma.AssignmentUncheckedUpdateInput,
     })
     return result
   },
@@ -18,12 +21,15 @@ const scoreAssignRepository: ScoreAssignRepository = {
   },
   getByClassId: async (classId, filter = {}) => {
     const result = await prisma.assignment.findMany({
-      ...filter,
+      ...(filter as unknown as Prisma.AssignmentFindManyArgs),
       where: {
-        ...(filter.where ?? {}),
+        ...((filter.where ?? {}) as Prisma.AssignmentWhereInput),
         classId,
       },
-      orderBy: filter.orderBy ?? { createdAt: 'asc' },
+      orderBy:
+        (filter.orderBy as Prisma.AssignmentOrderByWithRelationInput) ?? {
+          createdAt: 'asc',
+        },
       include: {
         scores: {
           include: {

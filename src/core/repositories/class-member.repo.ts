@@ -1,9 +1,12 @@
 import { prisma } from '@/lib/prisma'
+import type { Prisma } from '@prisma'
 import type { ClassMemberRepository } from '@/core/domain/repositories/class-member'
 
 const classMemberRepository: ClassMemberRepository = {
   create: async (data) => {
-    const result = await prisma.classMember.create({ data })
+    const result = await prisma.classMember.create({
+      data: data as Prisma.ClassMemberUncheckedCreateInput,
+    })
     return result
   },
   delete: async (classId, studentId) => {
@@ -27,12 +30,15 @@ const classMemberRepository: ClassMemberRepository = {
   },
   getByClassId: async (classId, filter = {}) => {
     const result = await prisma.classMember.findMany({
-      ...filter,
+      ...(filter as unknown as Prisma.ClassMemberFindManyArgs),
       where: {
-        ...(filter.where ?? {}),
+        ...((filter.where ?? {}) as Prisma.ClassMemberWhereInput),
         classId,
       },
-      orderBy: filter.orderBy ?? { createdAt: 'asc' },
+      orderBy:
+        (filter.orderBy as Prisma.ClassMemberOrderByWithRelationInput) ?? {
+          createdAt: 'asc',
+        },
       include: {
         student: true,
       },

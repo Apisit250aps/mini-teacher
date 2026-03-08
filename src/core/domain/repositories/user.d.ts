@@ -1,14 +1,15 @@
-import type { Prisma, User } from '@prisma'
-
-type UserWithYears = Prisma.UserGetPayload<{
-  include: { years: true }
-}>
+import type { User } from '../entities/user'
+import type {
+  UserCreateData,
+  UserUpdateData,
+  UserWithYears,
+} from '../data/user'
 
 interface UserRepository {
   getById: (id: string) => Promise<UserWithYears | null>
   getByEmail: (email: string) => Promise<UserWithYears | null>
-  create: (data: Prisma.UserCreateInput) => Promise<User>
-  update: (id: string, data: Prisma.UserUpdateInput) => Promise<User>
+  create: (data: UserCreateData) => Promise<User>
+  update: (id: string, data: UserUpdateData) => Promise<User>
   delete: (id: string) => Promise<void>
 }
 

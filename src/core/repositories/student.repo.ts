@@ -1,15 +1,18 @@
 import { prisma } from '@/lib/prisma'
+import type { Prisma } from '@prisma'
 import type { StudentRepository } from '@/core/domain/repositories/student'
 
 const studentRepository: StudentRepository = {
   create: async (data) => {
-    const result = await prisma.student.create({ data })
+    const result = await prisma.student.create({
+      data: data as Prisma.StudentUncheckedCreateInput,
+    })
     return result
   },
   update: async (id, data) => {
     const result = await prisma.student.update({
       where: { id },
-      data,
+      data: data as Prisma.StudentUncheckedUpdateInput,
     })
     return result
   },
@@ -41,12 +44,14 @@ const studentRepository: StudentRepository = {
   },
   getAllByTeacher: async (teacherId, filter = {}) => {
     const result = await prisma.student.findMany({
-      ...filter,
+      ...(filter as unknown as Prisma.StudentFindManyArgs),
       where: {
-        ...(filter.where ?? {}),
+        ...((filter.where ?? {}) as Prisma.StudentWhereInput),
         teacherId,
       },
-      orderBy: filter.orderBy ?? { code: 'asc' },
+      orderBy: (filter.orderBy as Prisma.StudentOrderByWithRelationInput) ?? {
+        code: 'asc',
+      },
     })
     return result
   },
