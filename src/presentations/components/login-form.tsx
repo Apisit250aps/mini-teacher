@@ -8,7 +8,7 @@ import {
   FieldSeparator,
 } from '@/presentations/components/ui/field'
 import { Input } from '@/presentations/components/ui/input'
-import { InputPassword } from '@/presentations/components/ui/input-password'
+import { InputPassword } from '@/components/ui/input-password'
 import {
   Form,
   FormControl,
@@ -50,7 +50,11 @@ export function LoginForm({
                 <FormItem>
                   <FormLabel>ชื่อผู้ใช้</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="กรอกชื่อผู้ใช้" />
+                    <Input
+                      {...field}
+                      value={field.value ?? ''}
+                      placeholder="กรอกชื่อผู้ใช้"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -63,7 +67,11 @@ export function LoginForm({
                 <FormItem>
                   <FormLabel>รหัสผ่าน</FormLabel>
                   <FormControl>
-                    <InputPassword {...field} placeholder="กรอกรหัสผ่าน" />
+                    <InputPassword
+                      {...field}
+                      value={field.value ?? ''}
+                      placeholder="กรอกรหัสผ่าน"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

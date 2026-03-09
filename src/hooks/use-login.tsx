@@ -1,12 +1,17 @@
 'use client'
 
-import { UserLogin, UserLoginSchema } from '@/models/entities'
+import { userEntitySchema } from '@/core/domain/schema';
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { createContext, useContext, useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import z from 'zod';
+
+const userLoginSchema = userEntitySchema.pick({ name: true, password: true })
+
+type UserLogin = z.infer<typeof userLoginSchema>
 
 type LoginContextValue = {
   onSubmit: (data: UserLogin) => void
@@ -20,7 +25,7 @@ export function LoginProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter()
 
   const onSubmit = useCallback(
-    async (data: UserLogin) => {
+    async (data:UserLogin) => {
       const result = await signIn('credentials', {
         redirect: false,
         name: data.name,
@@ -37,7 +42,7 @@ export function LoginProvider({ children }: { children: React.ReactNode }) {
     [router],
   )
   const methods = useForm<UserLogin>({
-    resolver: zodResolver(UserLoginSchema),
+    resolver: zodResolver(userLoginSchema),
     defaultValues: {
       name: '',
       password: '',
