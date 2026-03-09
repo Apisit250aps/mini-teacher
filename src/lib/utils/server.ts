@@ -1,4 +1,15 @@
+
+import { NextAuthRequest, User } from 'next-auth'
 import { NextResponse } from 'next/server'
+
+export const authorized = async (
+  request: NextAuthRequest,
+): Promise<User | null> => {
+  if (!request.auth) {
+    return null
+  }
+  return request.auth.user
+}
 
 export const ok = <T>(message: string, data: T, status = 200) =>
   NextResponse.json(
@@ -17,6 +28,24 @@ export const okOnlyMessage = (message: string, status = 200) =>
       message,
     } satisfies ApiResponse,
     { status },
+  )
+
+export const badRequest = (message: string) =>
+  NextResponse.json(
+    {
+      success: false,
+      message,
+    } satisfies ApiResponse<null>,
+    { status: 400 },
+  )
+
+export const unauthorized = () =>
+  NextResponse.json(
+    {
+      success: false,
+      message: 'Unauthorized',
+    } satisfies ApiResponse<null>,
+    { status: 401 },
   )
 
 export const getJsonSearchParam = <T>(

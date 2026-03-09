@@ -1,6 +1,6 @@
 import { classUseCase } from '@/core/usecases'
 import { toErrorResponse } from '@/lib/utils/error'
-import { ok } from '@/app/api/_utils'
+import { ok } from '@/lib/utils/server'
 import type { NextAuthRequest } from 'next-auth'
 
 export async function POST(request: NextAuthRequest) {

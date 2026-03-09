@@ -1,6 +1,6 @@
 import { classMemberUseCase } from '@/core/usecases'
 import { toErrorResponse } from '@/lib/utils/error'
-import { getJsonSearchParam, ok } from '@/app/api/_utils'
+import { getJsonSearchParam, ok } from '@/lib/utils/server'
 import type { NextAuthRequest } from 'next-auth'
 
 type Context = {

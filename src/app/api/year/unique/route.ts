@@ -1,19 +1,23 @@
 import { yearUseCase } from '@/core/usecases'
 import { toErrorResponse } from '@/lib/utils/error'
-import { getSearchParam, ok } from '@/app/api/_utils'
+import { authorized, badRequest, getSearchParam, ok } from '@/lib/utils/server'
 import type { NextAuthRequest } from 'next-auth'
 
 export async function GET(request: NextAuthRequest) {
   try {
-    const userId = getSearchParam(request, 'userId')
-    const year = getSearchParam(request, 'year')
-    const term = getSearchParam(request, 'term')
+    const user = await authorized(request)
 
-    const data = await yearUseCase.getUnique(
-      userId,
-      year ? Number(year) : year,
-      term ? Number(term) : term,
-    )
+    const year = Number(getSearchParam(request, 'year'))
+    const term = Number(getSearchParam(request, 'term'))
+    const uid = getSearchParam(request, 'userId')
+
+    const userId = uid || user?.id
+
+    if (!userId) {
+      return badRequest('กรุณาระบุ userId')
+    }
+
+    const data = await yearUseCase.getUnique(userId, year, term)
     return ok('ดึงข้อมูลปีการศึกษาแบบ unique สำเร็จ', data)
   } catch (error) {
     return toErrorResponse(error)

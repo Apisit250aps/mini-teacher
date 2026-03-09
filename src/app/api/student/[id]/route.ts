@@ -1,6 +1,6 @@
 import { studentUseCase } from '@/core/usecases'
 import { toErrorResponse } from '@/lib/utils/error'
-import { ok, okOnlyMessage } from '@/app/api/_utils'
+import { ok, okOnlyMessage } from '@/lib/utils/server'
 import type { NextAuthRequest } from 'next-auth'
 
 type Context = {

@@ -1,14 +1,18 @@
 import { yearUseCase } from '@/core/usecases'
 import { toErrorResponse } from '@/lib/utils/error'
-import { ok, okOnlyMessage } from '@/app/api/_utils'
+import { authorized, ok, okOnlyMessage, unauthorized } from '@/lib/utils/server'
 import type { NextAuthRequest } from 'next-auth'
 
 type Context = {
   params: Promise<{ id: string }>
 }
 
-export async function GET(_: NextAuthRequest, context: Context) {
+export async function GET(request: NextAuthRequest, context: Context) {
   try {
+    // authorized
+    const user = await authorized(request)
+    if (!user) return unauthorized()
+    //
     const { id } = await context.params
     const data = await yearUseCase.getById(id)
     return ok('ดึงข้อมูลปีการศึกษาสำเร็จ', data)
@@ -19,6 +23,10 @@ export async function GET(_: NextAuthRequest, context: Context) {
 
 export async function PATCH(request: NextAuthRequest, context: Context) {
   try {
+    // authorized
+    const user = await authorized(request)
+    if (!user) return unauthorized()
+    // 
     const { id } = await context.params
     const payload = await request.json()
     const data = await yearUseCase.update(id, payload)
@@ -28,8 +36,12 @@ export async function PATCH(request: NextAuthRequest, context: Context) {
   }
 }
 
-export async function DELETE(_: NextAuthRequest, context: Context) {
+export async function DELETE(request: NextAuthRequest, context: Context) {
   try {
+    // authorized
+    const user = await authorized(request)
+    if (!user) return unauthorized()
+    //
     const { id } = await context.params
     await yearUseCase.delete(id)
     return okOnlyMessage('ลบปีการศึกษาสำเร็จ')

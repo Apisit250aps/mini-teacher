@@ -1,6 +1,6 @@
 import { checkStudentUseCase } from '@/core/usecases'
 import { toErrorResponse } from '@/lib/utils/error'
-import { getSearchParam, ok } from '@/app/api/_utils'
+import { getSearchParam, ok } from '@/lib/utils/server'
 import type { NextAuthRequest } from 'next-auth'
 
 export async function GET(request: NextAuthRequest) {

@@ -1,8 +1,13 @@
 import { yearUseCase } from '@/core/usecases'
 import { toErrorResponse } from '@/lib/utils/error'
-import { getJsonSearchParam, ok } from '@/app/api/_utils'
+import {
+  authorized,
+  getJsonSearchParam,
+  ok,
+  unauthorized,
+} from '@/lib/utils/server'
 import type { NextAuthRequest } from 'next-auth'
-import { YearQuery } from '@/core/domain/data';
+import { YearQuery } from '@/core/domain/data'
 
 export async function GET(request: NextAuthRequest) {
   try {
@@ -16,8 +21,15 @@ export async function GET(request: NextAuthRequest) {
 
 export async function POST(request: NextAuthRequest) {
   try {
+    const user = await authorized(request)
+
+    if (!user) return unauthorized()
+
     const payload = await request.json()
-    const data = await yearUseCase.create(payload)
+    const data = await yearUseCase.create({
+      ...payload,
+      userId: user.id,
+    })
 
     return ok('สร้างปีการศึกษาสำเร็จ', data, 201)
   } catch (error) {
