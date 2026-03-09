@@ -3,8 +3,8 @@
 import * as React from 'react'
 import { Calendar1, GraduationCap, LibraryBig } from 'lucide-react'
 
-import { NavMenu } from '@/presentations/components/nav-menu'
-import { NavUser } from '@/presentations/components/nav-user'
+import { NavMenu } from '@/presentations/components/app/nav-menu'
+import { NavUser } from '@/presentations/components/app/nav-user'
 import { YearSwitcher } from '@/presentations/components/app/year/year-switcher'
 import {
   Sidebar,
