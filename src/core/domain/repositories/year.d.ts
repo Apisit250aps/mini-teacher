@@ -14,7 +14,7 @@ interface YearRepository {
     userId: string,
     year: number,
     term: number,
-  ) => Promise<Year | null>
+  ) => Promise<YearWithClasses | null>
   create: (data: YearCreateData) => Promise<Year>
   update: (id: string, data: YearUpdateData) => Promise<Year>
   delete: (id: string) => Promise<void>

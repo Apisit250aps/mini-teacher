@@ -22,20 +22,22 @@ import { useYearContext } from '@/hooks/app/use-year'
 import ModalDialog from '@/presentations/components/share/overlay/modal-dialog'
 import YearCreateForm from '@/presentations/components/app/year/year-create-form'
 import { useOverlay } from '@/hooks/contexts/use-overlay'
-import { useYearQueries } from '@/hooks/queries/use-year'
+import { useYearMutations } from '@/hooks/queries';
+import { YearWithClasses } from '@/core/domain/data';
 
 export function TeamSwitcher() {
   const { isMobile } = useSidebar()
   const { closeAll } = useOverlay()
-  const { activeYear, onActive } = useYearContext()
-  const { onCreate, list: years } = useYearQueries()
+  const { activeYear, onActive, years } = useYearContext()
+  const {create} = useYearMutations()
+  
 
   if (!activeYear) {
     return null
   }
 
   const onSubmit = async (data: { year: number; term: number }) => {
-    await onCreate({
+    await create({
       year: data.year,
       term: data.term,
     }).then(() => {
@@ -76,10 +78,10 @@ export function TeamSwitcher() {
             <DropdownMenuLabel className="text-muted-foreground text-xs">
               Years
             </DropdownMenuLabel>
-            {years.data?.map((year) => (
+            {years.map((year) => (
               <DropdownMenuItem
                 key={year.id}
-                onClick={() => onActive(year!)}
+                onClick={() => onActive(year as YearWithClasses)}
                 className="gap-2 p-2"
               >
                 <div className="flex size-6 items-center justify-center rounded-md border">

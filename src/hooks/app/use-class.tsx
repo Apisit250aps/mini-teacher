@@ -1,9 +1,9 @@
 'use client'
-import { Class } from '@/models/entities'
+
 import React from 'react'
 import { Album } from 'lucide-react'
 import { useYearContext } from './use-year'
-import { useClassesInYear } from '../queries/use-year'
+import { Class } from '@/core/domain/entities'
 
 type ClassContextValue = {
   classes: Class[]
@@ -22,11 +22,10 @@ export function ClassProvider({
 }) {
   // state
   const { activeYear } = useYearContext()
-  const classList = useClassesInYear()
+  const classList = useYearContext().activeYear.classes
   // memo
   const classes = React.useMemo(() => {
-    if (classList.isPending) return []
-    return (classList.data as Class[]) || []
+    return classList || []
   }, [classList])
 
   const classRoutes = React.useMemo(() => {

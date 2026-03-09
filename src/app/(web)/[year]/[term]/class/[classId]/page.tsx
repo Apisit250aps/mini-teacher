@@ -1,8 +1,4 @@
 import ClassDetailView from '@/presentations/views/class-detail-view'
-import {
-  getClassByYearAndClassId,
-  getYearsByYearTerm,
-} from '@/models/repositories'
 import { ClassProvider } from '@/hooks/app/use-class'
 import EmptyPage from '@/presentations/components/share/empty/empty-page'
 import { Album, Calendar } from 'lucide-react'
@@ -10,6 +6,7 @@ import { Button } from '@/presentations/components/ui/button'
 import Link from 'next/link'
 import { forbidden } from 'next/navigation'
 import { auth } from '@/auth'
+import { classRepository, yearRepository } from '@/core/repositories';
 
 export default async function Page({
   params,
@@ -21,10 +18,10 @@ export default async function Page({
   if (!session) {
     forbidden()
   }
-  const yearData = await getYearsByYearTerm(
+  const yearData = await yearRepository.getUnique(
+    session.user.id,
     parseInt(year),
     parseInt(term),
-    session.user.id,
   )
   if (!yearData) {
     return (
@@ -40,7 +37,7 @@ export default async function Page({
       />
     )
   }
-  const classRoom = await getClassByYearAndClassId(yearData.id, classId)
+  const classRoom = await classRepository.getByYearAndClassId(yearData.id, classId)
 
   if (!classRoom) {
     return (

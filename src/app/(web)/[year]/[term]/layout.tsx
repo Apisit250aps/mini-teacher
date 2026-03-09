@@ -2,8 +2,9 @@ import React from 'react'
 import EmptyPage from '@/presentations/components/share/empty/empty-page'
 import { auth } from '@/auth'
 import { YearProvider } from '@/hooks/app/use-year'
-import { getYearsByYearTerm, getYearsByAuthUser } from '@/models/repositories'
+
 import { forbidden } from 'next/navigation'
+import { yearRepository } from '@/core/repositories'
 
 export default async function Layout({
   children,
@@ -22,13 +23,17 @@ export default async function Layout({
 
   const { year, term } = await params
 
-  const activeYear = await getYearsByYearTerm(
+  const activeYear = await yearRepository.getUnique(
+    session.user.id,
     parseInt(year),
     parseInt(term),
-    session.user.id,
   )
 
-  const years = await getYearsByAuthUser(session.user.id)
+  const years = await yearRepository.getAll({
+    where: {
+      userId: session.user.id,
+    },
+  })
 
   if (!activeYear) {
     return (

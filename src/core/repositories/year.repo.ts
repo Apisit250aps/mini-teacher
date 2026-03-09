@@ -63,6 +63,9 @@ const yearRepository: YearRepository = {
         year,
         term,
       },
+      include: {
+        classes: true,
+      }
     })
     return result
   },

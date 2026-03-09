@@ -7,12 +7,12 @@ import {
   TabsTrigger,
 } from '@/presentations/components/ui/tabs'
 import PageLayout from '@/presentations/components/layouts/page-layout'
-import { Class } from '@/models/entities'
 import ClassMemberSection from '@/presentations/components/app/class/class-member-section'
 import { useStoredTab } from '@/hooks/contexts/tab-storage'
 import { useClassContext } from '@/hooks/app/use-class'
 import StudentCheckTable from '@/presentations/components/app/student/student-check-table'
 import StudentScoreTable from '@/presentations/components/app/student/student-score-table'
+import { Class } from '@/core/domain/entities';
 
 const DEFAULT_ACTIVE_TAB = 'check'
 const ALLOWED_TABS = [DEFAULT_ACTIVE_TAB, 'member', 'score']
