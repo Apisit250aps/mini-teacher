@@ -46,7 +46,7 @@ export default function YearCreateCard() {
       <Form {...methods}>
         <form
           className="w-full"
-          onSubmit={methods.handleSubmit((data) => create(data))}
+          onSubmit={methods.handleSubmit(create)}
         >
           <Card className="w-full">
             <CardHeader>

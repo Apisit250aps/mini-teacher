@@ -22,7 +22,7 @@ type YearQueries = {
 }
 
 export type YearMutations = {
-  create: (data: YearCreateData) => Promise<Year>
+  create: (data: Omit<YearCreateData, 'userId'>) => Promise<Year>
   update: (id: string, data: YearUpdateData) => Promise<Year>
   remove: (id: string) => Promise<void>
   setActive: (data: SetActiveYearData) => Promise<void>
@@ -118,8 +118,8 @@ export const useYearMutations = (): YearMutations => {
   const deleteMutation = useApiMutationWithDates('delete', '/year/{id}')
   const setActiveMutation = useApiMutationWithDates('patch', '/year/active')
 
-  const create = (data: YearCreateData) =>
-    mutateApiData<Year, { body: YearCreateData }>(
+  const create = (data: Omit<YearCreateData, 'userId'>) =>
+    mutateApiData<Year, { body: Omit<YearCreateData, 'userId'> }>(
       createMutation.mutateAsync,
       { body: data },
       {
