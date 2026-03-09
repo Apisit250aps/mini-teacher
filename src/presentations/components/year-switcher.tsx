@@ -22,27 +22,40 @@ import { useYearContext } from '@/hooks/app/use-year'
 import ModalDialog from '@/presentations/components/share/overlay/modal-dialog'
 import YearCreateForm from '@/presentations/components/app/year/year-create-form'
 import { useOverlay } from '@/hooks/contexts/use-overlay'
-import { useYearMutations } from '@/hooks/queries';
-import { YearWithClasses } from '@/core/domain/data';
+import { useYearMutations } from '@/hooks/queries'
+import { YearWithClasses } from '@/core/domain/data'
+import { useRouter } from 'next/navigation'
+import { useCallback } from 'react'
 
-export function TeamSwitcher() {
+export function YearSwitcher() {
+  const router = useRouter()
   const { isMobile } = useSidebar()
   const { closeAll } = useOverlay()
-  const { activeYear, onActive, years } = useYearContext()
-  const {create} = useYearMutations()
-  
+  const { activeYear, years } = useYearContext()
+  const { create } = useYearMutations()
+
+  const onSubmit = useCallback(
+    async (data: { year: number; term: number }) => {
+      await create({
+        year: data.year,
+        term: data.term,
+      }).then(() => {
+        closeAll()
+      })
+    },
+    [create, closeAll],
+  )
+
+  const onActive = useCallback(
+    (year: YearWithClasses) => {
+      const url = `/${year.year}/${year.term}/class`
+      router.replace(url)
+    },
+    [router],
+  )
 
   if (!activeYear) {
     return null
-  }
-
-  const onSubmit = async (data: { year: number; term: number }) => {
-    await create({
-      year: data.year,
-      term: data.term,
-    }).then(() => {
-      closeAll()
-    })
   }
 
   return (

@@ -1,17 +1,17 @@
 'use client'
-import React, { useCallback } from 'react'
+import React from 'react'
 
-import { useOverlay } from '@/hooks/contexts/use-overlay'
-import { useRouter } from 'next/navigation'
-import { Year } from '@/core/domain/entities';
-import { YearWithClasses } from '@/core/domain/data';
+import { YearWithClasses } from '@/core/domain/data'
 
 type YearContextValue = {
-  activeYear: YearWithClasses
-  years: Year[]
-  setYears?: (years: Year[]) => void
-  setActiveYear?: (year: YearWithClasses) => void
-  onActive: (year: YearWithClasses) => void
+  activeYear?: YearWithClasses
+  years: YearWithClasses[]
+}
+
+type YearProviderProps = {
+  children: React.ReactNode
+  years: YearWithClasses[]
+  activeYear?: YearWithClasses
 }
 
 const YearContext = React.createContext<YearContextValue | null>(null)
@@ -20,34 +20,12 @@ export function YearProvider({
   children,
   years,
   activeYear,
-}: {
-  children: React.ReactNode
-  years: Year[]
-  activeYear: YearWithClasses
-}) {
-  const router = useRouter()
-
-  useOverlay()
-  //
-  const [yearsState, setYears] = React.useState<Year[]>(years)
-  const [activeYearState, setActiveYear] = React.useState<YearWithClasses>(activeYear)
-
-  const onActive = useCallback(
-    async (year: YearWithClasses) => {
-      setActiveYear(year)
-      router.replace(`/${year.year}/${year.term}/class`)
-    },
-    [router],
-  )
-
+}: YearProviderProps) {
   return (
     <YearContext.Provider
       value={{
-        activeYear: activeYearState,
-        years: yearsState,
-        setYears,
-        setActiveYear,
-        onActive,
+        activeYear,
+        years,
       }}
     >
       {children}

@@ -5,7 +5,7 @@ import { Calendar1, GraduationCap, LibraryBig } from 'lucide-react'
 
 import { NavMenu } from '@/presentations/components/nav-menu'
 import { NavUser } from '@/presentations/components/nav-user'
-import { TeamSwitcher } from '@/presentations/components/team-switcher'
+import { YearSwitcher } from '@/presentations/components/year-switcher'
 import {
   Sidebar,
   SidebarContent,
@@ -13,24 +13,35 @@ import {
   SidebarHeader,
   SidebarRail,
 } from '@/presentations/components/ui/sidebar'
-import { useClassContext } from '@/hooks/app/use-class'
 import { useYearContext } from '@/hooks/app/use-year'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { classRoutes } = useClassContext()
   const { activeYear } = useYearContext()
 
-  const basePath = `/${activeYear.year}/${activeYear.term}/class`
+  const basePath = React.useMemo(
+    () =>
+      activeYear ? `/${activeYear.year}/${activeYear.term}/class` : '/class',
+    [activeYear],
+  )
 
-  const nav = [
-    { name: 'ห้องเรียน', url: `${basePath}/manage`, icon: LibraryBig },
-    { name: 'นักเรียน', url: `${basePath}/student`, icon: GraduationCap },
-    { name: 'เทอม', url: `${basePath}/term`, icon: Calendar1 },
-  ]
+  const nav = React.useMemo(
+    () => [
+      { name: 'ห้องเรียน', url: `${basePath}/manage`, icon: LibraryBig },
+      { name: 'นักเรียน', url: `${basePath}/student`, icon: GraduationCap },
+      { name: 'เทอม', url: `${basePath}/term`, icon: Calendar1 },
+    ],
+    [basePath],
+  )
+
+  const classRoutes = React.useMemo(
+    () => [{ name: 'จัดการ', url: `${basePath}/manage`, icon: LibraryBig }],
+    [basePath],
+  )
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher />
+        <YearSwitcher />
       </SidebarHeader>
       <SidebarContent>
         <NavMenu nav={classRoutes} label="ห้องเรียน" />

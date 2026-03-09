@@ -23,17 +23,15 @@ export default async function Layout({
 
   const { year, term } = await params
 
-  const activeYear = await yearRepository.getUnique(
-    session.user.id,
-    parseInt(year),
-    parseInt(term),
-  )
-
   const years = await yearRepository.getAll({
     where: {
       userId: session.user.id,
     },
   })
+
+  const activeYear = years.find(
+    (y) => y.year === parseInt(year) && y.term === parseInt(term),
+  )
 
   if (!activeYear) {
     return (
@@ -43,6 +41,7 @@ export default async function Layout({
       />
     )
   }
+
   return (
     <YearProvider activeYear={activeYear} years={years}>
       {children}
