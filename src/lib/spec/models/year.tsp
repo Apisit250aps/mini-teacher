@@ -12,7 +12,6 @@ model YearWithOwnerAndClasses extends YearData {
 }
 
 model YearCreateBody {
-  userId: string;
   year: int32;
   term: int32;
   description?: string | null;

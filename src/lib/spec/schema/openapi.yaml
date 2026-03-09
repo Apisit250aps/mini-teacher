@@ -4237,12 +4237,9 @@ components:
     YearCreateBody:
       type: object
       required:
-        - userId
         - year
         - term
       properties:
-        userId:
-          type: string
         year:
           type: integer
           format: int32

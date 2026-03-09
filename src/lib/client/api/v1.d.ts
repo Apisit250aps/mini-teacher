@@ -953,7 +953,6 @@ export interface components {
             years: components["schemas"]["PrismaModels.Year"][];
         } & components["schemas"]["UserData"];
         YearCreateBody: {
-            userId: string;
             /** Format: int32 */
             year: number;
             /** Format: int32 */
