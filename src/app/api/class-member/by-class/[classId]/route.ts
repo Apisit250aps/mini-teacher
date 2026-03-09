@@ -1,3 +1,4 @@
+import { ClassMemberQuery } from '@/core/domain/data/class-member';
 import { classMemberUseCase } from '@/core/usecases'
 import { toErrorResponse } from '@/lib/utils/error'
 import { getJsonSearchParam, ok } from '@/lib/utils/server'
@@ -10,7 +11,7 @@ type Context = {
 export async function GET(request: NextAuthRequest, context: Context) {
   try {
     const { classId } = await context.params
-    const filter = getJsonSearchParam(request, 'filter')
+    const filter = getJsonSearchParam<ClassMemberQuery>(request, 'filter')
     const data = await classMemberUseCase.getByClassId(classId, filter)
     return ok('ดึงสมาชิกห้องเรียนสำเร็จ', data)
   } catch (error) {

@@ -16,8 +16,8 @@ export async function POST(request: NextAuthRequest) {
 export async function DELETE(request: NextAuthRequest) {
   try {
     const payload = (await request.json()) as {
-      classId?: string
-      studentId?: string
+      classId: string
+      studentId: string
     }
     await classMemberUseCase.delete(payload.classId, payload.studentId)
     return okOnlyMessage('ลบสมาชิกห้องเรียนสำเร็จ')

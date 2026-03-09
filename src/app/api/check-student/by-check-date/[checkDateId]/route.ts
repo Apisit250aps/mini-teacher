@@ -1,3 +1,4 @@
+import { CheckStudentQuery } from '@/core/domain/data/check-student';
 import { checkStudentUseCase } from '@/core/usecases'
 import { toErrorResponse } from '@/lib/utils/error'
 import { getJsonSearchParam, ok } from '@/lib/utils/server'
@@ -10,7 +11,7 @@ type Context = {
 export async function GET(request: NextAuthRequest, context: Context) {
   try {
     const { checkDateId } = await context.params
-    const filter = getJsonSearchParam(request, 'filter')
+    const filter = getJsonSearchParam<CheckStudentQuery>(request, 'filter')
     const data = await checkStudentUseCase.getByCheckDateId(checkDateId, filter)
     return ok('ดึงรายการเช็กชื่อตามวันสำเร็จ', data)
   } catch (error) {

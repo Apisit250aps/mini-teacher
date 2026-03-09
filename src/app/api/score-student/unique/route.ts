@@ -7,7 +7,7 @@ export async function GET(request: NextAuthRequest) {
   try {
     const assignmentId = getSearchParam(request, 'assignmentId')
     const studentId = getSearchParam(request, 'studentId')
-    const data = await scoreStudentUseCase.getUnique(assignmentId, studentId)
+    const data = await scoreStudentUseCase.getUnique(assignmentId!, studentId!)
     return ok('ดึงคะแนนแบบ unique สำเร็จ', data)
   } catch (error) {
     return toErrorResponse(error)
