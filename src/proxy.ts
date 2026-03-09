@@ -1,14 +1,7 @@
 import { auth } from '@/auth'
 import { useMiddlewares } from '@/lib/middlewares'
-import { NextAuthRequest } from 'next-auth'
 import { signAuth } from './lib/middlewares/auth'
-
-const debugMiddlewares = (req: NextAuthRequest) => {
-  const debug = !false
-  if (debug) {
-    console.log('auth', req.auth)
-  }
-}
+import { debugMiddlewares } from './lib/middlewares/app';
 
 export default auth((req) =>
   useMiddlewares(req, [
