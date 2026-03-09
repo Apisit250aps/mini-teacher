@@ -43,7 +43,10 @@ export default async function Layout({
   }
 
   return (
-    <YearProvider activeYear={{ year: parseInt(year), term: parseInt(term) }}>
+    <YearProvider
+      teacherId={session.user.id}
+      activeYear={{ year: parseInt(year), term: parseInt(term) }}
+    >
       {children}
     </YearProvider>
   )

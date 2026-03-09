@@ -3,16 +3,18 @@ import React, { useMemo } from 'react'
 
 import { YearWithClasses } from '@/core/domain/data'
 import { useYearsListQuery } from '@/hooks/queries'
-import { useSession } from 'next-auth/react'
+import { User } from '@/core/domain/entities'
 
 type YearContextValue = {
   active?: YearWithClasses
   years: YearWithClasses[]
+  teacher: string
 }
 
 type YearProviderProps = {
   children: React.ReactNode
-  activeYear?: {
+  teacherId: string
+  activeYear: {
     year: number
     term: number
   }
@@ -20,12 +22,14 @@ type YearProviderProps = {
 
 const YearContext = React.createContext<YearContextValue | null>(null)
 
-export function YearProvider({ children, activeYear }: YearProviderProps) {
-  const session = useSession()
-
+export function YearProvider({
+  children,
+  activeYear,
+  teacherId,
+}: YearProviderProps) {
   const { data: list } = useYearsListQuery({
     where: {
-      userId: session.data?.user.id,
+      userId: teacherId,
     },
   })
 
@@ -41,6 +45,7 @@ export function YearProvider({ children, activeYear }: YearProviderProps) {
       value={{
         active: active,
         years: list ?? [],
+        teacher: teacherId,
       }}
     >
       {children}
