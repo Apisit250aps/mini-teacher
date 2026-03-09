@@ -1,4 +1,5 @@
 'use client'
+import { ClassProvider } from '@/hooks/app/use-class';
 import DashboardLayout from '@/presentations/components/layouts/dashboard-layout'
 
 export default function Layout({
@@ -6,5 +7,9 @@ export default function Layout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  return <DashboardLayout>{children}</DashboardLayout>
+  return (
+    <ClassProvider>
+      <DashboardLayout>{children}</DashboardLayout>
+    </ClassProvider>
+  )
 }

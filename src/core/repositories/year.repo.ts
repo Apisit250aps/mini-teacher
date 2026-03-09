@@ -42,7 +42,6 @@ const yearRepository: YearRepository = {
   getAll: async (filter = {}) => {
     const years = await prisma.year.findMany({
       ...(filter as unknown as Prisma.YearFindManyArgs),
-      orderBy: { createdAt: 'desc' },
       include: {
         classes: true,
       },
@@ -65,7 +64,7 @@ const yearRepository: YearRepository = {
       },
       include: {
         classes: true,
-      }
+      },
     })
     return result
   },

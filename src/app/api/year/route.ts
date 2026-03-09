@@ -12,6 +12,7 @@ import { YearQuery } from '@/core/domain/data'
 export async function GET(request: NextAuthRequest) {
   try {
     const filter = getJsonSearchParam<YearQuery>(request, 'filter')
+    console.log('filter', filter)
     const data = await yearUseCase.getAll(filter)
     return ok('ดึงรายการปีการศึกษาสำเร็จ', data)
   } catch (error) {

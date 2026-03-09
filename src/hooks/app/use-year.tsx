@@ -3,7 +3,6 @@ import React, { useMemo } from 'react'
 
 import { YearWithClasses } from '@/core/domain/data'
 import { useYearsListQuery } from '@/hooks/queries'
-import { User } from '@/core/domain/entities'
 
 type YearContextValue = {
   active?: YearWithClasses
@@ -30,6 +29,9 @@ export function YearProvider({
   const { data: list } = useYearsListQuery({
     where: {
       userId: teacherId,
+    },
+    orderBy: {
+      term: 'desc',
     },
   })
 

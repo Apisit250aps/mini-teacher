@@ -27,6 +27,7 @@ export const useClassesByYearQuery = (yearId: string, filter?: ClassQuery) => {
       },
     },
     {
+      enabled: !!yearId,
       select: (res) => selectData<ClassWithMembers[]>(res, []),
     },
   )
