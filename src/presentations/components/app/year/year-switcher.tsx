@@ -39,6 +39,8 @@ export function YearSwitcher() {
       await create({
         year: data.year,
         term: data.term,
+        description: '',
+        isActive: true,
       }).then(() => {
         closeAll()
       })

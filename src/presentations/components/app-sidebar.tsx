@@ -5,7 +5,7 @@ import { Calendar1, GraduationCap, LibraryBig } from 'lucide-react'
 
 import { NavMenu } from '@/presentations/components/nav-menu'
 import { NavUser } from '@/presentations/components/nav-user'
-import { YearSwitcher } from '@/presentations/components/year-switcher'
+import { YearSwitcher } from '@/presentations/components/app/year/year-switcher'
 import {
   Sidebar,
   SidebarContent,
