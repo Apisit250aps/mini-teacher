@@ -1,4 +1,6 @@
 'use client'
+import { YearCreateData } from '@/core/domain/data'
+import { yearCreateSchema } from '@/core/domain/schema/year.schema'
 import { Button } from '@/presentations/components/ui/button'
 import {
   Form,
@@ -11,25 +13,22 @@ import {
 import { Input } from '@/presentations/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import z from 'zod'
-
-const schema = z.object({
-  year: z.number().min(4, 'กรุณากรอกปีการศึกษาอย่างน้อย 4 ตัวอักษร'),
-  term: z.number().min(1).max(3),
-})
+import { Textarea } from '../../ui/textarea'
 
 export default function YearCreateForm({
   value,
   onSubmit,
 }: {
-  value?: { year: number; term: number }
-  onSubmit: (data: { year: number; term: number }) => void
+  value?: Omit<YearCreateData, 'userId'>
+  onSubmit: (data: Omit<YearCreateData, 'userId'>) => void
 }) {
-  const methods = useForm<{ year: number; term: number }>({
-    resolver: zodResolver(schema),
+  const methods = useForm({
+    resolver: zodResolver(yearCreateSchema.omit({ userId: true })),
     defaultValues: {
       year: value?.year ?? new Date().getFullYear() + 543,
       term: value?.term ?? 1,
+      description: value?.description ?? '',
+      isActive: value?.isActive ?? true,
     },
   })
 
@@ -74,8 +73,27 @@ export default function YearCreateForm({
             </FormItem>
           )}
         />
+        <FormField
+          control={methods.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>คำอธิบาย</FormLabel>
+              <FormControl>
+                <Textarea
+                  {...field}
+                  value={field.value ?? ''}
+                  placeholder="กรอกคำอธิบาย"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <div className="flex justify-end">
-          <Button type="submit">สร้าง</Button>
+          <Button type="submit">
+            {value ? 'บันทึกการเปลี่ยนแปลง' : 'สร้างปีการศึกษา'}
+          </Button>
         </div>
       </form>
     </Form>

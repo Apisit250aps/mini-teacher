@@ -2,17 +2,17 @@ import { ConfirmDialog } from '@/presentations/components/share/overlay/confirm-
 import ModalDialog from '@/presentations/components/share/overlay/modal-dialog'
 import { DropdownMenuItem } from '@/presentations/components/ui/dropdown-menu'
 import { useOverlay } from '@/hooks/contexts/use-overlay'
-import { useYearQueries } from '@/hooks/queries/use-year'
-import { YearDetail } from '@/models/entities/year.entity'
 import { Pen, Trash } from 'lucide-react'
 import YearCreateForm from './year-create-form'
+import { useYearMutations } from '@/hooks/queries'
+import { YearWithClasses } from '@/core/domain/data'
 
 export const DeleteYearAction = ({ yearId }: { yearId: string }) => {
-  const { onRemove } = useYearQueries()
+  const { remove } = useYearMutations()
   const { closeAll } = useOverlay()
 
   const handleDelete = async () => {
-    await onRemove(yearId)
+    await remove(yearId)
     closeAll()
   }
 
@@ -32,12 +32,12 @@ export const DeleteYearAction = ({ yearId }: { yearId: string }) => {
   )
 }
 
-export const EditYearAction = ({ year }: { year: YearDetail }) => {
-  const { onUpdate } = useYearQueries()
+export const EditYearAction = ({ year }: { year: YearWithClasses }) => {
+  const { update } = useYearMutations()
   const { closeAll } = useOverlay()
 
   const handleUpdate = async (data: { year: number; term: number }) => {
-    await onUpdate(year.id, data).then(() => {
+    await update(year.id, data).then(() => {
       closeAll()
     })
   }
@@ -58,6 +58,8 @@ export const EditYearAction = ({ year }: { year: YearDetail }) => {
         value={{
           year: year.year,
           term: year.term,
+          description: year.description,
+          isActive: year.isActive,
         }}
         onSubmit={handleUpdate}
       />

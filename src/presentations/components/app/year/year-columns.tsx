@@ -1,9 +1,15 @@
-import { Class, YearDetail } from '@/models'
+'use client'
+
 import { Cell, ColumnDef } from '@tanstack/react-table'
 import { DeleteYearAction, EditYearAction } from './year-actions'
 import { ActionDropdown } from '@/presentations/components/share/overlay/action-dropdown'
+import { YearWithClasses } from '@/core/domain/data'
 
-const YearActionColumn = ({ cell }: { cell: Cell<YearDetail, unknown> }) => {
+const YearActionColumn = ({
+  cell,
+}: {
+  cell: Cell<YearWithClasses, unknown>
+}) => {
   return (
     <ActionDropdown id={'YEAR_ACTION_COLUMN_' + cell.row.original.id}>
       <EditYearAction year={cell.row.original} />
@@ -12,7 +18,7 @@ const YearActionColumn = ({ cell }: { cell: Cell<YearDetail, unknown> }) => {
   )
 }
 
-export const yearColumns: ColumnDef<YearDetail>[] = [
+export const yearColumns: ColumnDef<YearWithClasses>[] = [
   {
     accessorKey: 'year',
     header: 'ปีการศึกษา',
@@ -22,10 +28,14 @@ export const yearColumns: ColumnDef<YearDetail>[] = [
     header: 'ภาคเรียน',
   },
   {
+    accessorKey: 'description',
+    header: 'รายละเอียด',
+  },
+  {
     accessorKey: 'classes',
     header: 'จำนวนห้องเรียน',
     cell: ({ getValue }) => {
-      const classes = getValue() as Class[]
+      const classes = getValue() as YearWithClasses['classes']
       return classes.length
     },
   },
