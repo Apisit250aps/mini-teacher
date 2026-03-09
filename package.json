@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "eslint",
     "gen:spec": "tsp compile ./src/lib/spec/main.tsp",
-    "gen:api": "openapi-typescript ./src/lib/spec/schema/openapi.yaml -o ./src/lib/client/api/v1.d.ts",
+    "gen:api": "npm run gen:spec && tsx ./scripts/generator-api.ts",
     "db:push": "prisma db push",
     "db:generate": "prisma generate"
   },

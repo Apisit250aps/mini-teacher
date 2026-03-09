@@ -1,29 +1,19 @@
 import { YearWithClasses } from '@/core/domain/data'
 import { $api } from '@/lib/client'
+import { mapDatesDeep } from '@/lib/utils'
 
-type YearQueryContext = {
+type YearQueries = {
   data: YearWithClasses[]
+  isLoading: boolean
 }
 
-export const useYearQuery = (): YearQueryContext => {
-  const { data: years } = $api.useQuery('get', '/year', undefined, {
-    select: (res) => {
-      if (res.data) {
-        return res.data.map((year) => ({
-          ...year,
-          createdAt: new Date(year.createdAt),
-          updatedAt: new Date(year.updatedAt),
-          classes: year.classes.map((cls) => ({
-            ...cls,
-            createdAt: new Date(cls.createdAt),
-            updatedAt: new Date(cls.updatedAt),
-          })),
-        }))
-      }
-    },
+export const useYearQueries = (): YearQueries => {
+  const list = $api.useQuery('get', '/year', undefined, {
+    select: (res) => mapDatesDeep(res.data) as YearWithClasses[],
   })
 
   return {
-    data: years ?? [],
+    isLoading: list.isPending,
+    data: list.data ?? [],
   }
 }
