@@ -18,16 +18,22 @@ import {
   SelectValue,
 } from '@/presentations/components/ui/select'
 import { useClassContext } from '@/hooks/app/use-class'
-import { useYearContext } from '@/hooks/app/use-year'
 import { useOverlay } from '@/hooks/contexts/use-overlay'
-import { useScoreQueries } from '@/hooks/queries/use-score'
-import { assignEnum } from '@/models/entities'
-import { onSettledToast } from '@/lib/utils/hooks'
+import { useScoreAssignMutations } from '@/hooks/queries'
+import { AssignType } from '@/core/domain/entities'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Plus } from 'lucide-react'
 import { useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
+
+const ASSIGN_TYPES = [
+  'ASSIGNMENT',
+  'HOMEWORK',
+  'QUIZ',
+  'EXAM',
+  'PROJECT',
+] as const
 
 const CreateScoreAssignFormSchema = z.object({
   name: z.string().min(1, 'กรุณากรอกชื่องาน/ข้อสอบ'),
@@ -40,7 +46,7 @@ const CreateScoreAssignFormSchema = z.object({
     .number()
     .refine((v) => !v || !isNaN(Number(v)), 'ต้องเป็นตัวเลข')
     .refine((v) => !v || Number(v) <= 10, 'คะแนนสูงสุดต้องไม่เกิน 10'),
-  type: z.enum(assignEnum).optional(),
+  type: z.enum(ASSIGN_TYPES).optional(),
   assignDate: z.string().optional().nullable(),
   finalDate: z.string().optional().nullable(),
 })
@@ -49,8 +55,7 @@ type CreateScoreAssignForm = z.infer<typeof CreateScoreAssignFormSchema>
 
 export function ScoreAssignCreateAction() {
   const { activeClass } = useClassContext()
-  const { activeYear } = useYearContext()
-  const { create } = useScoreQueries()
+  const { create } = useScoreAssignMutations()
   const { closeAll } = useOverlay()
 
   const methods = useForm<CreateScoreAssignForm>({
@@ -68,42 +73,23 @@ export function ScoreAssignCreateAction() {
 
   const onSubmit = useCallback(
     async (data: CreateScoreAssignForm) => {
-      if (!activeClass || !activeYear) return
+      if (!activeClass) return
 
-      await create
-        .mutateAsync(
-          {
-            body: {
-              name: data.name,
-              description: data.description,
-              minScore: data.minScore ? Number(data.minScore) : undefined,
-              maxScore: data.maxScore ? Number(data.maxScore) : undefined,
-              type: data.type,
-              assignDate: data.assignDate
-                ? new Date(data.assignDate).toISOString()
-                : null,
-              finalDate: data.finalDate
-                ? new Date(data.finalDate).toISOString()
-                : null,
-            },
-            params: {
-              path: {
-                classId: activeClass.id,
-              },
-            },
-          },
-          {
-            onSettled(data, error, _variables, _, context) {
-              onSettledToast(data, error)
-              context.client.refetchQueries({})
-              methods.reset()
-              closeAll()
-            },
-          },
-        )
-        .then((res) => console.log(res))
+      await create({
+        classId: activeClass.id,
+        title: data.name,
+        description: data.description,
+        minScore: data.minScore ? Number(data.minScore) : undefined,
+        maxScore: data.maxScore ? Number(data.maxScore) : undefined,
+        type: data.type as AssignType | undefined,
+        assignDate: data.assignDate ? new Date(data.assignDate) : null,
+        dueDate: data.finalDate ? new Date(data.finalDate) : null,
+      })
+
+      methods.reset()
+      closeAll()
     },
-    [create, activeClass, activeYear, methods, closeAll],
+    [activeClass, closeAll, create, methods],
   )
 
   return (
@@ -195,13 +181,17 @@ export function ScoreAssignCreateAction() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {assignEnum.map((type) => (
+                    {ASSIGN_TYPES.map((type) => (
                       <SelectItem key={type} value={type}>
                         {type === 'ASSIGNMENT'
                           ? 'งาน'
-                          : type === 'EXAM'
-                            ? 'สอบ'
-                            : 'แบบทดสอบ'}
+                          : type === 'HOMEWORK'
+                            ? 'การบ้าน'
+                            : type === 'QUIZ'
+                              ? 'ควิซ'
+                              : type === 'EXAM'
+                                ? 'สอบ'
+                                : 'โปรเจกต์'}
                       </SelectItem>
                     ))}
                   </SelectContent>

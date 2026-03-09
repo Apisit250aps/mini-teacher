@@ -3,7 +3,11 @@
 import React, { useMemo } from 'react'
 import { CheckStatusCell } from '@/presentations/components/app/student/actions/check-status-cell'
 import { CheckDateCreateAction } from '../class/check/action-modal'
-import { useStudentCheck } from '@/hooks/app/use-check'
+import { useClassContext } from '@/hooks/app/use-class'
+import {
+  useCheckDatesByClassQuery,
+  useClassMembersByClassQuery,
+} from '@/hooks/queries'
 import {
   Table,
   TableBody,
@@ -16,15 +20,16 @@ import { Spinner } from '@/presentations/components/ui/spinner'
 
 type CheckDateWithStudents = {
   id: string
-  date: string
+  date: string | Date
   isEditable?: boolean
   checkStudents?: Array<{
+    id?: string
     studentId: string
     status: string | null
   }>
 }
 
-const newDate = (date: string) => {
+const newDate = (date: string | Date) => {
   const d = new Intl.DateTimeFormat('th-TH', {
     day: '2-digit',
     month: 'short',
@@ -34,7 +39,14 @@ const newDate = (date: string) => {
 }
 
 export default function StudentCheckTable() {
-  const { checkDates, classMembers, isLoading } = useStudentCheck()
+  const { activeClass } = useClassContext()
+  const classId = activeClass?.id ?? ''
+  const checkDatesQuery = useCheckDatesByClassQuery(classId)
+  const classMembersQuery = useClassMembersByClassQuery(classId)
+
+  const checkDates = checkDatesQuery.data
+  const classMembers = classMembersQuery.data
+  const isLoading = checkDatesQuery.isLoading || classMembersQuery.isLoading
 
   const checkDateList = useMemo(
     () => checkDates as CheckDateWithStudents[],

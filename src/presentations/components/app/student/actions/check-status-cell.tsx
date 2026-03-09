@@ -6,14 +6,14 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from '@/presentations/components/ui/context-menu'
-import { useClassContext } from '@/hooks/app/use-class'
-import { useCheckQueries } from '@/hooks/queries/use-check'
-import { CHECK_STATUS } from '@/models'
+import { useCheckStudentMutations } from '@/hooks/queries'
+import { CheckStatus } from '@/core/domain/entities'
 import { useMemo, useState } from 'react'
 
-type AttendanceStatus = NonNullable<CHECK_STATUS>
+type AttendanceStatus = Exclude<CheckStatus, 'DEFAULT'>
 
 type CheckDateStudentStatus = {
+  id?: string
   studentId: string
   status: string | null
 }
@@ -78,8 +78,7 @@ export function CheckStatusCell({
   studentId,
   checkDate,
 }: CheckStatusCellProps) {
-  const { activeClass } = useClassContext()
-  const { list, studentCheck } = useCheckQueries()
+  const { create, update } = useCheckStudentMutations()
   const [optimisticStatus, setOptimisticStatus] = useState<
     AttendanceStatus | undefined
   >(undefined)
@@ -93,32 +92,36 @@ export function CheckStatusCell({
   }, [checkDate.checkStudents, studentId])
 
   const status = optimisticStatus ?? serverStatus
+  const currentCheck = useMemo(
+    () =>
+      checkDate.checkStudents?.find(
+        (studentCheckItem) => studentCheckItem.studentId === studentId,
+      ),
+    [checkDate.checkStudents, studentId],
+  )
   const isEmptyStatus = !status
-  const isPending = studentCheck.isPending
+  const isPending = false
   const isDisabled = isPending || checkDate.isEditable === false
 
   const handleAttendanceChange = async (nextStatus: AttendanceStatus) => {
-    if (!activeClass?.id || isDisabled) return
+    if (isDisabled) return
 
     const previousStatus = optimisticStatus
     setOptimisticStatus(nextStatus)
 
     try {
-      await studentCheck.mutateAsync({
-        params: {
-          path: {
-            classId: activeClass.id,
-            checkDateId: checkDate.id,
-          },
-        },
-        body: {
+      if (currentCheck?.id) {
+        await update(currentCheck.id, {
+          status: nextStatus,
+        })
+      } else {
+        await create({
+          checkDateId: checkDate.id,
           studentId,
           status: nextStatus,
-        },
-      })
-      void list.refetch().finally(() => {
-        setOptimisticStatus(undefined)
-      })
+        })
+      }
+      setOptimisticStatus(undefined)
     } catch {
       if (previousStatus) {
         setOptimisticStatus(previousStatus)

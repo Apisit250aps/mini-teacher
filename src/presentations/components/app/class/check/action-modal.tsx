@@ -10,11 +10,12 @@ import {
   FormMessage,
 } from '@/presentations/components/ui/form'
 import { Input } from '@/presentations/components/ui/input'
-import { useStudentCheck } from '@/hooks/app/use-check'
 import { useClassContext } from '@/hooks/app/use-class'
 import { useOverlay } from '@/hooks/contexts/use-overlay'
-import { useCheckQueries } from '@/hooks/queries/use-check'
-import { onSettledToast } from '@/lib/utils/hooks'
+import {
+  useCheckDateMutations,
+  useCheckDatesByClassQuery,
+} from '@/hooks/queries'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Calendar } from 'lucide-react'
 import { useEffect, useMemo } from 'react'
@@ -28,7 +29,9 @@ const toDateInputValue = (date: Date) => {
   return `${year}-${month}-${day}`
 }
 
-const getDefaultCheckDateValue = (checkDates: Array<{ date: string }>) => {
+const getDefaultCheckDateValue = (
+  checkDates: Array<{ date: string | Date }>,
+) => {
   if (!checkDates.length) {
     return toDateInputValue(new Date())
   }
@@ -49,9 +52,10 @@ const getDefaultCheckDateValue = (checkDates: Array<{ date: string }>) => {
 
 export function CheckDateCreateAction() {
   const { activeClass } = useClassContext()
-  const { create } = useCheckQueries()
+  const { create } = useCheckDateMutations()
   const { closeAll } = useOverlay()
-  const { checkDates } = useStudentCheck()
+  const checkDatesQuery = useCheckDatesByClassQuery(activeClass?.id ?? '')
+  const checkDates = checkDatesQuery.data
   const defaultDate = useMemo(
     () => getDefaultCheckDateValue(checkDates),
     [checkDates],
@@ -82,28 +86,16 @@ export function CheckDateCreateAction() {
   }, [defaultDate, methods])
 
   const onSubmit = async (data: { date: string }) => {
-    await create
-      .mutateAsync(
-        {
-          body: {
-            date: data.date,
-          },
-          params: {
-            path: {
-              classId: activeClass?.id ?? '',
-            },
-          },
-        },
-        {
-          onSettled(data, error, _variables, _, context) {
-            onSettledToast(data, error)
-            context.client.refetchQueries({})
-            methods.reset({ date: defaultDate })
-            closeAll()
-          },
-        },
-      )
-      .then((res) => console.log(res))
+    if (!activeClass?.id) return
+
+    await create({
+      classId: activeClass.id,
+      date: new Date(data.date),
+    })
+
+    await checkDatesQuery.query.refetch()
+    methods.reset({ date: defaultDate })
+    closeAll()
   }
   return (
     <ModalDialog

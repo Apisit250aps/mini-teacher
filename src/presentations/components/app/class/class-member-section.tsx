@@ -1,7 +1,10 @@
 'use client'
 import DataTable from '@/presentations/components/share/table/data-table'
-import { useClassQueries, useGetClassMembers } from '@/hooks/queries/use-class'
-import { ClassMemberDetail } from '@/models/entities'
+import {
+  useClassMemberMutations,
+  useClassMembersByClassQuery,
+} from '@/hooks/queries'
+import { ClassMemberWithStudent } from '@/core/domain/data'
 import { Cell, ColumnDef } from '@tanstack/react-table'
 import MemberCreate from '@/presentations/components/app/class/member/member-create'
 import { ActionDropdown } from '@/presentations/components/share/overlay/action-dropdown'
@@ -13,13 +16,12 @@ import ModalDialog from '@/presentations/components/share/overlay/modal-dialog'
 import StudentSelectTable from '@/presentations/components/app/student/student-select-table'
 import { Button } from '@/presentations/components/ui/button'
 import { useClassContext } from '@/hooks/app/use-class'
-import { useYearContext } from '@/hooks/app/use-year'
 import { useOverlay } from '@/hooks/contexts/use-overlay'
 
 const ColumnActions = ({
   cell,
 }: {
-  cell: Cell<ClassMemberDetail, unknown>
+  cell: Cell<ClassMemberWithStudent, unknown>
 }) => {
   return (
     <ActionDropdown id={'MEMBER_ACTION_COLUMN_' + cell.row.original.id}>
@@ -29,7 +31,7 @@ const ColumnActions = ({
   )
 }
 
-const columns: ColumnDef<ClassMemberDetail>[] = [
+const columns: ColumnDef<ClassMemberWithStudent>[] = [
   {
     accessorKey: 'student.code',
     header: 'รหัสนักเรียน',
@@ -78,9 +80,9 @@ const columns: ColumnDef<ClassMemberDetail>[] = [
 ]
 
 const MemberAdd = () => {
-  const membersQuery = useGetClassMembers()
-  const { addOrRemoveMember } = useClassQueries()
   const { activeClass } = useClassContext()
+  const membersQuery = useClassMembersByClassQuery(activeClass?.id ?? '')
+  const { create } = useClassMemberMutations()
   const { closeAll } = useOverlay()
 
   const { data: members } = membersQuery
@@ -88,23 +90,21 @@ const MemberAdd = () => {
   const existingStudentIds = members?.map((member) => member.student.id) ?? []
 
   const onSubmit = async (studentIds: string[]) => {
+    if (!activeClass?.id) return
+
     const excludedIds = existingStudentIds
     const filteredIds = studentIds.filter((id) => !excludedIds.includes(id))
+
     if (filteredIds.length > 0) {
       const promises = filteredIds.map((studentId) => {
-        return addOrRemoveMember.mutateAsync({
-          params: {
-            path: {
-              classId: activeClass?.id || '',
-            },
-          },
-          body: {
-            studentId,
-          },
+        return create({
+          classId: activeClass.id,
+          studentId,
         })
       })
+
       await Promise.all(promises)
-      membersQuery.refetch()
+      await membersQuery.query.refetch()
       closeAll()
     }
   }
@@ -121,7 +121,8 @@ const MemberAdd = () => {
 }
 
 export default function ClassMemberSection() {
-  const { data: members } = useGetClassMembers()
+  const { activeClass } = useClassContext()
+  const membersQuery = useClassMembersByClassQuery(activeClass?.id ?? '')
 
   return (
     <div className="flex flex-col items-center gap-4 w-full ">
@@ -130,7 +131,11 @@ export default function ClassMemberSection() {
         <MemberCreate />
       </div>
       <div className="w-full">
-        <DataTable data={members ?? []} columns={columns} />
+        <DataTable
+          data={membersQuery.data ?? []}
+          columns={columns}
+          isLoading={membersQuery.isLoading}
+        />
       </div>
     </div>
   )

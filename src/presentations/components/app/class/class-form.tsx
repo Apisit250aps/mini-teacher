@@ -10,17 +10,26 @@ import {
 } from '@/presentations/components/ui/form'
 import { Input } from '@/presentations/components/ui/input'
 import { useYearContext } from '@/hooks/app/use-year'
-import { ClassFormSchema, type ClassFormValue } from '@/models/entities'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { Textarea } from '@/presentations/components/ui/textarea'
+import z from 'zod'
+
+export const ClassFormSchema = z.object({
+  name: z.string().min(1, 'กรุณากรอกชื่อชั้นเรียน'),
+  subject: z.string().min(1, 'กรุณากรอกชื่อวิชา'),
+  description: z.string().optional().nullable(),
+  year: z.string().min(1, 'กรุณาเลือกปีการศึกษา'),
+})
+
+export type ClassFormValue = z.infer<typeof ClassFormSchema>
 
 export default function ClassForm({
   value,
   onSubmit,
 }: Readonly<FormValueProps<ClassFormValue>>) {
   // context
-  const { activeYear } = useYearContext()
+  const { active } = useYearContext()
   // form
   const methods = useForm<ClassFormValue>({
     resolver: zodResolver(ClassFormSchema),
@@ -28,7 +37,7 @@ export default function ClassForm({
       name: value?.name ?? '',
       subject: value?.subject ?? '',
       description: value?.description ?? '-',
-      year: value?.year ?? activeYear?.id ?? '',
+      year: value?.year ?? active?.id ?? '',
     },
   })
 

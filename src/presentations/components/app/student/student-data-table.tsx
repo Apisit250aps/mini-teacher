@@ -1,13 +1,14 @@
 'use client'
 import { ActionDropdown } from '@/presentations/components/share/overlay/action-dropdown'
 import DataTable from '@/presentations/components/share/table/data-table'
-import { useStudentQueries } from '@/hooks/queries/use-student'
+import { useStudentsByTeacherQuery } from '@/hooks/queries'
 import { Student } from '@/models/entities'
 import { Cell, ColumnDef } from '@tanstack/react-table'
 import {
   StudentDeleteAction,
   StudentEditAction,
 } from '@/presentations/components/app/student/student-action'
+import { useYearContext } from '@/hooks/app/use-year'
 
 const ColumnActions = ({ cell }: { cell: Cell<Student, unknown> }) => {
   return (
@@ -47,12 +48,12 @@ const columns: ColumnDef<Student>[] = [
 ]
 
 export function StudentDataTable() {
-  const { list } = useStudentQueries()
-  const { data } = list
+  const { teacher } = useYearContext()
+  const list = useStudentsByTeacherQuery(teacher)
 
   return (
     <DataTable
-      data={data?.data ?? []}
+      data={list.data ?? []}
       columns={columns}
       isLoading={list.isLoading}
     />

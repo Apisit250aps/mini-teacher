@@ -1,19 +1,20 @@
 'use client'
 import ClassForm from '@/presentations/components/app/class/class-form'
+import type { ClassFormValue } from '@/presentations/components/app/class/class-form'
 import { ActionDropdown } from '@/presentations/components/share/overlay/action-dropdown'
 import ModalDialog from '@/presentations/components/share/overlay/modal-dialog'
 import DataTable from '@/presentations/components/share/table/data-table'
 import { DropdownMenuItem } from '@/presentations/components/ui/dropdown-menu'
-import { Class, ClassFormValue } from '@/models/entities'
+import type { Class } from '@/core/domain/entities'
 import { Cell, ColumnDef } from '@tanstack/react-table'
 import { Pen, Trash } from 'lucide-react'
 import { ConfirmDialog } from '@/presentations/components/share/overlay/confirm-dialog'
-import { useClassesInYear } from '@/hooks/queries/use-year'
-import { useClassQueries } from '@/hooks/queries/use-class'
+import { useClassMutations } from '@/hooks/queries'
+import { useClassContext } from '@/hooks/app/use-class'
 import { useOverlay } from '@/hooks/contexts/use-overlay'
 
 const ColumnActions = ({ cell }: { cell: Cell<Class, unknown> }) => {
-  const { onUpdate, onDelete } = useClassQueries()
+  const { update, remove } = useClassMutations()
   const { closeAll } = useOverlay()
 
   return (
@@ -30,9 +31,18 @@ const ColumnActions = ({ cell }: { cell: Cell<Class, unknown> }) => {
         }
       >
         <ClassForm
-          value={cell.row.original}
+          value={{
+            name: cell.row.original.name,
+            subject: cell.row.original.subject,
+            description: cell.row.original.description,
+            year: cell.row.original.yearId,
+          }}
           onSubmit={function (data: ClassFormValue): void {
-            onUpdate(cell.row.original.id, data).then(() => {
+            const { year, ...rest } = data
+            update(cell.row.original.id, {
+              ...rest,
+              yearId: year,
+            }).then(() => {
               closeAll()
             })
           }}
@@ -48,7 +58,7 @@ const ColumnActions = ({ cell }: { cell: Cell<Class, unknown> }) => {
         }
         title="ยืนยันการลบห้องเรียน"
         description="คุณแน่ใจหรือไม่ว่าต้องการลบห้องเรียนนี้? การกระทำนี้ไม่สามารถย้อนกลับได้"
-        onConfirm={() => onDelete(cell.row.original.id).then(() => closeAll())}
+        onConfirm={() => remove(cell.row.original.id).then(() => closeAll())}
       />
     </ActionDropdown>
   )
@@ -77,13 +87,13 @@ const columns: ColumnDef<Class>[] = [
 ]
 
 export default function ClassDataTable() {
-  const classes = useClassesInYear()
+  const { classes, isLoading } = useClassContext()
 
   return (
     <DataTable
       columns={columns}
-      data={(classes.data as Class[]) || []}
-      isLoading={classes.isPending}
+      data={classes as Class[]}
+      isLoading={isLoading}
     />
   )
 }

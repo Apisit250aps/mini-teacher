@@ -1,7 +1,10 @@
 'use client'
 import React from 'react'
 import DataTable from '@/presentations/components/share/table/data-table'
-import { useStudentQueries } from '@/hooks/queries/use-student'
+import {
+  useClassMembersByClassQuery,
+  useStudentsByTeacherQuery,
+} from '@/hooks/queries'
 import { ColumnDef } from '@tanstack/react-table'
 import { Student } from '@/models/entities'
 import { Checkbox } from '@/presentations/components/ui/checkbox'
@@ -16,7 +19,8 @@ import {
   FormMessage,
 } from '@/presentations/components/ui/form'
 import { Button } from '@/presentations/components/ui/button'
-import { useGetClassMembers } from '@/hooks/queries/use-class'
+import { useClassContext } from '@/hooks/app/use-class'
+import { useYearContext } from '@/hooks/app/use-year'
 
 const columns: ColumnDef<Student>[] = [
   {
@@ -84,10 +88,12 @@ export default function StudentSelectTable({
 }: {
   onSubmit: (studentIds: string[]) => void
 }) {
-  const membersQuery = useGetClassMembers()
+  const { activeClass } = useClassContext()
+  const { teacher } = useYearContext()
+  const membersQuery = useClassMembersByClassQuery(activeClass?.id ?? '')
   const { data: members } = membersQuery
 
-  const { list } = useStudentQueries()
+  const list = useStudentsByTeacherQuery(teacher)
   const { data } = list
   const methods = useForm({
     resolver: zodResolver(
@@ -99,7 +105,7 @@ export default function StudentSelectTable({
     ),
   })
 
-  const excludeStudent = data?.data?.filter((student) => {
+  const excludeStudent = data?.filter((student) => {
     return !members?.some((member) => member.student.id === student.id)
   })
 

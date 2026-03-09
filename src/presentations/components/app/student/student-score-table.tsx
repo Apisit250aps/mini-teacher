@@ -10,7 +10,11 @@ import {
   TableRow,
 } from '@/presentations/components/ui/table'
 import { Spinner } from '@/presentations/components/ui/spinner'
-import { useStudentScore } from '@/hooks/app/use-score'
+import { useClassContext } from '@/hooks/app/use-class'
+import {
+  useClassMembersByClassQuery,
+  useScoreAssignsByClassQuery,
+} from '@/hooks/queries'
 import React from 'react'
 import {
   ContextMenu,
@@ -20,7 +24,15 @@ import {
 } from '@/presentations/components/ui/context-menu'
 
 export default function StudentScoreTable() {
-  const { scoreStudent, classMembers, isLoading } = useStudentScore()
+  const { activeClass } = useClassContext()
+  const classId = activeClass?.id ?? ''
+
+  const scoreAssignsQuery = useScoreAssignsByClassQuery(classId)
+  const classMembersQuery = useClassMembersByClassQuery(classId)
+
+  const scoreAssigns = scoreAssignsQuery.data
+  const classMembers = classMembersQuery.data
+  const isLoading = scoreAssignsQuery.isLoading || classMembersQuery.isLoading
 
   return (
     <div className="space-y-4">
@@ -34,10 +46,12 @@ export default function StudentScoreTable() {
             <TableRow>
               <TableHead className="w-20">รหัสนักเรียน</TableHead>
               <TableHead className="w-auto">ชื่อนักเรียน</TableHead>
-              {scoreStudent?.data?.map((assign) => (
+              {scoreAssigns?.map((assign) => (
                 <ContextMenu key={assign.id}>
                   <ContextMenuTrigger asChild>
-                    <TableHead className="text-center">{assign.name}</TableHead>
+                    <TableHead className="text-center">
+                      {assign.title}
+                    </TableHead>
                   </ContextMenuTrigger>
                   <ContextMenuContent>
                     <ContextMenuItem>Profile</ContextMenuItem>
@@ -53,7 +67,7 @@ export default function StudentScoreTable() {
             {isLoading ? (
               <TableRow>
                 <TableCell
-                  colSpan={scoreStudent?.data?.length ?? 0 + 2}
+                  colSpan={(scoreAssigns?.length ?? 0) + 2}
                   className="text-center py-10"
                 >
                   <Spinner />
@@ -68,21 +82,12 @@ export default function StudentScoreTable() {
                       {member.student.prefix}
                       {member.student.firstName} {member.student.lastName}
                     </TableCell>
-                    {scoreStudent?.data?.map((assign) => {
-                      const convertedAssign = {
-                        ...assign,
-                        assignDate: assign.assignDate
-                          ? new Date(assign.assignDate)
-                          : null,
-                        finalDate: assign.finalDate
-                          ? new Date(assign.finalDate)
-                          : null,
-                      }
+                    {scoreAssigns?.map((assign) => {
                       return (
                         <TableCell key={assign.id} className="text-center p-1">
                           <ScoreInputCell
                             studentId={member.studentId}
-                            assign={convertedAssign}
+                            assign={assign}
                           />
                         </TableCell>
                       )

@@ -1,17 +1,15 @@
 'use client'
 
 import { Input } from '@/presentations/components/ui/input'
-import { useClassContext } from '@/hooks/app/use-class'
-import { useYearContext } from '@/hooks/app/use-year'
-import { useScoreQueries } from '@/hooks/queries/use-score'
-import { ScoreAssignDetail } from '@/models'
+import { useScoreStudentMutations } from '@/hooks/queries'
+import { ScoreAssignWithScores } from '@/core/domain/data'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import z from 'zod'
 
 type ScoreInputCellProps = {
-  assign: ScoreAssignDetail
+  assign: ScoreAssignWithScores
   studentId: string
   disabled?: boolean
 }
@@ -21,9 +19,7 @@ export function ScoreInputCell({
   assign,
   studentId,
 }: ScoreInputCellProps) {
-  const { activeClass } = useClassContext()
-  const { activeYear } = useYearContext()
-  const { scoreStudent, onInputScore } = useScoreQueries()
+  const { create, update } = useScoreStudentMutations()
   const schema = useMemo(
     () =>
       z.object({
@@ -75,11 +71,20 @@ export function ScoreInputCell({
 
   const onCommit = useCallback(
     async (score: number) => {
-      if (!activeYear.id || !activeClass?.id) return
+      const currentScore = assign.scores.find((s) => s.studentId === studentId)
 
-      await onInputScore(assign.id, studentId, score)
+      if (currentScore?.id) {
+        await update(currentScore.id, { score })
+        return
+      }
+
+      await create({
+        assignmentId: assign.id,
+        studentId,
+        score,
+      })
     },
-    [activeYear.id, activeClass, onInputScore, assign.id, studentId],
+    [assign.id, assign.scores, create, studentId, update],
   )
 
   const commitValue = useCallback(
@@ -135,7 +140,7 @@ export function ScoreInputCell({
               e.currentTarget.blur()
             }
           }}
-          disabled={disabled || scoreStudent.isPending || !assign.isEditable}
+          disabled={disabled || !assign.isEditable}
         />
       )}
     />

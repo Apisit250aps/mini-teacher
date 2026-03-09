@@ -4,46 +4,46 @@ import ModalDialog from '@/presentations/components/share/overlay/modal-dialog'
 import React, { useCallback } from 'react'
 import StudentForm from '@/presentations/components/app/student/student-form'
 import { Button } from '@/presentations/components/ui/button'
-import { useStudentQueries } from '@/hooks/queries/use-student'
+import {
+  useClassMemberMutations,
+  useClassMembersByClassQuery,
+  useStudentMutations,
+  useStudentsByTeacherQuery,
+} from '@/hooks/queries'
 import { Student, StudentFormValue } from '@/models/entities'
 import { toast } from 'sonner'
 import { useOverlay } from '@/hooks/contexts/use-overlay'
 import { DropdownMenuItem } from '@/presentations/components/ui/dropdown-menu'
 import { Pen, Trash } from 'lucide-react'
 import { ConfirmDialog } from '@/presentations/components/share/overlay/confirm-dialog'
-import { useClassQueries, useGetClassMembers } from '@/hooks/queries/use-class'
 import { useClassContext } from '@/hooks/app/use-class'
+import { useYearContext } from '@/hooks/app/use-year'
 
 export function StudentCreateAction() {
-  const { create, list } = useStudentQueries()
+  const { teacher } = useYearContext()
+  const { create } = useStudentMutations()
+  const list = useStudentsByTeacherQuery(teacher)
   const { closeAll } = useOverlay()
 
   const onStudentCreate = useCallback(
     async (data: StudentFormValue) => {
-      await create.mutateAsync(
-        {
-          body: {
-            prefix: data.prefix,
-            code: data.code,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            nickname: data.nickname,
-          },
-        },
-        {
-          onSettled(data, error) {
-            if (error) {
-              toast.error('เกิดข้อผิดพลาดในการสร้างนักเรียน')
-              return
-            }
-            toast.success('สร้างนักเรียนสำเร็จ')
-            list.refetch()
-            closeAll()
-          },
-        },
-      )
+      try {
+        await create({
+          teacherId: teacher,
+          prefix: data.prefix,
+          code: data.code,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          nickname: data.nickname,
+        })
+        await list.query.refetch()
+        toast.success('สร้างนักเรียนสำเร็จ')
+        closeAll()
+      } catch {
+        toast.error('เกิดข้อผิดพลาดในการสร้างนักเรียน')
+      }
     },
-    [create, list, closeAll],
+    [closeAll, create, list.query, teacher],
   )
 
   return (
@@ -60,42 +60,31 @@ export function StudentCreateAction() {
 }
 
 export function StudentEditAction({ student }: { student: Student }) {
-  const { update, list } = useStudentQueries()
-  const member = useGetClassMembers()
+  const { teacher } = useYearContext()
+  const { activeClass } = useClassContext()
+  const { update } = useStudentMutations()
+  const list = useStudentsByTeacherQuery(teacher)
+  const member = useClassMembersByClassQuery(activeClass?.id ?? '')
   const { closeAll } = useOverlay()
 
   const onStudentUpdate = useCallback(
     async (data: StudentFormValue) => {
-      await update.mutateAsync(
-        {
-          params: {
-            path: {
-              studentId: student.id,
-            },
-          },
-          body: {
-            prefix: data.prefix,
-            code: data.code,
-            firstName: data.firstName,
-            lastName: data.lastName,
-            nickname: data.nickname,
-          },
-        },
-        {
-          onSettled(data, error) {
-            if (error) {
-              toast.error('เกิดข้อผิดพลาดในการแก้ไขนักเรียน')
-              return
-            }
-            toast.success('แก้ไขนักเรียนสำเร็จ')
-            list.refetch()
-            member.refetch()
-            closeAll()
-          },
-        },
-      )
+      try {
+        await update(student.id, {
+          prefix: data.prefix,
+          code: data.code,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          nickname: data.nickname,
+        })
+        await Promise.all([list.query.refetch(), member.query.refetch()])
+        toast.success('แก้ไขนักเรียนสำเร็จ')
+        closeAll()
+      } catch {
+        toast.error('เกิดข้อผิดพลาดในการแก้ไขนักเรียน')
+      }
     },
-    [closeAll, list, member, student.id, update],
+    [closeAll, list.query, member.query, student.id, update],
   )
 
   return (
@@ -126,31 +115,21 @@ export function StudentEditAction({ student }: { student: Student }) {
 }
 
 export function StudentDeleteAction({ studentId }: { studentId: string }) {
-  const { remove, list } = useStudentQueries()
+  const { teacher } = useYearContext()
+  const { remove } = useStudentMutations()
+  const list = useStudentsByTeacherQuery(teacher)
   const { closeAll } = useOverlay()
 
   const onStudentDelete = useCallback(async () => {
-    await remove.mutateAsync(
-      {
-        params: {
-          path: {
-            studentId: studentId,
-          },
-        },
-      },
-      {
-        onSettled(data, error) {
-          if (error) {
-            toast.error('เกิดข้อผิดพลาดในการลบนักเรียน')
-            return
-          }
-          toast.success('ลบนักเรียนสำเร็จ')
-          list.refetch()
-          closeAll()
-        },
-      },
-    )
-  }, [closeAll, list, remove, studentId])
+    try {
+      await remove(studentId)
+      await list.query.refetch()
+      toast.success('ลบนักเรียนสำเร็จ')
+      closeAll()
+    } catch {
+      toast.error('เกิดข้อผิดพลาดในการลบนักเรียน')
+    }
+  }, [closeAll, list.query, remove, studentId])
 
   return (
     <ConfirmDialog
@@ -169,31 +148,22 @@ export function StudentDeleteAction({ studentId }: { studentId: string }) {
 }
 
 export function MemberDeleteAction({ studentId }: { studentId: string }) {
-  const { addOrRemoveMember } = useClassQueries()
-  const member = useGetClassMembers()
+  const { remove } = useClassMemberMutations()
   const { activeClass } = useClassContext()
+  const member = useClassMembersByClassQuery(activeClass?.id ?? '')
   const { closeAll } = useOverlay()
 
   const onStudentDelete = useCallback(async () => {
-    await addOrRemoveMember.mutateAsync(
-      {
-        params: {
-          path: {
-            classId: activeClass!.id!,
-          },
-        },
-        body: {
-          studentId: studentId,
-        },
-      },
-      {
-        onSuccess() {
-          member.refetch()
-          closeAll()
-        },
-      },
-    )
-  }, [activeClass, addOrRemoveMember, closeAll, member, studentId])
+    if (!activeClass?.id) return
+
+    await remove({
+      classId: activeClass.id,
+      studentId,
+    })
+
+    await member.query.refetch()
+    closeAll()
+  }, [activeClass, closeAll, member.query, remove, studentId])
 
   return (
     <ConfirmDialog
