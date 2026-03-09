@@ -30,9 +30,7 @@ export function YearProvider({
     where: {
       userId: teacherId,
     },
-    orderBy: {
-      term: 'desc',
-    },
+    orderBy: [{ term: 'desc' }, { year: 'desc' }],
   })
 
   const active = useMemo(() => {

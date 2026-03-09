@@ -1,5 +1,5 @@
 'use client'
-import React, { useMemo } from 'react'
+import React from 'react'
 
 import { ClassWithMembers } from '@/core/domain/data'
 import { useYearContext } from './use-year'

@@ -11,6 +11,7 @@ export default function YearDataTable() {
     where: {
       userId: session.data?.user.id,
     },
+    orderBy: [{ term: 'desc' }, { year: 'desc' }],
   })
 
   const props = useMemo(() => {

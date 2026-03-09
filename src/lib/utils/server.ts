@@ -7,7 +7,6 @@ export const authorized = async (_: NextAuthRequest): Promise<User | null> => {
   if (!session || !session.user) {
     return null
   }
-  console.log('Authorized user:', session)
   return session.user
 }
 

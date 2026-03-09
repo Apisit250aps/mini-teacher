@@ -17,12 +17,31 @@ export type ClassMutations = {
 }
 
 export const useClassesByYearQuery = (yearId: string, filter?: ClassQuery) => {
+  /**
+   * Fetches a list of classes with their members for a specific academic year.
+   *
+   * @param yearId - The ID of the academic year to fetch classes for
+   * @param filter - Optional filter parameters to apply to the query
+   *
+   * @returns A query object containing:
+   * - `data`: An array of classes with their member information, or an empty array if no data is returned
+   * - `isLoading`: Whether the query is currently loading
+   * - `error`: Any error that occurred during the fetch
+   * - `refetch`: Function to manually refetch the data
+   *
+   * @remarks
+   * - The query is only enabled when `yearId` is provided
+   * - Results are transformed through the `selectData` function
+   * - Supports date-based parameters via `useApiQueryWithDates`
+   */
   const query = useApiQueryWithDates(
     'get',
     '/class/by-year/{yearId}',
     {
       params: {
-        path: { yearId },
+        path: {
+          yearId: yearId,
+        },
         query: toFilterQuery(filter),
       },
     },

@@ -6,11 +6,12 @@ import { Pen, Trash } from 'lucide-react'
 import YearCreateForm from './year-create-form'
 import { useYearMutations } from '@/hooks/queries'
 import { YearWithClasses } from '@/core/domain/data'
+import { useYearContext } from '@/hooks/app/use-year';
 
 export const DeleteYearAction = ({ yearId }: { yearId: string }) => {
   const { remove } = useYearMutations()
   const { closeAll } = useOverlay()
-
+  const { active } = useYearContext()
   const handleDelete = async () => {
     await remove(yearId)
     closeAll()
@@ -20,7 +21,11 @@ export const DeleteYearAction = ({ yearId }: { yearId: string }) => {
     <ConfirmDialog
       dialogKey={`DELETE_YEAR_${yearId}`}
       trigger={
-        <DropdownMenuItem variant="destructive" className="text-destructive">
+        <DropdownMenuItem
+          variant="destructive"
+          className="text-destructive"
+          disabled={active?.id === yearId}
+        >
           <Trash />
           ลบ
         </DropdownMenuItem>
@@ -35,7 +40,7 @@ export const DeleteYearAction = ({ yearId }: { yearId: string }) => {
 export const EditYearAction = ({ year }: { year: YearWithClasses }) => {
   const { update } = useYearMutations()
   const { closeAll } = useOverlay()
-
+  const { active } = useYearContext()
   const handleUpdate = async (data: { year: number; term: number }) => {
     await update(year.id, data).then(() => {
       closeAll()
@@ -48,7 +53,7 @@ export const EditYearAction = ({ year }: { year: YearWithClasses }) => {
       dialogKey={`EDIT_YEAR_${year.id}`}
       closeOutside={false}
       trigger={
-        <DropdownMenuItem>
+        <DropdownMenuItem disabled={active?.id === year.id}>
           <Pen />
           แก้ไขข้อมูล
         </DropdownMenuItem>
