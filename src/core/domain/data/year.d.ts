@@ -3,11 +3,11 @@ import type { Class } from '../entities/class'
 import type { User } from '../entities/user'
 import type { FindManyOptions } from './common'
 
-export type YearWithClasses = Year & {
+export interface YearWithClasses extends Year {
   classes: Class[]
 }
 
-export type YearWithOwnerAndClasses = Year & {
+export interface YearWithOwnerAndClasses extends Year {
   classes: Class[]
   owner: User
 }
