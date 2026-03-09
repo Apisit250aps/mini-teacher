@@ -162,3 +162,21 @@ export async function mutateApiData<TData, TVariables>(
 
   return unwrapApiData(result as ApiResponse<TData>, fallbackMessage)
 }
+
+export async function mutateApiSuccess<TVariables>(
+  mutateAsync: MutateAsyncFn<TVariables>,
+  variables: TVariables,
+  options?: ApiMutationOptions,
+): Promise<void> {
+  const { fallbackMessage, ...settledOptions } = options ?? {}
+
+  const result = await mutateAsync(variables, {
+    onSettled: createApiSettledHandler(settledOptions),
+  })
+
+  if (!result.success) {
+    throw new Error(
+      result.error || result.message || fallbackMessage || 'Operation failed',
+    )
+  }
+}
