@@ -1,9 +1,8 @@
 'use client'
 import React from 'react'
-import { Year } from '@/models'
 
 type AppContext = {
-  years?: Year
+  active?: boolean
 }
 
 const AppContext = React.createContext<AppContext | null>(null)
@@ -12,7 +11,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   return (
     <AppContext.Provider
       value={{
-        years: undefined,
+        active: true,
       }}
     >
       {children}

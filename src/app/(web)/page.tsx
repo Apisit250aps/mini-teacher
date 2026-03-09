@@ -1,6 +1,7 @@
 import { auth } from '@/auth'
 import { yearRepository } from '@/core/repositories'
 import YearCreateCard from '@/presentations/components/app/year/year-create-card'
+import YearIntroSelect from '@/presentations/components/app/year/year-intro-select'
 import {
   Empty,
   EmptyContent,
@@ -25,7 +26,7 @@ export default async function Home() {
   return (
     <div className="h-full">
       <Empty className="bg-muted/30 h-dvh">
-        <EmptyHeader>
+        {/* <EmptyHeader>
           <EmptyMedia variant="icon">
             <School />
           </EmptyMedia>
@@ -34,23 +35,12 @@ export default async function Home() {
             สวัสดีครับ ยินดีต้อนรับสู่ระบบจัดการห้องเรียนของเรา!
             เริ่มต้นด้วยการสร้างห้องเรียนใหม่หรือเข้าร่วมห้องเรียนที่มีอยู่แล้วเพื่อเริ่มต้นการเรียนรู้และการสอนอย่างมีประสิทธิภาพ
           </EmptyDescription>
-        </EmptyHeader>
+        </EmptyHeader> */}
         <EmptyContent>
           {years.length === 0 ? (
             <YearCreateCard />
           ) : (
-            <>
-              {years.map((year) => (
-                <div key={year.id} className="p-4 border rounded">
-                  <h3 className="text-lg font-semibold">
-                    {year.year} เทอม {year.term}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {year.description}
-                  </p>
-                </div>
-              ))}
-            </>
+            <YearIntroSelect years={years} />
           )}
         </EmptyContent>
       </Empty>

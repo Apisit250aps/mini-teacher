@@ -43,7 +43,7 @@ export default async function Layout({
   }
 
   return (
-    <YearProvider activeYear={activeYear} years={years}>
+    <YearProvider activeYear={{ year: parseInt(year), term: parseInt(term) }}>
       {children}
     </YearProvider>
   )

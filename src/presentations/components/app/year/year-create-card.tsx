@@ -23,8 +23,10 @@ import { yearCreateSchema } from '@/core/domain/schema/year.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Textarea } from '../../ui/textarea'
 import { useYearMutations } from '@/hooks/queries/year-query'
+import { useRouter } from 'next/navigation'
 
 export default function YearCreateCard() {
+  const router = useRouter()
   const methods = useForm({
     resolver: zodResolver(
       yearCreateSchema.omit({
@@ -46,7 +48,9 @@ export default function YearCreateCard() {
       <Form {...methods}>
         <form
           className="w-full"
-          onSubmit={methods.handleSubmit(create)}
+          onSubmit={methods.handleSubmit((data) =>
+            create(data).then(() => router.refresh()),
+          )}
         >
           <Card className="w-full">
             <CardHeader>

@@ -31,7 +31,7 @@ export function YearSwitcher() {
   const router = useRouter()
   const { isMobile } = useSidebar()
   const { closeAll } = useOverlay()
-  const { activeYear, years } = useYearContext()
+  const { active, years } = useYearContext()
   const { create } = useYearMutations()
 
   const onSubmit = useCallback(
@@ -54,7 +54,7 @@ export function YearSwitcher() {
     [router],
   )
 
-  if (!activeYear) {
+  if (!active) {
     return null
   }
 
@@ -73,10 +73,10 @@ export function YearSwitcher() {
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">
-                  ปีการศึกษา {activeYear.year}
+                  ปีการศึกษา {active.year}
                 </span>
                 <span className="truncate text-xs">
-                  ภาคเรียนที่ {activeYear.term}
+                  ภาคเรียนที่ {active.term}
                 </span>
               </div>
               <ChevronsUpDown className="ml-auto" />
@@ -101,7 +101,7 @@ export function YearSwitcher() {
                   <Calendar className="size-3.5 shrink-0" />
                 </div>
                 {year.term} / {year.year}
-                {activeYear.id === year.id && (
+                {active.id === year.id && (
                   <DropdownMenuShortcut>Current</DropdownMenuShortcut>
                 )}
               </DropdownMenuItem>

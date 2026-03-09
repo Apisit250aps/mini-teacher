@@ -9,7 +9,6 @@ export const dateSchema = z.coerce.date({
 export const optionalNullableStringSchema = z
   .string()
   .trim()
-  .min(1, 'ต้องมีอย่างน้อย 1 ตัวอักษร')
   .nullable()
   .optional()
 

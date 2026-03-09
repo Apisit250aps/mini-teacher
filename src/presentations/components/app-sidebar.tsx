@@ -16,12 +16,11 @@ import {
 import { useYearContext } from '@/hooks/app/use-year'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { activeYear } = useYearContext()
+  const { active } = useYearContext()
 
   const basePath = React.useMemo(
-    () =>
-      activeYear ? `/${activeYear.year}/${activeYear.term}/class` : '/class',
-    [activeYear],
+    () => (active ? `/${active.year}/${active.term}/class` : '/class'),
+    [active],
   )
 
   const nav = React.useMemo(
