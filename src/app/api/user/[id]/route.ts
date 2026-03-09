@@ -1,6 +1,6 @@
 import { userUseCase } from '@/core/usecases'
 import { toErrorResponse } from '@/lib/utils/error'
-import { ok, okOnlyMessage } from '@/lib/utils/server'
+import { authorized, ok, okOnlyMessage, unauthorized } from '@/lib/utils/server'
 import type { NextAuthRequest } from 'next-auth'
 
 type Context = {
@@ -19,6 +19,8 @@ export async function GET(_: NextAuthRequest, context: Context) {
 
 export async function PATCH(request: NextAuthRequest, context: Context) {
   try {
+    const user = await authorized(request)
+    if (!user) return unauthorized()
     const { id } = await context.params
     const payload = await request.json()
     const data = await userUseCase.update(id, payload)
@@ -28,8 +30,10 @@ export async function PATCH(request: NextAuthRequest, context: Context) {
   }
 }
 
-export async function DELETE(_: NextAuthRequest, context: Context) {
+export async function DELETE(request: NextAuthRequest, context: Context) {
   try {
+    const user = await authorized(request)
+    if (!user) return unauthorized()
     const { id } = await context.params
     await userUseCase.delete(id)
     return okOnlyMessage('ลบผู้ใช้สำเร็จ')
