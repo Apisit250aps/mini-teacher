@@ -1,13 +1,18 @@
 'use client'
 import React from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import PageLayout from '@/components/layouts/page-layout'
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/presentations/components/ui/tabs'
+import PageLayout from '@/presentations/components/layouts/page-layout'
 import { Class } from '@/models/entities'
-import ClassMemberSection from '@/components/app/class/class-member-section'
+import ClassMemberSection from '@/presentations/components/app/class/class-member-section'
 import { useStoredTab } from '@/hooks/contexts/tab-storage'
 import { useClassContext } from '@/hooks/app/use-class'
-import StudentCheckTable from '@/components/app/student/student-check-table'
-import StudentScoreTable from '@/components/app/student/student-score-table'
+import StudentCheckTable from '@/presentations/components/app/student/student-check-table'
+import StudentScoreTable from '@/presentations/components/app/student/student-score-table'
 
 const DEFAULT_ACTIVE_TAB = 'check'
 const ALLOWED_TABS = [DEFAULT_ACTIVE_TAB, 'member', 'score']

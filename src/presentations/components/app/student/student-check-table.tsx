@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useMemo } from 'react'
-import { CheckStatusCell } from '@/components/app/student/actions/check-status-cell'
+import { CheckStatusCell } from '@/presentations/components/app/student/actions/check-status-cell'
 import { CheckDateCreateAction } from '../class/check/action-modal'
 import { useStudentCheck } from '@/hooks/app/use-check'
 import {
@@ -11,8 +11,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import { Spinner } from '@/components/ui/spinner'
+} from '@/presentations/components/ui/table'
+import { Spinner } from '@/presentations/components/ui/spinner'
 
 type CheckDateWithStudents = {
   id: string
@@ -81,7 +81,10 @@ export default function StudentCheckTable() {
                     </TableCell>
                     {checkDateList.map((checkDate) => {
                       return (
-                        <TableCell key={checkDate.id} className="text-center p-1">
+                        <TableCell
+                          key={checkDate.id}
+                          className="text-center p-1"
+                        >
                           <CheckStatusCell
                             studentId={member.student.id}
                             checkDate={checkDate}

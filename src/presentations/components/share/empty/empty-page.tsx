@@ -5,7 +5,7 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from '@/components/ui/empty'
+} from '@/presentations/components/ui/empty'
 import { IconBell } from '@tabler/icons-react'
 type EmptyPageProps = {
   title: string
@@ -31,9 +31,7 @@ export default function EmptyPage({
           {description}
         </EmptyDescription>
       </EmptyHeader>
-      <EmptyContent>
-        {action}
-      </EmptyContent>
+      <EmptyContent>{action}</EmptyContent>
     </Empty>
   )
 }

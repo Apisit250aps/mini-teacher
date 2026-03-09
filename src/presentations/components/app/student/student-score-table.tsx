@@ -1,6 +1,6 @@
 'use client'
-import { ScoreAssignCreateAction } from '@/components/app/class/score/action-modal'
-import { ScoreInputCell } from '@/components/app/student/actions/score-input-cell'
+import { ScoreAssignCreateAction } from '@/presentations/components/app/class/score/action-modal'
+import { ScoreInputCell } from '@/presentations/components/app/student/actions/score-input-cell'
 import {
   Table,
   TableBody,
@@ -8,8 +8,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import { Spinner } from '@/components/ui/spinner'
+} from '@/presentations/components/ui/table'
+import { Spinner } from '@/presentations/components/ui/spinner'
 import { useStudentScore } from '@/hooks/app/use-score'
 import React from 'react'
 import {
@@ -17,7 +17,7 @@ import {
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
-} from '@/components/ui/context-menu'
+} from '@/presentations/components/ui/context-menu'
 
 export default function StudentScoreTable() {
   const { scoreStudent, classMembers, isLoading } = useStudentScore()

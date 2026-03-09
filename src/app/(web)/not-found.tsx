@@ -1,6 +1,6 @@
-import EmptyPage from '@/components/share/empty/empty-page'
-import { Button } from '@/components/ui/button'
-import { AlertCircleIcon } from 'lucide-react';
+import EmptyPage from '@/presentations/components/share/empty/empty-page'
+import { Button } from '@/presentations/components/ui/button'
+import { AlertCircleIcon } from 'lucide-react'
 import Link from 'next/link'
 
 export default function Page() {

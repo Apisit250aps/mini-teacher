@@ -9,7 +9,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
+} from '@/presentations/components/ui/alert-dialog'
 import { useOverlay } from '@/hooks/contexts/use-overlay'
 
 type ConfirmDialogProps = {

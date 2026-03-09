@@ -1,6 +1,6 @@
 'use client'
 'use no memo'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/presentations/components/ui/button'
 import {
   TableHeader,
   TableRow,
@@ -8,14 +8,14 @@ import {
   TableBody,
   TableCell,
   Table,
-} from '@/components/ui/table'
+} from '@/presentations/components/ui/table'
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
-} from '@/components/ui/select'
+} from '@/presentations/components/ui/select'
 import {
   IconChevronsLeft,
   IconChevronLeft,
@@ -34,8 +34,8 @@ import {
 } from '@tanstack/react-table'
 import React, { useEffect, useRef } from 'react'
 import { useMemo } from 'react'
-import { Label } from '@/components/ui/label'
-import { Spinner } from '@/components/ui/spinner'
+import { Label } from '@/presentations/components/ui/label'
+import { Spinner } from '@/presentations/components/ui/spinner'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]

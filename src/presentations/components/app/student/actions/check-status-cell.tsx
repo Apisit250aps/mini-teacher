@@ -5,7 +5,7 @@ import {
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
-} from '@/components/ui/context-menu'
+} from '@/presentations/components/ui/context-menu'
 import { useClassContext } from '@/hooks/app/use-class'
 import { useCheckQueries } from '@/hooks/queries/use-check'
 import { CHECK_STATUS } from '@/models'

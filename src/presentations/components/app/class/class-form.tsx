@@ -1,5 +1,5 @@
 'use client'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/presentations/components/ui/button'
 import {
   Form,
   FormControl,
@@ -7,13 +7,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+} from '@/presentations/components/ui/form'
+import { Input } from '@/presentations/components/ui/input'
 import { useYearContext } from '@/hooks/app/use-year'
 import { ClassFormSchema, type ClassFormValue } from '@/models/entities'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { Textarea } from '@/components/ui/textarea'
+import { Textarea } from '@/presentations/components/ui/textarea'
 
 export default function ClassForm({
   value,

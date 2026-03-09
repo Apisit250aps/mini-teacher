@@ -1,5 +1,5 @@
 import { auth } from '@/auth'
-import { LoginForm } from '@/components/login-form'
+import { LoginForm } from '@/presentations/components/login-form'
 import { LoginProvider } from '@/hooks/use-login'
 import { redirect } from 'next/navigation'
 

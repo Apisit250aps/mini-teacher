@@ -1,5 +1,5 @@
 'use client'
-import DataTable from '@/components/share/table/data-table'
+import DataTable from '@/presentations/components/share/table/data-table'
 import { useYearQueries } from '@/hooks/queries/use-year'
 import { useMemo } from 'react'
 import { yearColumns } from './year-columns'

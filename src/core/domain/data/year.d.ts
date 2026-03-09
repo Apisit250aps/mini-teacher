@@ -13,6 +13,7 @@ export interface YearWithOwnerAndClasses extends Year {
 }
 
 export interface YearCreateData {
+  userId: string
   year: number
   term: number
   description?: string | null

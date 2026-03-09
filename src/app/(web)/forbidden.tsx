@@ -1,5 +1,5 @@
-import EmptyPage from '@/components/share/empty/empty-page'
-import { Button } from '@/components/ui/button'
+import EmptyPage from '@/presentations/components/share/empty/empty-page'
+import { Button } from '@/presentations/components/ui/button'
 import { Ban } from 'lucide-react'
 import Link from 'next/link'
 

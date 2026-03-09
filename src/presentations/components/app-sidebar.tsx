@@ -3,16 +3,16 @@
 import * as React from 'react'
 import { Calendar1, GraduationCap, LibraryBig } from 'lucide-react'
 
-import { NavMenu } from '@/components/nav-menu'
-import { NavUser } from '@/components/nav-user'
-import { TeamSwitcher } from '@/components/team-switcher'
+import { NavMenu } from '@/presentations/components/nav-menu'
+import { NavUser } from '@/presentations/components/nav-user'
+import { TeamSwitcher } from '@/presentations/components/team-switcher'
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from '@/components/ui/sidebar'
+} from '@/presentations/components/ui/sidebar'
 import { useClassContext } from '@/hooks/app/use-class'
 import { useYearContext } from '@/hooks/app/use-year'
 

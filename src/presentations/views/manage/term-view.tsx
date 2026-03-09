@@ -1,5 +1,5 @@
-import YearDataTable from '@/components/app/year/year-data-table'
-import PageLayout from '@/components/layouts/page-layout'
+import YearDataTable from '@/presentations/components/app/year/year-data-table'
+import PageLayout from '@/presentations/components/layouts/page-layout'
 import React from 'react'
 
 export default function TermsView() {

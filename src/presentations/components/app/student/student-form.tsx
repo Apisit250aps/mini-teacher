@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
+import { Button } from '@/presentations/components/ui/button'
 import {
   Form,
   FormControl,
@@ -8,8 +8,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+} from '@/presentations/components/ui/form'
+import { Input } from '@/presentations/components/ui/input'
 import { StudentFormSchema, StudentFormValue } from '@/models/entities'
 import { zodResolver } from '@hookform/resolvers/zod'
 import React from 'react'

@@ -1,10 +1,14 @@
 'use client'
 import { GalleryVerticalEnd } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import { Field, FieldGroup, FieldSeparator } from '@/components/ui/field'
-import { Input } from '@/components/ui/input'
-import { InputPassword } from '@/components/ui/input-password'
+import { Button } from '@/presentations/components/ui/button'
+import {
+  Field,
+  FieldGroup,
+  FieldSeparator,
+} from '@/presentations/components/ui/field'
+import { Input } from '@/presentations/components/ui/input'
+import { InputPassword } from '@/presentations/components/ui/input-password'
 import {
   Form,
   FormControl,
@@ -12,7 +16,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
+} from '@/presentations/components/ui/form'
 import { useLogin } from '@/hooks/use-login'
 
 export function LoginForm({

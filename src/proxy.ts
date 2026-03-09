@@ -6,7 +6,7 @@ import { debugMiddlewares } from './lib/middlewares/app';
 export default auth((req) =>
   useMiddlewares(req, [
     {
-      prefix: '/*',
+      prefix: '/',
       middlewares: [debugMiddlewares, signAuth],
     },
   ]),

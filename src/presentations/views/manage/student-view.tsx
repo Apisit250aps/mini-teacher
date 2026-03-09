@@ -1,8 +1,8 @@
 'use client'
 
-import { StudentCreateAction } from '@/components/app/student/student-action'
-import { StudentDataTable } from '@/components/app/student/student-data-table'
-import PageLayout from '@/components/layouts/page-layout'
+import { StudentCreateAction } from '@/presentations/components/app/student/student-action'
+import { StudentDataTable } from '@/presentations/components/app/student/student-data-table'
+import PageLayout from '@/presentations/components/layouts/page-layout'
 
 export default function StudentView() {
   return (

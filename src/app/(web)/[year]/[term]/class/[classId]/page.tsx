@@ -4,9 +4,9 @@ import {
   getYearsByYearTerm,
 } from '@/models/repositories'
 import { ClassProvider } from '@/hooks/app/use-class'
-import EmptyPage from '@/components/share/empty/empty-page'
+import EmptyPage from '@/presentations/components/share/empty/empty-page'
 import { Album, Calendar } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/presentations/components/ui/button'
 import Link from 'next/link'
 import { forbidden } from 'next/navigation'
 import { auth } from '@/auth'

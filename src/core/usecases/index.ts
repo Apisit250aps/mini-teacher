@@ -10,6 +10,7 @@ import {
   yearRepository,
 } from '@/core/repositories'
 
+import { createYearUseCase } from './year.usecase'
 import { createCheckDateUseCase } from './check-date.usecase'
 import { createCheckStudentUseCase } from './check-student.usecase'
 import { createClassMemberUseCase } from './class-member.usecase'
@@ -18,7 +19,6 @@ import { createScoreAssignUseCase } from './score-assign.usecase'
 import { createScoreStudentUseCase } from './score-student.usecase'
 import { createStudentUseCase } from './student.usecase'
 import { createUserUseCase } from './user.usecase'
-import { createYearUseCase } from './year.usecase'
 
 export const userUseCase = createUserUseCase(userRepository)
 export const yearUseCase = createYearUseCase(yearRepository)

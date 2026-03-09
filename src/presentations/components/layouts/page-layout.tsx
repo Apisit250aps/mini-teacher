@@ -5,7 +5,7 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-} from '@/components/ui/card'
+} from '@/presentations/components/ui/card'
 
 type PageLayoutProps = {
   children?: React.ReactNode
@@ -29,7 +29,9 @@ export default function PageLayout({
         </div>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
-      <CardContent className="w-full max-w-full overflow-x-auto">{children}</CardContent>
+      <CardContent className="w-full max-w-full overflow-x-auto">
+        {children}
+      </CardContent>
     </Card>
   )
 }

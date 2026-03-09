@@ -1,5 +1,5 @@
 import React from 'react'
-import EmptyPage from '@/components/share/empty/empty-page'
+import EmptyPage from '@/presentations/components/share/empty/empty-page'
 import { auth } from '@/auth'
 import { YearProvider } from '@/hooks/app/use-year'
 import { getYearsByYearTerm, getYearsByAuthUser } from '@/models/repositories'

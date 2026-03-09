@@ -1,17 +1,17 @@
 'use client'
-import DataTable from '@/components/share/table/data-table'
+import DataTable from '@/presentations/components/share/table/data-table'
 import { useClassQueries, useGetClassMembers } from '@/hooks/queries/use-class'
 import { ClassMemberDetail } from '@/models/entities'
 import { Cell, ColumnDef } from '@tanstack/react-table'
-import MemberCreate from '@/components/app/class/member/member-create'
-import { ActionDropdown } from '@/components/share/overlay/action-dropdown'
+import MemberCreate from '@/presentations/components/app/class/member/member-create'
+import { ActionDropdown } from '@/presentations/components/share/overlay/action-dropdown'
 import {
   MemberDeleteAction,
   StudentEditAction,
-} from '@/components/app/student/student-action'
-import ModalDialog from '@/components/share/overlay/modal-dialog'
-import StudentSelectTable from '@/components/app/student/student-select-table'
-import { Button } from '@/components/ui/button'
+} from '@/presentations/components/app/student/student-action'
+import ModalDialog from '@/presentations/components/share/overlay/modal-dialog'
+import StudentSelectTable from '@/presentations/components/app/student/student-select-table'
+import { Button } from '@/presentations/components/ui/button'
 import { useClassContext } from '@/hooks/app/use-class'
 import { useYearContext } from '@/hooks/app/use-year'
 import { useOverlay } from '@/hooks/contexts/use-overlay'
@@ -95,7 +95,7 @@ const MemberAdd = () => {
         return addOrRemoveMember.mutateAsync({
           params: {
             path: {
-                classId: activeClass?.id || '',
+              classId: activeClass?.id || '',
             },
           },
           body: {

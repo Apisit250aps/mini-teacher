@@ -1,13 +1,13 @@
 'use client'
-import { ActionDropdown } from '@/components/share/overlay/action-dropdown'
-import DataTable from '@/components/share/table/data-table'
+import { ActionDropdown } from '@/presentations/components/share/overlay/action-dropdown'
+import DataTable from '@/presentations/components/share/table/data-table'
 import { useStudentQueries } from '@/hooks/queries/use-student'
 import { Student } from '@/models/entities'
 import { Cell, ColumnDef } from '@tanstack/react-table'
 import {
   StudentDeleteAction,
   StudentEditAction,
-} from '@/components/app/student/student-action'
+} from '@/presentations/components/app/student/student-action'
 
 const ColumnActions = ({ cell }: { cell: Cell<Student, unknown> }) => {
   return (

@@ -24,7 +24,6 @@ export const yearCreateSchema = yearEntitySchema.omit({
 })
 
 export const yearUpdateSchema = yearCreateSchema
-  .omit({ userId: true })
   .partial()
   .refine(ensureAtLeastOneField, {
     message: 'ต้องมีข้อมูลอย่างน้อย 1 ฟิลด์',

@@ -2,22 +2,22 @@
 
 import React from 'react'
 import Link from 'next/link'
-import PageLayout from '@/components/layouts/page-layout'
-import { Button } from '@/components/ui/button'
+import PageLayout from '@/presentations/components/layouts/page-layout'
+import { Button } from '@/presentations/components/ui/button'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
+} from '@/presentations/components/ui/card'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from '@/presentations/components/ui/select'
 import {
   Table,
   TableBody,
@@ -25,9 +25,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import EmptyPage from '@/components/share/empty/empty-page'
-import { Spinner } from '@/components/ui/spinner'
+} from '@/presentations/components/ui/table'
+import EmptyPage from '@/presentations/components/share/empty/empty-page'
+import { Spinner } from '@/presentations/components/ui/spinner'
 import { useClassContext } from '@/hooks/app/use-class'
 import { useYearContext } from '@/hooks/app/use-year'
 import { useGetClassMembers } from '@/hooks/queries/use-class'
@@ -195,7 +195,8 @@ export default function Page() {
       scoreSlots,
       scoreFilled,
       scoreRate: scoreSlots > 0 ? (scoreFilled / scoreSlots) * 100 : 0,
-      averageScore: classFullScore > 0 ? (scoreTotal / classFullScore) * 100 : 0,
+      averageScore:
+        classFullScore > 0 ? (scoreTotal / classFullScore) * 100 : 0,
     }
   }, [
     attendanceByStudent,
@@ -213,12 +214,12 @@ export default function Page() {
       const attendedCount = (attendance?.present ?? 0) + (attendance?.late ?? 0)
 
       const attendanceRate =
-        checkDates.length > 0
-          ? (attendedCount / checkDates.length) * 100
-          : 0
+        checkDates.length > 0 ? (attendedCount / checkDates.length) * 100 : 0
 
       const averageScore =
-        totalAssignableScore > 0 ? ((score?.total ?? 0) / totalAssignableScore) * 100 : 0
+        totalAssignableScore > 0
+          ? ((score?.total ?? 0) / totalAssignableScore) * 100
+          : 0
 
       const grade = getCurrentGrade(averageScore, totalAssignableScore > 0)
 
@@ -244,7 +245,9 @@ export default function Page() {
   ])
 
   const isLoading =
-    membersQuery.isPending || checksQuery.isPending || scoreAssignsQuery.isPending
+    membersQuery.isPending ||
+    checksQuery.isPending ||
+    scoreAssignsQuery.isPending
 
   if (classes.length === 0) {
     return (
@@ -321,7 +324,8 @@ export default function Page() {
             <CardTitle>{formatPercent(totals.averageScore)}</CardTitle>
           </CardHeader>
           <CardContent className="text-xs text-muted-foreground">
-            เต็มรวม {totalAssignableScore} คะแนน • กรอกแล้ว {totals.scoreFilled}/{totals.scoreSlots || 0}
+            เต็มรวม {totalAssignableScore} คะแนน • กรอกแล้ว {totals.scoreFilled}
+            /{totals.scoreSlots || 0}
           </CardContent>
         </Card>
       </div>
@@ -360,7 +364,10 @@ export default function Page() {
                 </TableRow>
               ) : studentRows.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={9} className="py-10 text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={9}
+                    className="py-10 text-center text-muted-foreground"
+                  >
                     ไม่พบข้อมูลนักเรียนในห้องเรียนนี้
                   </TableCell>
                 </TableRow>
@@ -373,8 +380,12 @@ export default function Page() {
                     <TableCell className="text-center">{row.absent}</TableCell>
                     <TableCell className="text-center">{row.late}</TableCell>
                     <TableCell className="text-center">{row.leave}</TableCell>
-                    <TableCell className="text-right">{formatPercent(row.attendanceRate)}</TableCell>
-                    <TableCell className="text-right">{formatPercent(row.averageScore)}</TableCell>
+                    <TableCell className="text-right">
+                      {formatPercent(row.attendanceRate)}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {formatPercent(row.averageScore)}
+                    </TableCell>
                     <TableCell className="text-center">{row.grade}</TableCell>
                   </TableRow>
                 ))

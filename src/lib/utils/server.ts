@@ -1,14 +1,14 @@
-
+import { auth } from '@/auth'
 import { NextAuthRequest, User } from 'next-auth'
 import { NextResponse } from 'next/server'
 
-export const authorized = async (
-  request: NextAuthRequest,
-): Promise<User | null> => {
-  if (!request.auth) {
+export const authorized = async (_: NextAuthRequest): Promise<User | null> => {
+  const session = await auth()
+  if (!session || !session.user) {
     return null
   }
-  return request.auth.user
+  console.log('Authorized user:', session)
+  return session.user
 }
 
 export const ok = <T>(message: string, data: T, status = 200) =>

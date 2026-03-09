@@ -1,10 +1,10 @@
 'use client'
 import React from 'react'
-import DataTable from '@/components/share/table/data-table'
+import DataTable from '@/presentations/components/share/table/data-table'
 import { useStudentQueries } from '@/hooks/queries/use-student'
 import { ColumnDef } from '@tanstack/react-table'
 import { Student } from '@/models/entities'
-import { Checkbox } from '@/components/ui/checkbox'
+import { Checkbox } from '@/presentations/components/ui/checkbox'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import z from 'zod'
@@ -14,8 +14,8 @@ import {
   FormField,
   FormItem,
   FormMessage,
-} from '@/components/ui/form'
-import { Button } from '@/components/ui/button'
+} from '@/presentations/components/ui/form'
+import { Button } from '@/presentations/components/ui/button'
 import { useGetClassMembers } from '@/hooks/queries/use-class'
 
 const columns: ColumnDef<Student>[] = [

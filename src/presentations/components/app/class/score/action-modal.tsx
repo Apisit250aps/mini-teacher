@@ -1,6 +1,6 @@
 'use client'
-import ModalDialog from '@/components/share/overlay/modal-dialog'
-import { Button } from '@/components/ui/button'
+import ModalDialog from '@/presentations/components/share/overlay/modal-dialog'
+import { Button } from '@/presentations/components/ui/button'
 import {
   Form,
   FormControl,
@@ -8,15 +8,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+} from '@/presentations/components/ui/form'
+import { Input } from '@/presentations/components/ui/input'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from '@/presentations/components/ui/select'
 import { useClassContext } from '@/hooks/app/use-class'
 import { useYearContext } from '@/hooks/app/use-year'
 import { useOverlay } from '@/hooks/contexts/use-overlay'

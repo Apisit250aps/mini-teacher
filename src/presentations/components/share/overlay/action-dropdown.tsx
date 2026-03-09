@@ -1,11 +1,11 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
+import { Button } from '@/presentations/components/ui/button'
 import {
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenu,
-} from '@/components/ui/dropdown-menu'
+} from '@/presentations/components/ui/dropdown-menu'
 import { useOverlay } from '@/hooks/contexts/use-overlay'
 
 import { IconDotsVertical } from '@tabler/icons-react'

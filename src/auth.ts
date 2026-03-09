@@ -9,5 +9,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     strategy: 'jwt',
   },
   providers: [Google],
-  callbacks: {},
+  callbacks: {
+    
+  },
 })

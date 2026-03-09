@@ -28,6 +28,9 @@
       ],
       "@prisma": [
         "./prisma/generated/client"
+      ],
+      "@/components/*": [
+        "./src/presentations/components/*"
       ]
     }
   },

@@ -7,25 +7,20 @@ import {
   uuidSchema,
 } from './common'
 
-export const assignmentEntitySchema = z
-  .object({
-    id: uuidSchema,
-    classId: uuidSchema,
-    title: z.string().trim().min(1),
-    description: optionalNullableStringSchema,
-    minScore: z.number().int().min(0),
-    maxScore: z.number().int().min(0),
-    type: assignTypeSchema,
-    assignDate: dateSchema.nullable().optional(),
-    dueDate: dateSchema.nullable().optional(),
-    isEditable: z.boolean(),
-    createdAt: z.date(),
-    updatedAt: z.date(),
-  })
-  .refine((value) => value.maxScore >= value.minScore, {
-    message: 'maxScore ต้องมากกว่าหรือเท่ากับ minScore',
-    path: ['maxScore'],
-  })
+export const assignmentEntitySchema = z.object({
+  id: uuidSchema,
+  classId: uuidSchema,
+  title: z.string().trim().min(1),
+  description: optionalNullableStringSchema,
+  minScore: z.number().int().min(0),
+  maxScore: z.number().int().min(0),
+  type: assignTypeSchema,
+  assignDate: dateSchema.nullable().optional(),
+  dueDate: dateSchema.nullable().optional(),
+  isEditable: z.boolean(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+})
 
 export const assignmentCreateSchema = assignmentEntitySchema.omit({
   id: true,

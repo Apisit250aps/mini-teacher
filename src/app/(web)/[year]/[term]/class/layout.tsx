@@ -1,5 +1,5 @@
 'use client'
-import DashboardLayout from '@/components/layouts/dashboard-layout'
+import DashboardLayout from '@/presentations/components/layouts/dashboard-layout'
 import { ClassProvider } from '@/hooks/app/use-class'
 
 export default function Layout({
