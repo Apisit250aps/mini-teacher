@@ -29,8 +29,6 @@ model User {
   email?: string | null;
   emailVerified?: utcDateTime | null;
   image?: string | null;
-  accounts?: Account[];
-  sessions?: Session[];
   isActive: boolean;
   isTeacher: boolean;
   isAdmin: boolean;
@@ -38,8 +36,6 @@ model User {
   lastName?: string | null;
   createdAt: utcDateTime;
   updatedAt: utcDateTime;
-  years?: Year[];
-  classMembers?: ClassMember[];
 }
 
 @doc("DB table: accounts")
@@ -59,7 +55,6 @@ model Account {
   session_state?: string | null;
   createdAt: utcDateTime;
   updatedAt: utcDateTime;
-  user?: User | null;
 }
 
 @doc("DB table: sessions")
@@ -69,7 +64,6 @@ model Session {
   sessionToken: string;
   userId: string;
   expires: utcDateTime;
-  user?: User | null;
   createdAt: utcDateTime;
   updatedAt: utcDateTime;
 }
@@ -94,8 +88,6 @@ model Year {
   isActive: boolean;
   createdAt: utcDateTime;
   updatedAt: utcDateTime;
-  owner?: User | null;
-  classes?: Class[];
 }
 
 @doc("DB table: classes")
@@ -109,10 +101,6 @@ model Class {
   isActive: boolean;
   createdAt: utcDateTime;
   updatedAt: utcDateTime;
-  year?: Year | null;
-  classMembers?: ClassMember[];
-  checkDates?: CheckDate[];
-  assignments?: Assignment[];
 }
 
 @doc("DB table: students")
@@ -127,9 +115,6 @@ model Student {
   nickname?: string | null;
   createdAt: utcDateTime;
   updatedAt: utcDateTime;
-  classMembers?: ClassMember[];
-  checkStudents?: CheckStudent[];
-  scores?: Score[];
 }
 
 @doc("DB table: class_members")
@@ -140,9 +125,6 @@ model ClassMember {
   studentId: string;
   createdAt: utcDateTime;
   updatedAt: utcDateTime;
-  class?: Class | null;
-  student?: Student | null;
-  user?: User | null;
   userId?: string | null;
 }
 
@@ -156,8 +138,6 @@ model CheckDate {
   isEditable: boolean;
   createdAt: utcDateTime;
   updatedAt: utcDateTime;
-  class?: Class | null;
-  checkStudents?: CheckStudent[];
 }
 
 @doc("DB table: check_students")
@@ -169,8 +149,6 @@ model CheckStudent {
   status: CheckStatus;
   createdAt: utcDateTime;
   updatedAt: utcDateTime;
-  checkDate?: CheckDate | null;
-  student?: Student | null;
 }
 
 @doc("DB table: assignments")
@@ -188,8 +166,6 @@ model Assignment {
   isEditable: boolean;
   createdAt: utcDateTime;
   updatedAt: utcDateTime;
-  class?: Class | null;
-  scores?: Score[];
 }
 
 @doc("DB table: scores")
@@ -201,6 +177,4 @@ model Score {
   score: int32;
   createdAt: utcDateTime;
   updatedAt: utcDateTime;
-  assignment?: Assignment | null;
-  student?: Student | null;
 }

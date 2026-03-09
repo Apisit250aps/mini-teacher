@@ -523,8 +523,6 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-            class?: components["schemas"]["PrismaModels.Class"] | null;
-            checkStudents?: components["schemas"]["PrismaModels.CheckStudent"][];
         };
         CheckDateUpdateBody: {
             /** Format: date-time */
@@ -534,7 +532,7 @@ export interface components {
         };
         CheckDateWithStudents: {
             checkStudents: components["schemas"]["CheckStudentWithStudent"][];
-        } & WithRequired<components["schemas"]["CheckDateData"], "checkStudents">;
+        } & components["schemas"]["CheckDateData"];
         CheckStudentCreateBody: {
             checkDateId: string;
             studentId: string;
@@ -550,8 +548,6 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-            checkDate?: components["schemas"]["PrismaModels.CheckDate"] | null;
-            student?: components["schemas"]["PrismaModels.Student"] | null;
         };
         CheckStudentUpdateBody: {
             status?: components["schemas"]["PrismaModels.CheckStatus"];
@@ -559,10 +555,10 @@ export interface components {
         CheckStudentWithRelations: {
             student: components["schemas"]["PrismaModels.Student"];
             checkDate: components["schemas"]["PrismaModels.CheckDate"];
-        } & WithRequired<components["schemas"]["CheckStudentData"], "student" | "checkDate">;
+        } & components["schemas"]["CheckStudentData"];
         CheckStudentWithStudent: {
             student: components["schemas"]["PrismaModels.Student"];
-        } & WithRequired<components["schemas"]["CheckStudentData"], "student">;
+        } & components["schemas"]["CheckStudentData"];
         ClassCreateBody: {
             yearId: string;
             name: string;
@@ -582,10 +578,6 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-            year?: components["schemas"]["PrismaModels.Year"] | null;
-            classMembers?: components["schemas"]["PrismaModels.ClassMember"][];
-            checkDates?: components["schemas"]["PrismaModels.CheckDate"][];
-            assignments?: components["schemas"]["PrismaModels.Assignment"][];
         };
         ClassMemberCreateBody: {
             classId: string;
@@ -601,9 +593,6 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-            class?: components["schemas"]["PrismaModels.Class"] | null;
-            student?: components["schemas"]["PrismaModels.Student"] | null;
-            user?: components["schemas"]["PrismaModels.User"] | null;
             userId?: string | null;
         };
         ClassMemberDeleteBody: {
@@ -612,7 +601,7 @@ export interface components {
         };
         ClassMemberWithStudent: {
             student: components["schemas"]["PrismaModels.Student"];
-        } & WithRequired<components["schemas"]["ClassMemberData"], "student">;
+        } & components["schemas"]["ClassMemberData"];
         ClassUpdateBody: {
             yearId?: string;
             name?: string;
@@ -625,10 +614,10 @@ export interface components {
             classMembers: components["schemas"]["ClassMemberWithStudent"][];
             checkDates: components["schemas"]["PrismaModels.CheckDate"][];
             assignments: components["schemas"]["PrismaModels.Assignment"][];
-        } & WithRequired<components["schemas"]["ClassData"], "year" | "classMembers" | "checkDates" | "assignments">;
+        } & components["schemas"]["ClassData"];
         ClassWithMembers: {
             classMembers: components["schemas"]["ClassMemberWithStudent"][];
-        } & WithRequired<components["schemas"]["ClassData"], "classMembers">;
+        } & components["schemas"]["ClassData"];
         EmptyData: Record<string, never>;
         ErrorResponse: {
             success: boolean;
@@ -653,7 +642,6 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-            user?: components["schemas"]["PrismaModels.User"] | null;
         };
         /** @enum {string} */
         "PrismaModels.AssignType": "ASSIGNMENT" | "HOMEWORK" | "QUIZ" | "EXAM" | "PROJECT";
@@ -675,8 +663,6 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-            class?: components["schemas"]["PrismaModels.Class"] | null;
-            scores?: components["schemas"]["PrismaModels.Score"][];
         };
         /** @description DB table: check_dates */
         "PrismaModels.CheckDate": {
@@ -690,8 +676,6 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-            class?: components["schemas"]["PrismaModels.Class"] | null;
-            checkStudents?: components["schemas"]["PrismaModels.CheckStudent"][];
         };
         /** @enum {string} */
         "PrismaModels.CheckStatus": "DEFAULT" | "PRESENT" | "ABSENT" | "LATE" | "LEAVE";
@@ -705,8 +689,6 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-            checkDate?: components["schemas"]["PrismaModels.CheckDate"] | null;
-            student?: components["schemas"]["PrismaModels.Student"] | null;
         };
         /** @description DB table: classes */
         "PrismaModels.Class": {
@@ -720,10 +702,6 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-            year?: components["schemas"]["PrismaModels.Year"] | null;
-            classMembers?: components["schemas"]["PrismaModels.ClassMember"][];
-            checkDates?: components["schemas"]["PrismaModels.CheckDate"][];
-            assignments?: components["schemas"]["PrismaModels.Assignment"][];
         };
         /** @description DB table: class_members */
         "PrismaModels.ClassMember": {
@@ -734,9 +712,6 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-            class?: components["schemas"]["PrismaModels.Class"] | null;
-            student?: components["schemas"]["PrismaModels.Student"] | null;
-            user?: components["schemas"]["PrismaModels.User"] | null;
             userId?: string | null;
         };
         /** @description DB table: scores */
@@ -750,8 +725,6 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-            assignment?: components["schemas"]["PrismaModels.Assignment"] | null;
-            student?: components["schemas"]["PrismaModels.Student"] | null;
         };
         /** @description DB table: sessions */
         "PrismaModels.Session": {
@@ -760,7 +733,6 @@ export interface components {
             userId: string;
             /** Format: date-time */
             expires: string;
-            user?: components["schemas"]["PrismaModels.User"] | null;
             /** Format: date-time */
             createdAt: string;
             /** Format: date-time */
@@ -779,9 +751,6 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-            classMembers?: components["schemas"]["PrismaModels.ClassMember"][];
-            checkStudents?: components["schemas"]["PrismaModels.CheckStudent"][];
-            scores?: components["schemas"]["PrismaModels.Score"][];
         };
         /** @description DB table: users */
         "PrismaModels.User": {
@@ -791,8 +760,6 @@ export interface components {
             email?: string | null;
             emailVerified?: string | null;
             image?: string | null;
-            accounts?: components["schemas"]["PrismaModels.Account"][];
-            sessions?: components["schemas"]["PrismaModels.Session"][];
             isActive: boolean;
             isTeacher: boolean;
             isAdmin: boolean;
@@ -802,8 +769,6 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-            years?: components["schemas"]["PrismaModels.Year"][];
-            classMembers?: components["schemas"]["PrismaModels.ClassMember"][];
         };
         /** @description DB table: verification_tokens */
         "PrismaModels.VerificationToken": {
@@ -827,8 +792,6 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-            owner?: components["schemas"]["PrismaModels.User"] | null;
-            classes?: components["schemas"]["PrismaModels.Class"][];
         };
         ScoreAssignCreateBody: {
             classId: string;
@@ -861,8 +824,6 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-            class?: components["schemas"]["PrismaModels.Class"] | null;
-            scores?: components["schemas"]["PrismaModels.Score"][];
         };
         ScoreAssignUpdateBody: {
             title?: string;
@@ -878,7 +839,7 @@ export interface components {
         };
         ScoreAssignWithScores: {
             scores: components["schemas"]["ScoreStudentWithStudent"][];
-        } & WithRequired<components["schemas"]["ScoreAssignData"], "scores">;
+        } & components["schemas"]["ScoreAssignData"];
         ScoreStudentCreateBody: {
             assignmentId: string;
             studentId: string;
@@ -896,8 +857,6 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-            assignment?: components["schemas"]["PrismaModels.Assignment"] | null;
-            student?: components["schemas"]["PrismaModels.Student"] | null;
         };
         ScoreStudentUpdateBody: {
             /** Format: int32 */
@@ -905,17 +864,17 @@ export interface components {
         };
         ScoreStudentWithStudent: {
             student: components["schemas"]["PrismaModels.Student"];
-        } & WithRequired<components["schemas"]["ScoreStudentData"], "student">;
+        } & components["schemas"]["ScoreStudentData"];
         SetActiveYearBody: {
             userId?: string;
             yearId?: string;
         };
         StudentCheckWithDate: {
             checkDate: components["schemas"]["PrismaModels.CheckDate"];
-        } & WithRequired<components["schemas"]["PrismaModels.CheckStudent"], "checkDate">;
+        } & components["schemas"]["PrismaModels.CheckStudent"];
         StudentClassMemberWithClass: {
             class: components["schemas"]["PrismaModels.Class"];
-        } & WithRequired<components["schemas"]["PrismaModels.ClassMember"], "class">;
+        } & components["schemas"]["PrismaModels.ClassMember"];
         StudentCreateBody: {
             teacherId: string;
             code: string;
@@ -937,13 +896,10 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-            classMembers?: components["schemas"]["PrismaModels.ClassMember"][];
-            checkStudents?: components["schemas"]["PrismaModels.CheckStudent"][];
-            scores?: components["schemas"]["PrismaModels.Score"][];
         };
         StudentScoreWithAssignment: {
             assignment: components["schemas"]["PrismaModels.Assignment"];
-        } & WithRequired<components["schemas"]["PrismaModels.Score"], "assignment">;
+        } & components["schemas"]["PrismaModels.Score"];
         StudentUpdateBody: {
             code?: string;
             prefix?: string | null;
@@ -955,7 +911,7 @@ export interface components {
             classMembers: components["schemas"]["StudentClassMemberWithClass"][];
             checkStudents: components["schemas"]["StudentCheckWithDate"][];
             scores: components["schemas"]["StudentScoreWithAssignment"][];
-        } & WithRequired<components["schemas"]["StudentData"], "classMembers" | "checkStudents" | "scores">;
+        } & components["schemas"]["StudentData"];
         UserCreateBody: {
             name?: string | null;
             password?: string | null;
@@ -976,8 +932,6 @@ export interface components {
             email?: string | null;
             emailVerified?: string | null;
             image?: string | null;
-            accounts?: components["schemas"]["PrismaModels.Account"][];
-            sessions?: components["schemas"]["PrismaModels.Session"][];
             isActive: boolean;
             isTeacher: boolean;
             isAdmin: boolean;
@@ -987,8 +941,6 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-            years?: components["schemas"]["PrismaModels.Year"][];
-            classMembers?: components["schemas"]["PrismaModels.ClassMember"][];
         };
         UserUpdateBody: {
             name?: string | null;
@@ -1004,7 +956,7 @@ export interface components {
         };
         UserWithYears: {
             years: components["schemas"]["PrismaModels.Year"][];
-        } & WithRequired<components["schemas"]["UserData"], "years">;
+        } & components["schemas"]["UserData"];
         YearCreateBody: {
             userId: string;
             /** Format: int32 */
@@ -1028,8 +980,6 @@ export interface components {
             createdAt: string;
             /** Format: date-time */
             updatedAt: string;
-            owner?: components["schemas"]["PrismaModels.User"] | null;
-            classes?: components["schemas"]["PrismaModels.Class"][];
         };
         YearUpdateBody: {
             /** Format: int32 */
@@ -1041,11 +991,11 @@ export interface components {
         };
         YearWithClasses: {
             classes: components["schemas"]["PrismaModels.Class"][];
-        } & WithRequired<components["schemas"]["YearData"], "classes">;
+        } & components["schemas"]["YearData"];
         YearWithOwnerAndClasses: {
             owner: components["schemas"]["PrismaModels.User"];
             classes: components["schemas"]["PrismaModels.Class"][];
-        } & WithRequired<components["schemas"]["YearData"], "owner" | "classes">;
+        } & components["schemas"]["YearData"];
     };
     responses: never;
     parameters: never;
@@ -4586,6 +4536,3 @@ export interface operations {
         };
     };
 }
-type WithRequired<T, K extends keyof T> = T & {
-    [P in K]-?: T[P];
-};

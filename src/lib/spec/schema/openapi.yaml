@@ -3091,14 +3091,6 @@ components:
         updatedAt:
           type: string
           format: date-time
-        class:
-          anyOf:
-            - $ref: '#/components/schemas/PrismaModels.Class'
-            - type: 'null'
-        checkStudents:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.CheckStudent'
       description: 'DB table: check_dates'
     CheckDateUpdateBody:
       type: object
@@ -3159,14 +3151,6 @@ components:
         updatedAt:
           type: string
           format: date-time
-        checkDate:
-          anyOf:
-            - $ref: '#/components/schemas/PrismaModels.CheckDate'
-            - type: 'null'
-        student:
-          anyOf:
-            - $ref: '#/components/schemas/PrismaModels.Student'
-            - type: 'null'
       description: 'DB table: check_students'
     CheckStudentUpdateBody:
       type: object
@@ -3244,22 +3228,6 @@ components:
         updatedAt:
           type: string
           format: date-time
-        year:
-          anyOf:
-            - $ref: '#/components/schemas/PrismaModels.Year'
-            - type: 'null'
-        classMembers:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.ClassMember'
-        checkDates:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.CheckDate'
-        assignments:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.Assignment'
       description: 'DB table: classes'
     ClassMemberCreateBody:
       type: object
@@ -3296,18 +3264,6 @@ components:
         updatedAt:
           type: string
           format: date-time
-        class:
-          anyOf:
-            - $ref: '#/components/schemas/PrismaModels.Class'
-            - type: 'null'
-        student:
-          anyOf:
-            - $ref: '#/components/schemas/PrismaModels.Student'
-            - type: 'null'
-        user:
-          anyOf:
-            - $ref: '#/components/schemas/PrismaModels.User'
-            - type: 'null'
         userId:
           anyOf:
             - type: string
@@ -3450,10 +3406,6 @@ components:
         updatedAt:
           type: string
           format: date-time
-        user:
-          anyOf:
-            - $ref: '#/components/schemas/PrismaModels.User'
-            - type: 'null'
       description: 'DB table: accounts'
     PrismaModels.AssignType:
       type: string
@@ -3512,14 +3464,6 @@ components:
         updatedAt:
           type: string
           format: date-time
-        class:
-          anyOf:
-            - $ref: '#/components/schemas/PrismaModels.Class'
-            - type: 'null'
-        scores:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.Score'
       description: 'DB table: assignments'
     PrismaModels.CheckDate:
       type: object
@@ -3550,14 +3494,6 @@ components:
         updatedAt:
           type: string
           format: date-time
-        class:
-          anyOf:
-            - $ref: '#/components/schemas/PrismaModels.Class'
-            - type: 'null'
-        checkStudents:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.CheckStudent'
       description: 'DB table: check_dates'
     PrismaModels.CheckStatus:
       type: string
@@ -3591,14 +3527,6 @@ components:
         updatedAt:
           type: string
           format: date-time
-        checkDate:
-          anyOf:
-            - $ref: '#/components/schemas/PrismaModels.CheckDate'
-            - type: 'null'
-        student:
-          anyOf:
-            - $ref: '#/components/schemas/PrismaModels.Student'
-            - type: 'null'
       description: 'DB table: check_students'
     PrismaModels.Class:
       type: object
@@ -3631,22 +3559,6 @@ components:
         updatedAt:
           type: string
           format: date-time
-        year:
-          anyOf:
-            - $ref: '#/components/schemas/PrismaModels.Year'
-            - type: 'null'
-        classMembers:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.ClassMember'
-        checkDates:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.CheckDate'
-        assignments:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.Assignment'
       description: 'DB table: classes'
     PrismaModels.ClassMember:
       type: object
@@ -3669,18 +3581,6 @@ components:
         updatedAt:
           type: string
           format: date-time
-        class:
-          anyOf:
-            - $ref: '#/components/schemas/PrismaModels.Class'
-            - type: 'null'
-        student:
-          anyOf:
-            - $ref: '#/components/schemas/PrismaModels.Student'
-            - type: 'null'
-        user:
-          anyOf:
-            - $ref: '#/components/schemas/PrismaModels.User'
-            - type: 'null'
         userId:
           anyOf:
             - type: string
@@ -3711,14 +3611,6 @@ components:
         updatedAt:
           type: string
           format: date-time
-        assignment:
-          anyOf:
-            - $ref: '#/components/schemas/PrismaModels.Assignment'
-            - type: 'null'
-        student:
-          anyOf:
-            - $ref: '#/components/schemas/PrismaModels.Student'
-            - type: 'null'
       description: 'DB table: scores'
     PrismaModels.Session:
       type: object
@@ -3739,10 +3631,6 @@ components:
         expires:
           type: string
           format: date-time
-        user:
-          anyOf:
-            - $ref: '#/components/schemas/PrismaModels.User'
-            - type: 'null'
         createdAt:
           type: string
           format: date-time
@@ -3785,18 +3673,6 @@ components:
         updatedAt:
           type: string
           format: date-time
-        classMembers:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.ClassMember'
-        checkStudents:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.CheckStudent'
-        scores:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.Score'
       description: 'DB table: students'
     PrismaModels.User:
       type: object
@@ -3831,14 +3707,6 @@ components:
           anyOf:
             - type: string
             - type: 'null'
-        accounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.Account'
-        sessions:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.Session'
         isActive:
           type: boolean
         isTeacher:
@@ -3859,14 +3727,6 @@ components:
         updatedAt:
           type: string
           format: date-time
-        years:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.Year'
-        classMembers:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.ClassMember'
       description: 'DB table: users'
     PrismaModels.VerificationToken:
       type: object
@@ -3919,14 +3779,6 @@ components:
         updatedAt:
           type: string
           format: date-time
-        owner:
-          anyOf:
-            - $ref: '#/components/schemas/PrismaModels.User'
-            - type: 'null'
-        classes:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.Class'
       description: 'DB table: years'
     ScoreAssignCreateBody:
       type: object
@@ -4011,14 +3863,6 @@ components:
         updatedAt:
           type: string
           format: date-time
-        class:
-          anyOf:
-            - $ref: '#/components/schemas/PrismaModels.Class'
-            - type: 'null'
-        scores:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.Score'
       description: 'DB table: assignments'
     ScoreAssignUpdateBody:
       type: object
@@ -4099,14 +3943,6 @@ components:
         updatedAt:
           type: string
           format: date-time
-        assignment:
-          anyOf:
-            - $ref: '#/components/schemas/PrismaModels.Assignment'
-            - type: 'null'
-        student:
-          anyOf:
-            - $ref: '#/components/schemas/PrismaModels.Student'
-            - type: 'null'
       description: 'DB table: scores'
     ScoreStudentUpdateBody:
       type: object
@@ -4209,18 +4045,6 @@ components:
         updatedAt:
           type: string
           format: date-time
-        classMembers:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.ClassMember'
-        checkStudents:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.CheckStudent'
-        scores:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.Score'
       description: 'DB table: students'
     StudentScoreWithAssignment:
       type: object
@@ -4340,14 +4164,6 @@ components:
           anyOf:
             - type: string
             - type: 'null'
-        accounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.Account'
-        sessions:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.Session'
         isActive:
           type: boolean
         isTeacher:
@@ -4368,14 +4184,6 @@ components:
         updatedAt:
           type: string
           format: date-time
-        years:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.Year'
-        classMembers:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.ClassMember'
       description: 'DB table: users'
     UserUpdateBody:
       type: object
@@ -4480,14 +4288,6 @@ components:
         updatedAt:
           type: string
           format: date-time
-        owner:
-          anyOf:
-            - $ref: '#/components/schemas/PrismaModels.User'
-            - type: 'null'
-        classes:
-          type: array
-          items:
-            $ref: '#/components/schemas/PrismaModels.Class'
       description: 'DB table: years'
     YearUpdateBody:
       type: object

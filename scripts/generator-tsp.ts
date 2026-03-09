@@ -35,7 +35,7 @@ type NormalizedGeneratorConfig = {
 const CONFIG_DEFAULTS: NormalizedGeneratorConfig = {
   namespace: DEFAULT_NAMESPACE,
   outputDir: undefined,
-  emitRelations: true,
+  emitRelations: false,
   includeDbMap: true,
 }
 

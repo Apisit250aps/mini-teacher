@@ -14,7 +14,7 @@ generator tsp {
   output        = "../src/lib/spec/models/prisma-models.tsp"
   outputDir     = "../src/lib/spec/models"
   namespace     = "MiniTeacherService.PrismaModels"
-  emitRelations = "true"
+  emitRelations = "false"
   includeDbMap  = "true"
 }
 
