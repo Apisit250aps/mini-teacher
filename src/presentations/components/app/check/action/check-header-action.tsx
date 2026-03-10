@@ -6,16 +6,14 @@ import { CheckDateWithStudents } from '@/core/domain/data'
 import {
   ContextMenu,
   ContextMenuContent,
-  ContextMenuGroup,
-  ContextMenuItem,
   ContextMenuLabel,
   ContextMenuSeparator,
-  ContextMenuSub,
-  ContextMenuSubContent,
-  ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from '@/components/ui/context-menu'
-import { Pen, Lock, LockOpen, Trash } from 'lucide-react'
+import CheckLockAction from './check-lock-action'
+import CheckEditAction from './check-edit-action'
+import CheckAllAction from './check-all-action'
+import CheckDeleteAction from './check-delete-action'
 
 export default function CheckHeaderAction({
   checkDate,
@@ -28,33 +26,14 @@ export default function CheckHeaderAction({
   })
   return (
     <ContextMenu>
-      <ContextMenuTrigger>{date}</ContextMenuTrigger>
+      <ContextMenuTrigger>{date} </ContextMenuTrigger>
       <ContextMenuContent>
         <ContextMenuLabel>{date}</ContextMenuLabel>
-        <ContextMenuItem>
-          {checkDate.isEditable ? <LockOpen /> : <Lock />}
-          ล็อค
-        </ContextMenuItem>
-        <ContextMenuItem>
-          <Pen />
-          แก้ไข
-        </ContextMenuItem>
-        <ContextMenuSub>
-          <ContextMenuSubTrigger>เช็คทั้งหมด</ContextMenuSubTrigger>
-          <ContextMenuSubContent>
-            <ContextMenuGroup>
-              <ContextMenuItem>มา</ContextMenuItem>
-              <ContextMenuItem>สาย</ContextMenuItem>
-              <ContextMenuItem>ขาด</ContextMenuItem>
-              <ContextMenuItem>ลา</ContextMenuItem>
-            </ContextMenuGroup>
-          </ContextMenuSubContent>
-        </ContextMenuSub>
+        <CheckLockAction checkDate={checkDate} />
+        <CheckEditAction checkDate={checkDate} />
+        <CheckAllAction checkDate={checkDate} />
         <ContextMenuSeparator />
-        <ContextMenuItem variant="destructive">
-          <Trash />
-          ลบ
-        </ContextMenuItem>
+        <CheckDeleteAction checkDateId={checkDate.id} />
       </ContextMenuContent>
     </ContextMenu>
   )

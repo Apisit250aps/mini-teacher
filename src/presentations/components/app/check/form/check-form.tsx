@@ -26,7 +26,7 @@ export default function CheckForm({
     resolver: zodResolver(checkDateCreateSchema),
     defaultValues: {
       classId: value?.classId || '',
-      date: value?.date ?? new Date().toISOString().split('T')[0],
+      date: new Date(value?.date ?? new Date()).toISOString().split('T')[0],
       description: value?.description ?? '',
       isEditable: value?.isEditable ?? true,
     },
@@ -66,7 +66,7 @@ export default function CheckForm({
           )}
         />
         <div className="flex justify-end">
-          <Button type='submit'>{value ? 'บันทึกการแก้ไข' : 'สร้าง'}</Button>
+          <Button type="submit">{value ? 'บันทึกการแก้ไข' : 'สร้าง'}</Button>
         </div>
       </form>
     </Form>

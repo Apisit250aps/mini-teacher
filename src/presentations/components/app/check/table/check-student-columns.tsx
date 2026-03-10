@@ -39,7 +39,7 @@ export const useStudentColumns = (): ColumnDef<ClassMemberWithStudent>[] => {
       (checkDate) =>
         ({
           id: checkDate.id,
-          size: 60,
+          size: 75,
           accessorKey: `id`,
           meta: {
             className: 'p-0 relative text-center',
@@ -56,6 +56,7 @@ export const useStudentColumns = (): ColumnDef<ClassMemberWithStudent>[] => {
                 checkDateId={checkDate.id}
                 studentId={row.original.student.id}
                 record={record}
+                disabled={checkDate.isEditable === false}
               />
             )
           },

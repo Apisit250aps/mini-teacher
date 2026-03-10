@@ -46,12 +46,14 @@ export type CheckStatusActionProps = {
   checkDateId: string
   studentId: string
   record: CheckStudent | undefined
+  disabled?: boolean
 }
 
 export default function CheckStatusAction({
   checkDateId,
   studentId,
   record,
+  disabled = false,
 }: CheckStatusActionProps) {
   const mutations = useCheckStudentMutations()
 
@@ -69,7 +71,7 @@ export default function CheckStatusAction({
 
   return (
     <ContextMenu>
-      <ContextMenuTrigger asChild>
+      <ContextMenuTrigger asChild disabled={disabled}>
         <div
           className={`cursor-pointer select-none absolute inset-0 flex items-center justify-center text-xs font-medium ${cfg.cell}`}
         >
