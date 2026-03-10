@@ -6,7 +6,11 @@ import PageLayout from '@/presentations/components/layouts/page-layout'
 
 export default function StudentManageView() {
   return (
-    <PageLayout title={'นักเรียน'} actions={<StudentCreateAction />}>
+    <PageLayout
+      title={'นักเรียน'}
+      description={'จัดการข้อมูลนักเรียน'}
+      actions={<StudentCreateAction />}
+    >
       <StudentDataTable />
     </PageLayout>
   )
