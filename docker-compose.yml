@@ -1,6 +1,6 @@
 services:
   app:
-    container_name: app
+    container_name: mini-teacher
     build:
       context: .
       dockerfile: Dockerfile
