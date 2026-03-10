@@ -1,13 +1,11 @@
 'use client'
 
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 
 import { CheckDateWithStudents } from '@/core/domain/data'
 import { CheckStatus } from '@/core/domain/entities'
-import {
-  useCheckDatesByClassQuery,
-  useCheckStudentMutations,
-} from '@/hooks/queries'
+import { useCheckStudentMutations } from '@/hooks/queries'
+import { useClassMembersByClassQuery } from '@/hooks/queries/class-member-query'
 import {
   ContextMenuGroup,
   ContextMenuItem,
@@ -15,7 +13,7 @@ import {
   ContextMenuSubContent,
   ContextMenuSubTrigger,
 } from '@/components/ui/context-menu'
-import { useParams } from 'next/navigation'
+import { useQueryClient } from '@tanstack/react-query'
 
 const STATUS_OPTIONS: { value: CheckStatus; label: string }[] = [
   { value: 'PRESENT', label: 'มา' },
@@ -29,17 +27,32 @@ export default function CheckAllAction({
 }: {
   checkDate: CheckDateWithStudents
 }) {
-  const params = useParams<{ classId: string }>()
+  const queryClient = useQueryClient()
   const mutations = useCheckStudentMutations()
+  const { data: classMembers } = useClassMembersByClassQuery(checkDate.classId)
+
   const handleCheckAll = useCallback(
     async (status: CheckStatus) => {
+      if (!classMembers) return
       await Promise.all(
-        checkDate.checkStudents.map((cs) =>
-          mutations.update(cs.id, { status }),
-        ),
+        classMembers.map((cm) => {
+          const existing = checkDate.checkStudents.find(
+            (cs) => cs.studentId === cm.student.id,
+          )
+          if (existing) {
+            return mutations.update(existing.id, { status })
+          } else {
+            return mutations.create({
+              checkDateId: checkDate.id,
+              studentId: cm.student.id,
+              status,
+            })
+          }
+        }),
       )
+      queryClient.invalidateQueries({})
     },
-    [checkDate.checkStudents, mutations],
+    [checkDate, classMembers, mutations, queryClient],
   )
 
   return (
