@@ -20,9 +20,8 @@ export default async function Layout({
   if (!session) {
     forbidden()
   }
-
+  
   const { year, term } = await params
-
   const years = await yearRepository.getAll({
     where: {
       userId: session.user.id,
@@ -42,12 +41,5 @@ export default async function Layout({
     )
   }
 
-  return (
-    <YearProvider
-      teacherId={session.user.id}
-      activeYear={{ year: parseInt(year), term: parseInt(term) }}
-    >
-      {children}
-    </YearProvider>
-  )
+  return <YearProvider teacherId={session.user.id}>{children}</YearProvider>
 }

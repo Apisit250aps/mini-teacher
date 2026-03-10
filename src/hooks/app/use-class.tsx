@@ -1,40 +1,29 @@
 'use client'
-import React, { useMemo } from 'react'
-import { useParams, useSearchParams } from 'next/navigation'
+import React from 'react'
+import { useParams,  } from 'next/navigation'
 
-import { ClassWithMembers } from '@/core/domain/data'
+import { ClassMemberWithStudent, ClassWithMembers } from '@/core/domain/data'
 import { useYearContext } from './use-year'
-import { useClassesByYearQuery } from '../queries'
+import { useClassesByYearQuery, useClassMembersByClassQuery } from '../queries'
 
 type ClassContextValue = {
   classes: ClassWithMembers[]
+  members: ClassMemberWithStudent[]
   activeClass?: ClassWithMembers
-  isLoading: boolean
 }
 
 const ClassContext = React.createContext<ClassContextValue | null>(null)
 
 export function ClassProvider({ children }: { children: React.ReactNode }) {
-  const { active } = useYearContext()
-  const { data, isLoading } = useClassesByYearQuery(active?.id ?? '')
   const params = useParams<{ classId?: string }>()
-  const searchParams = useSearchParams()
-
-  const activeClassId =
-    params?.classId ??
-    searchParams.get('classId') ??
-    searchParams.get('class') ??
-    undefined
-
-  const activeClass = useMemo(() => {
-    if (!data?.length) return undefined
-    if (!activeClassId) return data[0]
-    return data.find((item) => item.id === activeClassId) ?? data[0]
-  }, [data, activeClassId])
-
+  // 
+  const { active } = useYearContext()
+  // 
+  const { data:classes } = useClassesByYearQuery(active?.id ?? '')
+  const { data: members } = useClassMembersByClassQuery(params.classId ?? '')
   return (
     <ClassContext.Provider
-      value={{ classes: data ?? [], activeClass, isLoading }}
+      value={{ classes:classes ?? [], members: members ?? [] }}
     >
       {children}
     </ClassContext.Provider>

@@ -33,6 +33,7 @@ export const useClassMembersByClassQuery = (
     },
     {
       select: (res) => selectData<ClassMemberWithStudent[]>(res, []),
+      enabled: !!classId,
     },
   )
 

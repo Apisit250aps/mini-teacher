@@ -3,6 +3,7 @@ import React, { useMemo } from 'react'
 
 import { YearWithClasses } from '@/core/domain/data'
 import { useYearsListQuery } from '@/hooks/queries'
+import { useParams } from 'next/navigation'
 
 type YearContextValue = {
   active?: YearWithClasses
@@ -13,19 +14,16 @@ type YearContextValue = {
 type YearProviderProps = {
   children: React.ReactNode
   teacherId: string
-  activeYear: {
-    year: number
-    term: number
-  }
 }
 
 const YearContext = React.createContext<YearContextValue | null>(null)
 
 export function YearProvider({
   children,
-  activeYear,
+
   teacherId,
 }: YearProviderProps) {
+  const params = useParams<{ year: string; term: string }>()
   const { data: list } = useYearsListQuery({
     where: {
       userId: teacherId,
@@ -34,11 +32,12 @@ export function YearProvider({
   })
 
   const active = useMemo(() => {
-    if (!activeYear || !list) return undefined
-    return list.find(
-      (y) => y.year === activeYear.year && y.term === activeYear.term,
+    return (
+      list.find(
+        (y) => y.year === Number(params.year) && y.term === Number(params.term),
+      ) ?? list[0]
     )
-  }, [activeYear, list])
+  }, [params, list])
 
   return (
     <YearContext.Provider
