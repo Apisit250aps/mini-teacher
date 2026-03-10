@@ -29,6 +29,7 @@ export const useCheckDatesByClassQuery = (
       },
     },
     {
+      enabled: !!classId,
       select: (res) => selectData<CheckDateWithStudents[]>(res, []),
     },
   )

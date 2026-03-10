@@ -1,14 +1,23 @@
 'use client'
 import React from 'react'
-import { useParams,  } from 'next/navigation'
+import { useParams } from 'next/navigation'
 
-import { ClassMemberWithStudent, ClassWithMembers } from '@/core/domain/data'
+import {
+  CheckDateWithStudents,
+  ClassMemberWithStudent,
+  ClassWithMembers,
+} from '@/core/domain/data'
 import { useYearContext } from './use-year'
-import { useClassesByYearQuery, useClassMembersByClassQuery } from '../queries'
+import {
+  useCheckDatesByClassQuery,
+  useClassesByYearQuery,
+  useClassMembersByClassQuery,
+} from '../queries'
 
 type ClassContextValue = {
   classes: ClassWithMembers[]
   members: ClassMemberWithStudent[]
+  checks: CheckDateWithStudents[]
   activeClass?: ClassWithMembers
 }
 
@@ -16,14 +25,19 @@ const ClassContext = React.createContext<ClassContextValue | null>(null)
 
 export function ClassProvider({ children }: { children: React.ReactNode }) {
   const params = useParams<{ classId?: string }>()
-  // 
+  //
   const { active } = useYearContext()
-  // 
-  const { data:classes } = useClassesByYearQuery(active?.id ?? '')
+  //
+  const { data: classes } = useClassesByYearQuery(active?.id ?? '')
   const { data: members } = useClassMembersByClassQuery(params.classId ?? '')
+  const { data: checks } = useCheckDatesByClassQuery(params.classId ?? '')
   return (
     <ClassContext.Provider
-      value={{ classes:classes ?? [], members: members ?? [] }}
+      value={{
+        classes: classes ?? [],
+        members: members ?? [],
+        checks: checks ?? [],
+      }}
     >
       {children}
     </ClassContext.Provider>

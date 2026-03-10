@@ -45,6 +45,7 @@ interface DataTableProps<TData, TValue> {
   limit?: number
   page?: number
   isLoading?: boolean
+  autoWidth?: boolean
 }
 
 export default function DataTable<TData, TValue>({
@@ -55,6 +56,7 @@ export default function DataTable<TData, TValue>({
   limit = 10,
   page = 1,
   isLoading = false,
+  autoWidth = false,
 }: DataTableProps<TData & { id: string }, TValue>) {
   const memoData = useMemo(() => data || [], [data])
   const memoColumns = useMemo(() => columns, [columns])
@@ -141,7 +143,7 @@ export default function DataTable<TData, TValue>({
 
   return (
     <div className="overflow-hidden rounded-md border p-4">
-      <Table>
+      <Table className={autoWidth ? 'w-auto' : ''}>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>

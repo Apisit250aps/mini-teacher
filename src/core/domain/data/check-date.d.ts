@@ -15,6 +15,7 @@ export interface CheckDateCreateData {
 }
 
 export interface CheckDateUpdateData {
+  classId?: string
   date?: Date
   description?: string | null
   isEditable?: boolean
