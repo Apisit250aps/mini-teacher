@@ -23,8 +23,8 @@ COPY tsconfig.json ./
 RUN npm ci --legacy-peer-deps
 # Copy the full project
 COPY . .
-ARG MONGODB_URI
-ENV MONGODB_URI=$MONGODB_URI
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
 
 
 # Build the Next.js app in standalone mode
@@ -49,8 +49,8 @@ RUN addgroup -g 1001 -S nodegroup \
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/backup /app/backup
-# COPY --from=builder /app/scripts /app/scripts
+# COPY --from=builder /app/backup /app/backup
+COPY --from=builder /app/scripts /app/scripts
 # Optional: copy env if you want to bake it into the image
 # Usually better to pass via runtime or docker-compose
 # COPY .env .env
