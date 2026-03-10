@@ -1,13 +1,13 @@
 import { yearUseCase } from '@/core/usecases'
 import { toErrorResponse } from '@/lib/utils/error'
 import { authorized, ok, okOnlyMessage, unauthorized } from '@/lib/utils/server'
-import type { NextAuthRequest } from 'next-auth'
+import type { NextRequest } from 'next/server'
 
 type Context = {
   params: Promise<{ id: string }>
 }
 
-export async function GET(request: NextAuthRequest, context: Context) {
+export async function GET(request: NextRequest, context: Context) {
   try {
     // authorized
     const user = await authorized(request)
@@ -21,7 +21,7 @@ export async function GET(request: NextAuthRequest, context: Context) {
   }
 }
 
-export async function PATCH(request: NextAuthRequest, context: Context) {
+export async function PATCH(request: NextRequest, context: Context) {
   try {
     // authorized
     const user = await authorized(request)
@@ -36,7 +36,7 @@ export async function PATCH(request: NextAuthRequest, context: Context) {
   }
 }
 
-export async function DELETE(request: NextAuthRequest, context: Context) {
+export async function DELETE(request: NextRequest, context: Context) {
   try {
     // authorized
     const user = await authorized(request)

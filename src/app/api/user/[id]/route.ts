@@ -1,13 +1,13 @@
 import { userUseCase } from '@/core/usecases'
 import { toErrorResponse } from '@/lib/utils/error'
 import { authorized, ok, okOnlyMessage, unauthorized } from '@/lib/utils/server'
-import type { NextAuthRequest } from 'next-auth'
+import type { NextRequest } from 'next/server'
 
 type Context = {
   params: Promise<{ id: string }>
 }
 
-export async function GET(_: NextAuthRequest, context: Context) {
+export async function GET(_: NextRequest, context: Context) {
   try {
     const { id } = await context.params
     const data = await userUseCase.getById(id)
@@ -17,7 +17,7 @@ export async function GET(_: NextAuthRequest, context: Context) {
   }
 }
 
-export async function PATCH(request: NextAuthRequest, context: Context) {
+export async function PATCH(request: NextRequest, context: Context) {
   try {
     const user = await authorized(request)
     if (!user) return unauthorized()
@@ -30,7 +30,7 @@ export async function PATCH(request: NextAuthRequest, context: Context) {
   }
 }
 
-export async function DELETE(request: NextAuthRequest, context: Context) {
+export async function DELETE(request: NextRequest, context: Context) {
   try {
     const user = await authorized(request)
     if (!user) return unauthorized()

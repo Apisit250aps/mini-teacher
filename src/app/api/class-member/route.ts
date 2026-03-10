@@ -1,9 +1,9 @@
 import { classMemberUseCase } from '@/core/usecases'
 import { toErrorResponse } from '@/lib/utils/error'
 import { ok, okOnlyMessage } from '@/lib/utils/server'
-import type { NextAuthRequest } from 'next-auth'
+import type { NextRequest } from 'next/server'
 
-export async function POST(request: NextAuthRequest) {
+export async function POST(request: NextRequest) {
   try {
     const payload = await request.json()
     const data = await classMemberUseCase.create(payload)
@@ -13,7 +13,7 @@ export async function POST(request: NextAuthRequest) {
   }
 }
 
-export async function DELETE(request: NextAuthRequest) {
+export async function DELETE(request: NextRequest) {
   try {
     const payload = (await request.json()) as {
       classId: string

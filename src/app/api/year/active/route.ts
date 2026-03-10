@@ -6,9 +6,9 @@ import {
   ok,
   okOnlyMessage,
 } from '@/lib/utils/server'
-import type { NextAuthRequest } from 'next-auth'
+import type { NextRequest } from 'next/server'
 
-export async function GET(request: NextAuthRequest) {
+export async function GET(request: NextRequest) {
   try {
     const userId = getSearchParam(request, 'userId')
     if (!userId) {
@@ -21,7 +21,7 @@ export async function GET(request: NextAuthRequest) {
   }
 }
 
-export async function PATCH(request: NextAuthRequest) {
+export async function PATCH(request: NextRequest) {
   try {
     const payload = (await request.json()) as {
       userId: string

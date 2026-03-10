@@ -6,10 +6,10 @@ import {
   ok,
   unauthorized,
 } from '@/lib/utils/server'
-import type { NextAuthRequest } from 'next-auth'
+import type { NextRequest } from 'next/server'
 import { YearQuery } from '@/core/domain/data'
 
-export async function GET(request: NextAuthRequest) {
+export async function GET(request: NextRequest) {
   try {
     const filter = getJsonSearchParam<YearQuery>(request, 'filter')
     const data = await yearUseCase.getAll(filter)
@@ -19,7 +19,7 @@ export async function GET(request: NextAuthRequest) {
   }
 }
 
-export async function POST(request: NextAuthRequest) {
+export async function POST(request: NextRequest) {
   try {
     const user = await authorized(request)
 

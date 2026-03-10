@@ -1,13 +1,13 @@
 import { scoreAssignUseCase } from '@/core/usecases'
 import { toErrorResponse } from '@/lib/utils/error'
 import { ok, okOnlyMessage } from '@/lib/utils/server'
-import type { NextAuthRequest } from 'next-auth'
+import type { NextRequest } from 'next/server'
 
 type Context = {
   params: Promise<{ id: string }>
 }
 
-export async function PATCH(request: NextAuthRequest, context: Context) {
+export async function PATCH(request: NextRequest, context: Context) {
   try {
     const { id } = await context.params
     const payload = await request.json()
@@ -18,7 +18,7 @@ export async function PATCH(request: NextAuthRequest, context: Context) {
   }
 }
 
-export async function DELETE(_: NextAuthRequest, context: Context) {
+export async function DELETE(_: NextRequest, context: Context) {
   try {
     const { id } = await context.params
     await scoreAssignUseCase.delete(id)

@@ -2,13 +2,13 @@ import { ScoreAssignQuery } from '@/core/domain/data';
 import { scoreAssignUseCase } from '@/core/usecases'
 import { toErrorResponse } from '@/lib/utils/error'
 import { getJsonSearchParam, ok } from '@/lib/utils/server'
-import type { NextAuthRequest } from 'next-auth'
+import type { NextRequest } from 'next/server'
 
 type Context = {
   params: Promise<{ classId: string }>
 }
 
-export async function GET(request: NextAuthRequest, context: Context) {
+export async function GET(request: NextRequest, context: Context) {
   try {
     const { classId } = await context.params
     const filter = getJsonSearchParam<ScoreAssignQuery>(request, 'filter')
