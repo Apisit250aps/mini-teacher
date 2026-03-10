@@ -53,7 +53,7 @@ export const useAssignmentColumns = (): ColumnDef<ClassMemberWithStudent>[] => {
             )
             return (
               <AssignmentScoreAction
-                key={record?.id ?? `new-${row.original.student.id}`}
+                key={`${assignment.id}-${row.original.student.id}`}
                 assignmentId={assignment.id}
                 studentId={row.original.student.id}
                 record={record}

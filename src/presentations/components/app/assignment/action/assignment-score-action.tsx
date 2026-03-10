@@ -3,8 +3,10 @@
 import { Score } from '@/core/domain/entities'
 import { useScoreStudentMutations } from '@/hooks/queries'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import z from 'zod'
+import React from 'react'
 import { toast } from 'sonner'
 import {
   Form,
@@ -23,8 +25,6 @@ export type AssignmentScoreActionProps = {
   disabled?: boolean
 }
 
-// Component is keyed by record?.id in the parent so it remounts
-// whenever the record is created/updated, keeping defaultValues fresh.
 export default function AssignmentScoreAction({
   assignmentId,
   studentId,
@@ -34,6 +34,7 @@ export default function AssignmentScoreAction({
   disabled = false,
 }: AssignmentScoreActionProps) {
   const mutations = useScoreStudentMutations()
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const scoreSchema = z.object({
     score: z
@@ -48,6 +49,16 @@ export default function AssignmentScoreAction({
     resolver: zodResolver(scoreSchema),
     defaultValues: { score: record?.score },
   })
+
+  // Sync form value when record changes from server (e.g. after another cell's
+  // mutation invalidates the query), but only if this input is NOT focused so
+  // we never interrupt the user while they are typing.
+  useEffect(() => {
+    if (document.activeElement !== inputRef.current) {
+      form.reset({ score: record?.score })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [record?.id, record?.score])
 
   const onSubmit = async ({ score }: FormValues) => {
     if (record) {
@@ -76,19 +87,24 @@ export default function AssignmentScoreAction({
                   type="number"
                   min={minScore}
                   max={maxScore}
-                  disabled={disabled}
+                  readOnly={disabled}
                   placeholder="-"
                   {...field}
+                  ref={(el) => {
+                    field.ref(el)
+                    ;(
+                      inputRef as React.MutableRefObject<HTMLInputElement | null>
+                    ).current = el
+                  }}
                   value={field.value ?? ''}
                   onChange={(e) => {
                     const num = e.target.valueAsNumber
                     field.onChange(isNaN(num) ? undefined : num)
                   }}
                   onFocus={(e) => e.target.select()}
-                  onBlur={(e) => {
+                  onBlur={() => {
                     field.onBlur()
                     form.handleSubmit(onSubmit, onError)()
-                    e.target.blur()
                   }}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') e.currentTarget.blur()
