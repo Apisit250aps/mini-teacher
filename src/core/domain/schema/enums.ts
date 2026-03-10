@@ -1,7 +1,13 @@
 import z from 'zod'
 
-const checkStatus = ['DEFAULT', 'PRESENT', 'ABSENT', 'LATE', 'LEAVE'] as const
-const assignType = [
+export const checkStatus = [
+  'DEFAULT',
+  'PRESENT',
+  'ABSENT',
+  'LATE',
+  'LEAVE',
+] as const
+export const assignType = [
   'ASSIGNMENT',
   'HOMEWORK',
   'QUIZ',
