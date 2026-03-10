@@ -45,6 +45,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       items: [
         { title: 'งานที่มอบหมาย', url: `${basePath}/${cls.id}/assignments` },
         { title: 'การเช็คชื่อ', url: `${basePath}/${cls.id}/checks` },
+        { title: 'รายชื่อ', url: `${basePath}/${cls.id}/members` },
       ],
     }))
   }, [basePath, classes])
