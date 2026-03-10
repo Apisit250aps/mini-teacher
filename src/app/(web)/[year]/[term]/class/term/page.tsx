@@ -1,7 +1,6 @@
-
 import React from 'react'
-import TermsView from '@/presentations/views/manage/term-view';
+import TermsManageView from '@/presentations/views/manage/terms-manage-view'
 
 export default function Page() {
-  return <TermsView />
+  return <TermsManageView />
 }

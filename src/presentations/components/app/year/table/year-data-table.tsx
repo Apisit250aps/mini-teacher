@@ -2,14 +2,14 @@
 import DataTable from '@/presentations/components/share/table/data-table'
 import { useMemo } from 'react'
 import { yearColumns } from './year-columns'
-import { useSession } from 'next-auth/react'
 import { useYearsListQuery } from '@/hooks/queries'
+import { useYearContext } from '@/hooks/app/use-year'
 
 export default function YearDataTable() {
-  const session = useSession()
+  const { teacher } = useYearContext()
   const query = useYearsListQuery({
     where: {
-      userId: session.data?.user.id,
+      userId: teacher,
     },
     orderBy: [{ term: 'desc' }, { year: 'desc' }],
   })

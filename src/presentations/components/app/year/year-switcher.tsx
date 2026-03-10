@@ -20,7 +20,7 @@ import {
 } from '@/presentations/components/ui/sidebar'
 import { useYearContext } from '@/hooks/app/use-year'
 import ModalDialog from '@/presentations/components/share/overlay/modal-dialog'
-import YearCreateForm from '@/presentations/components/app/year/year-create-form'
+import YearForm from '@/presentations/components/app/year/form/year-form'
 import { useOverlay } from '@/hooks/contexts/use-overlay'
 import { useYearMutations } from '@/hooks/queries'
 import { YearWithClasses } from '@/core/domain/data'
@@ -125,7 +125,7 @@ export function YearSwitcher() {
                 </DropdownMenuItem>
               }
             >
-              <YearCreateForm onSubmit={onSubmit} />
+              <YearForm onSubmit={onSubmit} />
             </ModalDialog>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -1,6 +1,6 @@
 import { auth } from '@/auth'
 import { yearRepository } from '@/core/repositories'
-import YearCreateCard from '@/presentations/components/app/year/year-create-card'
+import YearCreateCard from '@/presentations/components/app/year/form/year-create-card'
 import YearIntroSelect from '@/presentations/components/app/year/year-intro-select'
 import { Empty, EmptyContent } from '@/presentations/components/ui/empty'
 import { forbidden } from 'next/navigation'
@@ -13,6 +13,7 @@ export default async function Home() {
 
   const years = await yearRepository.getAll({
     where: { userId: session.user.id },
+    orderBy: [{ year: 'desc' }, { term: 'desc' }],
   })
 
   return (

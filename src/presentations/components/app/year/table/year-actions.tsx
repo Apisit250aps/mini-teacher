@@ -3,10 +3,10 @@ import ModalDialog from '@/presentations/components/share/overlay/modal-dialog'
 import { DropdownMenuItem } from '@/presentations/components/ui/dropdown-menu'
 import { useOverlay } from '@/hooks/contexts/use-overlay'
 import { Pen, Trash } from 'lucide-react'
-import YearCreateForm from './year-create-form'
+import YearForm from '../form/year-form'
 import { useYearMutations } from '@/hooks/queries'
 import { YearWithClasses } from '@/core/domain/data'
-import { useYearContext } from '@/hooks/app/use-year';
+import { useYearContext } from '@/hooks/app/use-year'
 
 export const DeleteYearAction = ({ yearId }: { yearId: string }) => {
   const { remove } = useYearMutations()
@@ -59,7 +59,7 @@ export const EditYearAction = ({ year }: { year: YearWithClasses }) => {
         </DropdownMenuItem>
       }
     >
-      <YearCreateForm
+      <YearForm
         value={{
           year: year.year,
           term: year.term,

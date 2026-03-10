@@ -13,9 +13,9 @@ import {
 import { Input } from '@/presentations/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
-import { Textarea } from '../../ui/textarea'
+import { Textarea } from '../../../ui/textarea'
 
-export default function YearCreateForm({
+export default function YearForm({
   value,
   onSubmit,
 }: {

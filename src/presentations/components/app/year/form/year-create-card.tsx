@@ -21,7 +21,7 @@ import {
 import { useForm } from 'react-hook-form'
 import { yearCreateSchema } from '@/core/domain/schema/year.schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Textarea } from '../../ui/textarea'
+import { Textarea } from '../../../ui/textarea'
 import { useYearMutations } from '@/hooks/queries/year-query'
 import { useRouter } from 'next/navigation'
 

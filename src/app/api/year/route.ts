@@ -12,7 +12,6 @@ import { YearQuery } from '@/core/domain/data'
 export async function GET(request: NextAuthRequest) {
   try {
     const filter = getJsonSearchParam<YearQuery>(request, 'filter')
-    console.log('filter', filter)
     const data = await yearUseCase.getAll(filter)
     return ok('ดึงรายการปีการศึกษาสำเร็จ', data)
   } catch (error) {
@@ -27,10 +26,7 @@ export async function POST(request: NextAuthRequest) {
     if (!user) return unauthorized()
 
     const payload = await request.json()
-    const data = await yearUseCase.create({
-      ...payload,
-      userId: user.id,
-    })
+    const data = await yearUseCase.create(payload)
 
     return ok('สร้างปีการศึกษาสำเร็จ', data, 201)
   } catch (error) {
