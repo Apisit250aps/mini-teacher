@@ -4,6 +4,7 @@ import { ClassMemberWithStudent } from '@/core/domain/data'
 import { useCheckDatesByClassQuery } from '@/hooks/queries'
 import { ColumnDef } from '@tanstack/react-table'
 import { useParams } from 'next/navigation'
+import CheckStatusAction from '../action/check-status-action'
 
 export const useStudentColumns = (): ColumnDef<ClassMemberWithStudent>[] => {
   const params = useParams<{ classId: string }>()
@@ -13,9 +14,6 @@ export const useStudentColumns = (): ColumnDef<ClassMemberWithStudent>[] => {
     {
       accessorKey: 'student.code',
       header: 'รหัสนักเรียน',
-      meta: {
-        className: 'sticky left-0 w-12 text-center z-10 bg-white',
-      },
       size: 100,
       cell: ({ row }) => {
         const code = row.original.student.code
@@ -25,36 +23,40 @@ export const useStudentColumns = (): ColumnDef<ClassMemberWithStudent>[] => {
     {
       accessorKey: 'student',
       header: 'ชื่อนักเรียน',
-      meta: {
-        className: 'sticky left-[50px] z-10 bg-white',
-      },
       size: 200,
       cell: ({ row }) => {
-        const fullName =
-          '' +
-          row.original.student.prefix +
-          row.original.student.firstName +
-          ' ' +
-          row.original.student.lastName
-        return <span>{fullName}</span>
+        const { prefix, firstName, lastName } = row.original.student
+        return (
+          <span>
+            {prefix}
+            {firstName} {lastName}
+          </span>
+        )
       },
     },
     ...(data?.map(
       (checkDate) =>
         ({
           id: checkDate.id,
-          size: 30,
+          size: 50,
           accessorKey: `id`,
-
+          meta: {
+            className: 'p-0 relative text-center',
+          },
           header: new Date(checkDate.date).toLocaleDateString('th-TH', {
-            day: '2-digit',
-            month: '2-digit',
+            day: 'numeric',
+            month: 'short',
           }),
           cell: ({ row }) => {
+            const record = checkDate.checkStudents.find(
+              (cs) => cs.studentId === row.original.student.id,
+            )
             return (
-              <span>
-                {checkDate.id}/{row.original.student.code}
-              </span>
+              <CheckStatusAction
+                checkDateId={checkDate.id}
+                studentId={row.original.student.id}
+                record={record}
+              />
             )
           },
         }) as ColumnDef<ClassMemberWithStudent>,
