@@ -34,7 +34,7 @@ export default function AssignmentCreateAction() {
       closeOutside={false}
     >
       <AssignmentForm
-        value={{ classId: params.classId }}
+        value={{ classId: params.classId! }}
         onSubmit={handleSubmit}
       />
     </ModalDialog>

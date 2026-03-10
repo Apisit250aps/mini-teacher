@@ -21,6 +21,7 @@ export interface ScoreAssignCreateData {
 }
 
 export interface ScoreAssignUpdateData {
+  classId?: string
   title?: string
   description?: string | null
   minScore?: number

@@ -54,11 +54,11 @@ export default function AssignmentForm({
   const methods = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      classId: (value as Partial<ScoreAssignCreateData>)?.classId || '',
+      classId: value?.classId || '',
       title: value?.title ?? '',
       description: value?.description ?? '',
       minScore: value?.minScore ?? 0,
-      maxScore: value?.maxScore ?? 100,
+      maxScore: value?.maxScore ?? 10,
       type: value?.type ?? 'ASSIGNMENT',
       assignDate: value?.assignDate
         ? new Date(value.assignDate).toISOString().split('T')[0]
