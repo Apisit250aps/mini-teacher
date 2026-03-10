@@ -9,9 +9,7 @@ export async function POST(request: NextAuthRequest) {
     if (!user) return unauthorized()
 
     const payload = await request.json()
-    const data = await studentUseCase.create(
-      { ...payload, teacherId: user.id }
-    )
+    const data = await studentUseCase.create(payload)
     return ok('สร้างนักเรียนสำเร็จ', data, 201)
   } catch (error) {
     return toErrorResponse(error)
