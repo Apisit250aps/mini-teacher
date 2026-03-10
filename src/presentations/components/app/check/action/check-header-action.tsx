@@ -15,7 +15,7 @@ import {
   ContextMenuSubTrigger,
   ContextMenuTrigger,
 } from '@/components/ui/context-menu'
-import { Pen, Lock, LockOpen, Trash, ListChecks } from 'lucide-react'
+import { Pen, Lock, LockOpen, Trash } from 'lucide-react'
 
 export default function CheckHeaderAction({
   checkDate,
@@ -31,11 +31,16 @@ export default function CheckHeaderAction({
       <ContextMenuTrigger>{date}</ContextMenuTrigger>
       <ContextMenuContent>
         <ContextMenuLabel>{date}</ContextMenuLabel>
+        <ContextMenuItem>
+          {checkDate.isEditable ? <LockOpen /> : <Lock />}
+          ล็อค
+        </ContextMenuItem>
+        <ContextMenuItem>
+          <Pen />
+          แก้ไข
+        </ContextMenuItem>
         <ContextMenuSub>
-          <ContextMenuSubTrigger>
-            <ListChecks />
-            เช็คทั้งหมด
-          </ContextMenuSubTrigger>
+          <ContextMenuSubTrigger>เช็คทั้งหมด</ContextMenuSubTrigger>
           <ContextMenuSubContent>
             <ContextMenuGroup>
               <ContextMenuItem>มา</ContextMenuItem>
@@ -45,14 +50,6 @@ export default function CheckHeaderAction({
             </ContextMenuGroup>
           </ContextMenuSubContent>
         </ContextMenuSub>
-        <ContextMenuItem>
-          {checkDate.isEditable ? <LockOpen /> : <Lock />}
-          ล็อค
-        </ContextMenuItem>
-        <ContextMenuItem>
-          <Pen />
-          แก้ไข
-        </ContextMenuItem>
         <ContextMenuSeparator />
         <ContextMenuItem variant="destructive">
           <Trash />
