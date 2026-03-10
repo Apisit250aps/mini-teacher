@@ -2,6 +2,7 @@
 import React from 'react'
 import PageLayout from '@/presentations/components/layouts/page-layout'
 import CheckCreateAction from '@/presentations/components/app/check/action/check-create-action'
+import CheckStudentTable from '@/presentations/components/app/check/table/check-student-table';
 
 export default function ClassCheckView() {
   return (
@@ -14,7 +15,7 @@ export default function ClassCheckView() {
         </>
       }
     >
-      ClassCheckView
+      <CheckStudentTable />
     </PageLayout>
   )
 }

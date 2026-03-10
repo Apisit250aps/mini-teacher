@@ -155,6 +155,7 @@ export default function DataTable<TData, TValue>({
                     minWidth: header.column.columnDef.minSize,
                     maxWidth: header.column.columnDef.maxSize,
                   }}
+                  className={header.column.columnDef.meta?.className}
                 >
                   {header.isPlaceholder
                     ? null
@@ -171,7 +172,7 @@ export default function DataTable<TData, TValue>({
         <TableBody>
           {isLoading ? (
             <TableRow>
-              <TableCell colSpan={columns.length} className="h-10 text-center">
+              <TableCell colSpan={columns.length} className={"h-10 text-center"}>
                 <div className="flex items-center gap-2 justify-center">
                   <Spinner data-icon="inline-start" />
                   กำลังโหลด...
@@ -189,6 +190,7 @@ export default function DataTable<TData, TValue>({
                       minWidth: cell.column.columnDef.minSize,
                       maxWidth: cell.column.columnDef.maxSize,
                     }}
+                    className={cell.column.columnDef.meta?.className}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
