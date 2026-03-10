@@ -1,7 +1,6 @@
 import React from 'react'
+import ClassMemberView from '@/presentations/views/class/class-member-view'
 
 export default function Page() {
-  return (
-    <div>Page</div>
-  )
+  return <ClassMemberView />
 }

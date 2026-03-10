@@ -3,9 +3,9 @@
 import * as React from 'react'
 import { Calendar1, GraduationCap, LibraryBig } from 'lucide-react'
 
-import { NavMain } from '@/presentations/components/app/nav-main'
-import { NavMenu } from '@/presentations/components/app/nav-menu'
-import { NavUser } from '@/presentations/components/app/nav-user'
+import { NavMain } from '@/presentations/components/app/base/nav-main'
+import { NavMenu } from '@/presentations/components/app/base/nav-menu'
+import { NavUser } from '@/presentations/components/app/base/nav-user'
 import { YearSwitcher } from '@/presentations/components/app/year/year-switcher'
 import {
   Sidebar,

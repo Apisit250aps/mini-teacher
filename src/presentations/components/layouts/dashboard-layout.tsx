@@ -1,13 +1,13 @@
 'use client'
 
-import { AppSidebar } from '@/presentations/components/app/app-sidebar'
+import { AppSidebar } from '@/presentations/components/app/base/app-sidebar'
 import { Separator } from '@/presentations/components/ui/separator'
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from '@/presentations/components/ui/sidebar'
-import AppBreadCrumb from '@/presentations/components/app/app-bread-crumb'
+import AppBreadCrumb from '@/presentations/components/app/base/app-bread-crumb'
 
 export default function DashboardLayout({
   children,
