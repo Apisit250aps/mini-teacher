@@ -3,7 +3,7 @@ import {
   generatorHandler,
   GeneratorOptions,
 } from '@prisma/generator-helper'
-import { logger } from '@prisma/sdk'
+import { logger } from '@prisma/internals'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
