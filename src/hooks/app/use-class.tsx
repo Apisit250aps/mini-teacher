@@ -6,18 +6,21 @@ import {
   CheckDateWithStudents,
   ClassMemberWithStudent,
   ClassWithMembers,
+  ScoreAssignWithScores,
 } from '@/core/domain/data'
 import { useYearContext } from './use-year'
 import {
   useCheckDatesByClassQuery,
   useClassesByYearQuery,
   useClassMembersByClassQuery,
+  useScoreAssignsByClassQuery,
 } from '../queries'
 
 type ClassContextValue = {
   classes: ClassWithMembers[]
   members: ClassMemberWithStudent[]
   checks: CheckDateWithStudents[]
+  assignments: ScoreAssignWithScores[]
   activeClass?: ClassWithMembers
 }
 
@@ -31,12 +34,14 @@ export function ClassProvider({ children }: { children: React.ReactNode }) {
   const { data: classes } = useClassesByYearQuery(active?.id ?? '')
   const { data: members } = useClassMembersByClassQuery(params.classId ?? '')
   const { data: checks } = useCheckDatesByClassQuery(params.classId ?? '')
+  const { data: assignments } = useScoreAssignsByClassQuery(params.classId ?? '')
   return (
     <ClassContext.Provider
       value={{
         classes: classes ?? [],
         members: members ?? [],
         checks: checks ?? [],
+        assignments: assignments ?? [],
       }}
     >
       {children}

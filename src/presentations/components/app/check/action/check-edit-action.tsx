@@ -33,7 +33,10 @@ export default function CheckEditAction({
       description="แก้ไขการเช็คชื่อ"
       dialogKey={`CHECK_EDIT_ACTION_${checkDate.id}`}
       trigger={
-        <ContextMenuItem onSelect={(e) => e.preventDefault()}>
+        <ContextMenuItem
+          onSelect={(e) => e.preventDefault()}
+          disabled={checkDate.isEditable === false}
+        >
           <Pen />
           แก้ไข
         </ContextMenuItem>

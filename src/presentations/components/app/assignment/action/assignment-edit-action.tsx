@@ -35,7 +35,10 @@ export default function AssignmentEditAction({
       description="แก้ไขงาน/ข้อสอบ"
       dialogKey={`ASSIGNMENT_EDIT_ACTION_${assignment.id}`}
       trigger={
-        <ContextMenuItem onSelect={(e) => e.preventDefault()}>
+        <ContextMenuItem
+          onSelect={(e) => e.preventDefault()}
+          disabled={assignment.isEditable === false}
+        >
           <Pen />
           แก้ไข
         </ContextMenuItem>

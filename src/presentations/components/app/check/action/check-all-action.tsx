@@ -57,11 +57,19 @@ export default function CheckAllAction({
 
   return (
     <ContextMenuSub>
-      <ContextMenuSubTrigger>เช็คทั้งหมด</ContextMenuSubTrigger>
+      <ContextMenuSubTrigger
+        disabled={checkDate.isEditable === false}
+      >
+        เช็คทั้งหมด
+      </ContextMenuSubTrigger>
       <ContextMenuSubContent>
         <ContextMenuGroup>
           {STATUS_OPTIONS.map(({ value, label }) => (
-            <ContextMenuItem key={value} onSelect={() => handleCheckAll(value)}>
+            <ContextMenuItem
+              key={value}
+              onSelect={() => handleCheckAll(value)}
+              disabled={checkDate.isEditable === false}
+            >
               {label}
             </ContextMenuItem>
           ))}
