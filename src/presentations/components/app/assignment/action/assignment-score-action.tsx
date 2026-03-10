@@ -19,6 +19,8 @@ export type AssignmentScoreActionProps = {
 
 type FormValues = z.infer<typeof scoreUpdateSchema>
 
+// Component is keyed by record?.id in the parent so it remounts
+// whenever the record is created/updated, keeping defaultValues fresh.
 export default function AssignmentScoreAction({
   assignmentId,
   studentId,
@@ -29,9 +31,9 @@ export default function AssignmentScoreAction({
 }: AssignmentScoreActionProps) {
   const mutations = useScoreStudentMutations()
 
-  const { register, handleSubmit, reset } = useForm<FormValues>({
+  const { register, handleSubmit } = useForm<FormValues>({
     resolver: zodResolver(scoreUpdateSchema),
-    defaultValues: { score: record?.score ?? ('' as unknown as number) },
+    defaultValues: { score: record?.score },
   })
 
   const onSubmit = async ({ score }: FormValues) => {
@@ -53,10 +55,7 @@ export default function AssignmentScoreAction({
         max={maxScore}
         disabled={disabled}
         placeholder="-"
-        onFocus={(e) => {
-          reset({ score: record?.score ?? ('' as unknown as number) })
-          e.target.select()
-        }}
+        onFocus={(e) => e.target.select()}
         onBlur={(e) => {
           onBlur(e)
           handleSubmit(onSubmit)()
