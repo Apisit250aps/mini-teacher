@@ -5,6 +5,7 @@ import { useCheckDatesByClassQuery } from '@/hooks/queries'
 import { ColumnDef } from '@tanstack/react-table'
 import { useParams } from 'next/navigation'
 import CheckStatusAction from '../action/check-status-action'
+import CheckHeaderAction from '../action/check-header-action'
 
 export const useStudentColumns = (): ColumnDef<ClassMemberWithStudent>[] => {
   const params = useParams<{ classId: string }>()
@@ -38,15 +39,14 @@ export const useStudentColumns = (): ColumnDef<ClassMemberWithStudent>[] => {
       (checkDate) =>
         ({
           id: checkDate.id,
-          size: 50,
+          size: 60,
           accessorKey: `id`,
           meta: {
             className: 'p-0 relative text-center',
           },
-          header: new Date(checkDate.date).toLocaleDateString('th-TH', {
-            day: 'numeric',
-            month: 'short',
-          }),
+          header: () => {
+            return <CheckHeaderAction checkDate={checkDate} />
+          },
           cell: ({ row }) => {
             const record = checkDate.checkStudents.find(
               (cs) => cs.studentId === row.original.student.id,
