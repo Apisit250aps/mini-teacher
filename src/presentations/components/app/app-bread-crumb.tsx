@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { useParams, usePathname } from 'next/navigation'
 import { z } from 'zod'
 
 import {
@@ -13,17 +13,25 @@ import {
   BreadcrumbSeparator,
 } from '@/presentations/components/ui/breadcrumb'
 import { useYearContext } from '@/hooks/app/use-year'
+import { useClassContext } from '@/hooks/app/use-class'
 
 export default function AppBreadCrumb() {
   const pathname = usePathname()
   const segments = pathname.split('/').filter(Boolean).slice(2)
   const { active } = useYearContext()
   const uuidSchema = z.uuid()
+  const { classes } = useClassContext()
+  const params = useParams()
 
   const isUuid = (value: string) => uuidSchema.safeParse(value).success
 
   const formatSegment = (segment: string) => {
     if (isUuid(segment)) {
+      if (params.classId && segment === params.classId) {
+        const found = classes.find((c) => c.id === segment)
+        return found ? found.name : '...'
+      }
+
       return '...'
     }
 
