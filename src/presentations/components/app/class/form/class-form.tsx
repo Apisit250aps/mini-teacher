@@ -1,7 +1,11 @@
 'use client'
-import { YearCreateData } from '@/core/domain/data'
-import { yearCreateSchema } from '@/core/domain/schema/year.schema'
-import { Button } from '@/presentations/components/ui/button'
+import React from 'react'
+
+import { ClassCreateData } from '@/core/domain/data'
+import { classCreateSchema } from '@/core/domain/schema'
+import { useYearContext } from '@/hooks/app/use-year'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
 import {
   Form,
   FormControl,
@@ -11,41 +15,35 @@ import {
   FormMessage,
 } from '@/presentations/components/ui/form'
 import { Input } from '@/presentations/components/ui/input'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { Textarea } from '../../../ui/textarea'
+import { Textarea } from '@/presentations/components/ui/textarea'
+import { Button } from '@/presentations/components/ui/button'
 
-export default function YearForm({
+export default function ClassForm({
   value,
   onSubmit,
-}: FormValueProps<Omit<YearCreateData, 'userId'>>) {
+}: FormValueProps<ClassCreateData>) {
+  const { active } = useYearContext()
   const methods = useForm({
-    resolver: zodResolver(yearCreateSchema.omit({ userId: true })),
+    resolver: zodResolver(classCreateSchema),
     defaultValues: {
-      year: value?.year ?? new Date().getFullYear() + 543,
-      term: value?.term ?? 1,
+      name: value?.name ?? '',
+      subject: value?.subject ?? '',
       description: value?.description ?? '',
       isActive: value?.isActive ?? true,
+      yearId: active?.id,
     },
   })
-
   return (
     <Form {...methods}>
       <form className="grid gap-4" onSubmit={methods.handleSubmit(onSubmit)}>
         <FormField
           control={methods.control}
-          name="year"
+          name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>ปีการศึกษา</FormLabel>
+              <FormLabel>ชื่อชั้นเรียน</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(Number(e.target.value))
-                  }}
-                  placeholder="กรอกปีการศึกษา"
-                />
+                <Input {...field} placeholder="กรอกชื่อชั้นเรียน" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -53,18 +51,12 @@ export default function YearForm({
         />
         <FormField
           control={methods.control}
-          name="term"
+          name="subject"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>ภาคการศึกษา</FormLabel>
+              <FormLabel>ชื่อวิชา</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  onChange={(e) => {
-                    field.onChange(Number(e.target.value))
-                  }}
-                  placeholder="กรอกภาคการศึกษา"
-                />
+                <Input {...field} placeholder="กรอกชื่อวิชา" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -88,9 +80,7 @@ export default function YearForm({
           )}
         />
         <div className="flex justify-end">
-          <Button type="submit">
-            {value ? 'บันทึกการเปลี่ยนแปลง' : 'สร้างปีการศึกษา'}
-          </Button>
+          <Button>{value ? 'บันทึกการแก้ไข' : 'สร้างชั้นเรียน'}</Button>
         </div>
       </form>
     </Form>
