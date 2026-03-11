@@ -234,13 +234,17 @@ export default function DataTable<TData, TValue>({
       </Table>
       <div className="flex items-center justify-between px-4 py-3">
         <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
-          {table.getFilteredSelectedRowModel().rows.length} of{' '}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          {table.getFilteredSelectedRowModel().rows.length > 0 && (
+            <>
+              เลือกแล้ว {table.getFilteredSelectedRowModel().rows.length} จาก{' '}
+              {table.getFilteredRowModel().rows.length} แถว
+            </>
+          )}
         </div>
         <div className="flex w-full items-center gap-8 lg:w-fit">
           <div className="hidden items-center gap-2 lg:flex">
             <Label htmlFor="rows-per-page" className="text-sm font-medium">
-              Rows per page
+              จำนวนที่แสดง
             </Label>
             <Select
               value={`${table.getState().pagination.pageSize}`}
@@ -259,11 +263,12 @@ export default function DataTable<TData, TValue>({
                     {pageSize}
                   </SelectItem>
                 ))}
+                <SelectItem value={`${memoData.length}`}>All</SelectItem>
               </SelectContent>
             </Select>
           </div>
           <div className="flex w-fit items-center justify-center text-sm font-medium">
-            Page {table.getState().pagination.pageIndex + 1} of{' '}
+            หน้า {table.getState().pagination.pageIndex + 1} จาก{' '}
             {table.getPageCount()}
           </div>
           <div className="ml-auto flex items-center gap-2 lg:ml-0">
@@ -273,7 +278,7 @@ export default function DataTable<TData, TValue>({
               onClick={() => table.setPageIndex(0)}
               disabled={!table.getCanPreviousPage()}
             >
-              <span className="sr-only">Go to first page</span>
+              <span className="sr-only">หน้าแรก</span>
               <IconChevronsLeft />
             </Button>
             <Button
@@ -283,7 +288,7 @@ export default function DataTable<TData, TValue>({
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
             >
-              <span className="sr-only">Go to previous page</span>
+              <span className="sr-only">หน้าก่อนหน้า</span>
               <IconChevronLeft />
             </Button>
             <Button
@@ -293,7 +298,7 @@ export default function DataTable<TData, TValue>({
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
             >
-              <span className="sr-only">Go to next page</span>
+              <span className="sr-only">หน้าถัดไป</span>
               <IconChevronRight />
             </Button>
             <Button
@@ -303,7 +308,7 @@ export default function DataTable<TData, TValue>({
               onClick={() => table.setPageIndex(table.getPageCount() - 1)}
               disabled={!table.getCanNextPage()}
             >
-              <span className="sr-only">Go to last page</span>
+              <span className="sr-only">หน้าสุดท้าย</span>
               <IconChevronsRight />
             </Button>
           </div>

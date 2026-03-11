@@ -11,12 +11,12 @@ export default function CheckStudentTable() {
   const query = useClassMembersByClassQuery(params.classId)
   const cols = useStudentColumns()
 
-  const autoLimit = React.useMemo(() => {
-    const count = query.data?.length ?? 0
-    if (count > 20) return 30
-    if (count > 10) return 20
-    return 5
-  }, [query.data])
+  // const autoLimit = React.useMemo(() => {
+  //   const count = query.data?.length ?? 0
+  //   if (count > 20) return 30
+  //   if (count > 10) return 20
+  //   return 5
+  // }, [query.data])
 
   const table = React.useMemo(
     () => ({
@@ -24,10 +24,8 @@ export default function CheckStudentTable() {
       data: query.data.map((classMember) => classMember.student) || [],
       isLoading: query.isLoading,
       autoWidth: !query.isLoading,
-      limit: autoLimit,
-      page: 1,
     }),
-    [query, cols, autoLimit],
+    [query, cols],
   )
 
   return <DataTable {...table} filterCols={['code', 'firstName']} />
