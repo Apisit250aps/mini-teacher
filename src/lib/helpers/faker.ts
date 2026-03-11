@@ -1,3 +1,4 @@
+import { StudentCreateData } from '@/core/domain/data'
 import { studentCreateSchema } from '@/core/domain/schema'
 import { base, th, en, Faker } from '@faker-js/faker'
 
@@ -5,7 +6,7 @@ export const fake = new Faker({
   locale: [th, en, base],
 })
 
-type StudentGeneratorOptions = {
+export type StudentGeneratorOptions = {
   teacherId: string
   length?: number
   code_prefix?: string
@@ -17,7 +18,7 @@ export const studentGenerator = ({
   length = 10,
   code_prefix = 'STU',
   male = 5,
-}: StudentGeneratorOptions) => {
+}: StudentGeneratorOptions): StudentCreateData[] => {
   return Array.from({ length }).map((_, i) => {
     const gender = i < male ? 'male' : 'female'
     return studentCreateSchema.parse({
