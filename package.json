@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "NODE_OPTIONS='--max-old-space-size=2048' next dev",
-    "build": "next build",
+    "build": "npm run db:generate && next build",
     "start": "next start",
     "lint": "eslint",
     "gen:spec": "tsp compile ./src/lib/spec/main.tsp",
