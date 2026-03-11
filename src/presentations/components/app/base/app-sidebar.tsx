@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Calendar1, GraduationCap, LibraryBig } from 'lucide-react'
+import { Calendar1, ChartArea, GraduationCap, LibraryBig } from 'lucide-react'
 
 import { NavMain } from '@/presentations/components/app/base/nav-main'
 import { NavMenu } from '@/presentations/components/app/base/nav-menu'
@@ -11,11 +11,15 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
+  SidebarGroup,
   SidebarHeader,
+  SidebarMenuButton,
+  SidebarMenuItem,
   SidebarRail,
 } from '@/presentations/components/ui/sidebar'
 import { useClassContext } from '@/hooks/app/use-class'
 import { useYearContext } from '@/hooks/app/use-year'
+import Link from 'next/link'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { active } = useYearContext()
@@ -43,9 +47,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       icon: LibraryBig,
       isActive: false,
       items: [
-        { title: 'งานที่มอบหมาย', url: `${basePath}/${cls.id}/assignments` },
+        { title: 'ภาพรวม', url: `${basePath}/${cls.id}` },
         { title: 'การเช็คชื่อ', url: `${basePath}/${cls.id}/checks` },
-        { title: 'รายชื่อ', url: `${basePath}/${cls.id}/members` },
+        { title: 'งานที่มอบหมาย', url: `${basePath}/${cls.id}/assignments` },
+        { title: 'รายชื่อนักเรียน', url: `${basePath}/${cls.id}/members` },
       ],
     }))
   }, [basePath, classes])
@@ -56,6 +61,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <YearSwitcher />
       </SidebarHeader>
       <SidebarContent>
+        <SidebarGroup>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <Link href={`${basePath}/`}>
+                <ChartArea />
+                <span>Dashboard</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarGroup>
         {classNavItems.length > 0 && <NavMain items={classNavItems} />}
         <NavMenu nav={nav} label="การจัดการ" />
       </SidebarContent>

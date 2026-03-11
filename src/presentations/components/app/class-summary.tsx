@@ -1,6 +1,7 @@
 'use client'
 
 import {
+  useClassByIdQuery,
   useClassMembersByClassQuery,
   useCheckDatesByClassQuery,
   useScoreAssignsByClassQuery,
@@ -9,6 +10,7 @@ import React, { useMemo } from 'react'
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/presentations/components/ui/card'
@@ -218,17 +220,15 @@ function StatCard({ icon, label, value }: StatCardProps) {
 // ---------------------------------------------------------------------------
 export type ClassSummaryProps = {
   classId: string
-  className?: string
-  subject?: string
   gradeThresholds?: GradeThreshold[]
 }
 
 export default function ClassSummary({
   classId,
-  className,
-  subject,
   gradeThresholds = DEFAULT_GRADE_THRESHOLDS,
 }: ClassSummaryProps) {
+  const { data: classData, isLoading: classLoading } =
+    useClassByIdQuery(classId)
   const { data: members, isLoading: membersLoading } =
     useClassMembersByClassQuery(classId)
   const { data: checks, isLoading: checksLoading } =
@@ -236,7 +236,8 @@ export default function ClassSummary({
   const { data: assignments, isLoading: assignmentsLoading } =
     useScoreAssignsByClassQuery(classId)
 
-  const isLoading = membersLoading || checksLoading || assignmentsLoading
+  const isLoading =
+    classLoading || membersLoading || checksLoading || assignmentsLoading
 
   // --- Overview stats ---
   const stats = useMemo(() => {
@@ -326,18 +327,6 @@ export default function ClassSummary({
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Class header */}
-      {(className || subject) && (
-        <div className="flex flex-col gap-0.5">
-          {className && (
-            <h2 className="text-xl font-bold leading-tight">{className}</h2>
-          )}
-          {subject && (
-            <p className="text-sm text-muted-foreground">{subject}</p>
-          )}
-        </div>
-      )}
-
       {/* Overview cards */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <StatCard
@@ -365,9 +354,25 @@ export default function ClassSummary({
       {/* Summary table */}
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-semibold">
+          <CardTitle className="text-lg font-semibold">
             สรุปผลนักเรียนในห้อง
           </CardTitle>
+          <CardDescription>
+            {(classData?.name || classData?.subject) && (
+              <div className="flex flex-col gap-0.5">
+                {classData?.name && (
+                  <h2 className="text-md font-bold leading-tight">
+                    {classData.name}
+                  </h2>
+                )}
+                {classData?.subject && (
+                  <p className="text-sm text-muted-foreground">
+                    {classData.subject}
+                  </p>
+                )}
+              </div>
+            )}
+          </CardDescription>
         </CardHeader>
         <CardContent className="overflow-x-auto p-0 pb-2">
           <DataTable {...table} filterCols={['code', 'firstName']} />
