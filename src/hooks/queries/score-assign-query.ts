@@ -29,6 +29,7 @@ export const useScoreAssignsByClassQuery = (
       },
     },
     {
+      enabled: !!classId,
       select: (res) => selectData<ScoreAssignWithScores[]>(res, []),
     },
   )
