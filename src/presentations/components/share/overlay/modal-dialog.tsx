@@ -12,6 +12,16 @@ import { DIALOG_KEY, useOverlay } from '@/hooks/contexts/use-overlay'
 
 import React from 'react'
 
+const DIALOG_SIZE = {
+  sm: 'sm:max-w-sm',
+  md: 'sm:max-w-lg',
+  lg: 'sm:max-w-2xl',
+  xl: 'sm:max-w-5xl',
+  full: 'sm:max-w-[90vw]',
+} as const
+
+type DialogSize = keyof typeof DIALOG_SIZE
+
 type ModalDialogProps = {
   title: string
   description?: string
@@ -19,6 +29,7 @@ type ModalDialogProps = {
   children?: React.ReactNode
   closeOutside?: boolean
   dialogKey?: string
+  size?: DialogSize
 }
 
 export default function ModalDialog({
@@ -28,6 +39,7 @@ export default function ModalDialog({
   children,
   closeOutside = true,
   dialogKey = DIALOG_KEY.MODAL_DIALOG,
+  size = 'md',
 }: ModalDialogProps) {
   const { open, closeOverlay, openOverlay } = useOverlay()
   return (
@@ -49,6 +61,7 @@ export default function ModalDialog({
         </DialogTrigger>
       )}
       <DialogContent
+        className={DIALOG_SIZE[size]}
         onInteractOutside={closeOutside ? undefined : (e) => e.preventDefault()}
       >
         <DialogHeader>

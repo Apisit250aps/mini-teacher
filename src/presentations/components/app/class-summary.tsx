@@ -374,7 +374,7 @@ export default function ClassSummary({
             )}
           </CardDescription>
         </CardHeader>
-        <CardContent className="overflow-x-auto p-0 pb-2">
+        <CardContent className="overflow-x-auto px-5">
           <DataTable {...table} filterCols={['code', 'firstName']} />
         </CardContent>
       </Card>

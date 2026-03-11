@@ -23,8 +23,8 @@ COPY tsconfig.json ./
 RUN npm ci --legacy-peer-deps
 # Copy the full project
 COPY . .
-ARG DATABASE_URL
-ENV DATABASE_URL=$DATABASE_URL
+# ARG DATABASE_URL
+# ENV DATABASE_URL=$DATABASE_URL
 
 
 # Build the Next.js app in standalone mode

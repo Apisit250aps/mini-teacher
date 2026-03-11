@@ -38,7 +38,7 @@ import { Label } from '@/presentations/components/ui/label'
 import { Spinner } from '@/presentations/components/ui/spinner'
 import { Input } from '../../ui/input'
 
-interface DataTableProps<TData, TValue> {
+export interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   value?: string[]
