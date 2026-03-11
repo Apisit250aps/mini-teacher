@@ -9,6 +9,7 @@ import { OverlayProvider } from '@/hooks/contexts/use-overlay'
 import TanstackQueryProvider from '@/hooks/contexts/tanstack-query'
 import { TabStorageProvider } from '@/hooks/contexts/tab-storage'
 import { AppProvider } from '@/hooks/contexts/app-context'
+import { Analytics } from '@vercel/analytics/next'
 
 const sarabun = Sarabun({
   variable: '--font-sarabun',
@@ -65,6 +66,7 @@ export default async function RootLayout({
           </AppProvider>
         </TanstackQueryProvider>
         <Toaster position="top-right" />
+        <Analytics />
       </body>
     </html>
   )
