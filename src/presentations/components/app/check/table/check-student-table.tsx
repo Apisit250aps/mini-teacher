@@ -21,7 +21,7 @@ export default function CheckStudentTable() {
   const table = React.useMemo(
     () => ({
       columns: cols,
-      data: query.data || [],
+      data: query.data.map((classMember) => classMember.student) || [],
       isLoading: query.isLoading,
       autoWidth: !query.isLoading,
       limit: autoLimit,
@@ -30,5 +30,5 @@ export default function CheckStudentTable() {
     [query, cols, autoLimit],
   )
 
-  return <DataTable {...table} />
+  return <DataTable {...table} filterCols={['code', 'firstName']} />
 }

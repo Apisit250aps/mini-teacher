@@ -14,12 +14,12 @@ export default function AssignmentStudentTable() {
   const table = React.useMemo(
     () => ({
       columns: cols,
-      data: query.data || [],
+      data: query.data.map(({ student }) => student) || [],
       isLoading: query.isLoading,
       autoWidth: !query.isLoading,
     }),
     [query, cols],
   )
 
-  return <DataTable {...table} />
+  return <DataTable {...table} filterCols={['code', 'firstName']} />
 }

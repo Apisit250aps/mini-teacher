@@ -1,6 +1,5 @@
 'use client'
 
-import { ClassMemberWithStudent } from '@/core/domain/data'
 import { Student } from '@/core/domain/entities';
 import { ColumnDef } from '@tanstack/react-table'
 
