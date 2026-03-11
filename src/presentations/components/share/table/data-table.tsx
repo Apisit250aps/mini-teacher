@@ -36,6 +36,7 @@ import React, { useEffect, useRef } from 'react'
 import { useMemo } from 'react'
 import { Label } from '@/presentations/components/ui/label'
 import { Spinner } from '@/presentations/components/ui/spinner'
+import { Input } from '../../ui/input'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -46,6 +47,7 @@ interface DataTableProps<TData, TValue> {
   page?: number
   isLoading?: boolean
   autoWidth?: boolean
+  filterCols?: (keyof TData)[]
 }
 
 export default function DataTable<TData, TValue>({
@@ -57,6 +59,7 @@ export default function DataTable<TData, TValue>({
   page = 1,
   isLoading = false,
   autoWidth = false,
+  filterCols,
 }: DataTableProps<TData & { id: string }, TValue>) {
   const memoData = useMemo(() => data || [], [data])
   const memoColumns = useMemo(() => columns, [columns])
@@ -76,6 +79,7 @@ export default function DataTable<TData, TValue>({
   }, [value]) // Empty deps array ensures this only runs once on mount
 
   const [rowSelection, setRowSelection] = React.useState(initialRowSelection)
+  const [globalFilter, setGlobalFilter] = React.useState('')
   const [pagination, setPagination] = React.useState({
     pageIndex: page - 1,
     pageSize: limit,
@@ -99,11 +103,20 @@ export default function DataTable<TData, TValue>({
     state: {
       rowSelection,
       pagination,
+      globalFilter,
     },
     enableRowSelection: true,
     getRowId: (row) => row.id,
     onRowSelectionChange: setRowSelection,
     onPaginationChange: setPagination,
+    onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: (row, columnId, filterValue) => {
+      if (!filterCols?.includes(columnId as keyof TData)) return false
+      const value = row.getValue(columnId)
+      return String(value ?? '')
+        .toLowerCase()
+        .includes(String(filterValue).toLowerCase())
+    },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -143,6 +156,16 @@ export default function DataTable<TData, TValue>({
 
   return (
     <div className="overflow-hidden rounded-md border p-4">
+      {filterCols && filterCols.length > 0 && (
+        <div className="flex items-center py-4">
+          <Input
+            placeholder="ค้นหา..."
+            value={globalFilter}
+            onChange={(event) => setGlobalFilter(event.target.value)}
+            className="max-w-sm"
+          />
+        </div>
+      )}
       <Table className={autoWidth ? 'w-auto' : ''}>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -172,7 +195,10 @@ export default function DataTable<TData, TValue>({
         <TableBody>
           {isLoading ? (
             <TableRow>
-              <TableCell colSpan={columns.length} className={"h-10 text-center"}>
+              <TableCell
+                colSpan={columns.length}
+                className={'h-10 text-center'}
+              >
                 <div className="flex items-center gap-2 justify-center">
                   <Spinner data-icon="inline-start" />
                   กำลังโหลด...

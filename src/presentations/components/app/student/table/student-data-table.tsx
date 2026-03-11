@@ -8,7 +8,7 @@ import { studentDataColumns } from './student-data-columns'
 export default function StudentDataTable() {
   const { teacher } = useYearContext()
   const query = useStudentsByTeacherQuery(teacher || '', {
-    orderBy:[{code:'asc'}]
+    orderBy: [{ code: 'asc' }],
   })
 
   const table = React.useMemo(
@@ -20,5 +20,10 @@ export default function StudentDataTable() {
     [query],
   )
 
-  return <DataTable {...table} />
+  return (
+    <DataTable
+      {...table}
+      filterCols={['code', 'firstName', 'lastName', 'prefix']}
+    />
+  )
 }

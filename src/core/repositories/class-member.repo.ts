@@ -71,7 +71,9 @@ const classMemberRepository: ClassMemberRepository = {
       },
       orderBy:
         (filter.orderBy as Prisma.ClassMemberOrderByWithRelationInput) ?? {
-          createdAt: 'asc',
+          student: {
+            code: 'asc',
+          },
         },
       include: {
         student: true,
