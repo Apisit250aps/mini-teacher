@@ -24,17 +24,16 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Textarea } from '../../../ui/textarea'
 import { useYearMutations } from '@/hooks/queries/year-query'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 
 export default function YearCreateCard() {
   const router = useRouter()
+  const session = useSession()
   const methods = useForm({
-    resolver: zodResolver(
-      yearCreateSchema.omit({
-        userId: true,
-      }),
-    ),
+    resolver: zodResolver(yearCreateSchema),
     defaultValues: {
       year: new Date().getFullYear() + 543,
+      userId: session.data?.user.id,
       term: 1,
       description: '',
       isActive: true,
