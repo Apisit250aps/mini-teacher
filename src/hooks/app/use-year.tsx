@@ -9,6 +9,7 @@ type YearContextValue = {
   active?: YearWithClasses
   years: YearWithClasses[]
   teacher: string
+  basePath: string
 }
 
 type YearProviderProps = {
@@ -24,6 +25,7 @@ export function YearProvider({
   teacherId,
 }: YearProviderProps) {
   const params = useParams<{ year: string; term: string }>()
+  const basePath = `/${params.year}/${params.term}`
   const { data: list } = useYearsListQuery({
     where: {
       userId: teacherId,
@@ -45,6 +47,7 @@ export function YearProvider({
         active: active,
         years: list ?? [],
         teacher: teacherId,
+        basePath,
       }}
     >
       {children}

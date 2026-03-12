@@ -61,7 +61,7 @@ export default function DataTable<TData, TValue>({
   autoWidth = false,
   filterCols,
 }: DataTableProps<TData & { id: string }, TValue>) {
-  const memoData = useMemo(() => data || [], [data])
+  const memoData = data
   const memoColumns = useMemo(() => columns, [columns])
 
   // Initialize rowSelection based on the initial value prop
