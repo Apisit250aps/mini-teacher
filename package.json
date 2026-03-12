@@ -3,7 +3,6 @@
   "main": "./src/spec/main.tsp",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "NODE_OPTIONS='--max-old-space-size=2048' next dev",
     "build": "next build",
