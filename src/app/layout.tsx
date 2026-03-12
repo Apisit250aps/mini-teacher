@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Mini Teacher | ระบบจัดการชั้นเรียนอัจฉริยะ',
     description: 'ช่วยคุณครูเช็คชื่อและบันทึกคะแนนนักเรียนได้ง่ายๆ ในที่เดียว',
-    url: 'https://mini-teacher.vercel.app',
+    url: 'https://miniteacher.online',
     siteName: 'Mini Teacher',
     locale: 'th_TH',
     type: 'website',
