@@ -3,6 +3,7 @@ import {
   checkStudentRepository,
   classMemberRepository,
   classRepository,
+  documentRepository,
   scoreAssignRepository,
   scoreStudentRepository,
   studentRepository,
@@ -10,6 +11,7 @@ import {
   yearRepository,
 } from '@/core/repositories'
 
+import { createDocumentUseCase } from './document.usecase'
 import { createYearUseCase } from './year.usecase'
 import { createCheckDateUseCase } from './check-date.usecase'
 import { createCheckStudentUseCase } from './check-student.usecase'
@@ -20,6 +22,7 @@ import { createScoreStudentUseCase } from './score-student.usecase'
 import { createStudentUseCase } from './student.usecase'
 import { createUserUseCase } from './user.usecase'
 
+export const documentUseCase = createDocumentUseCase(documentRepository)
 export const userUseCase = createUserUseCase(userRepository)
 export const yearUseCase = createYearUseCase(yearRepository)
 export const classUseCase = createClassUseCase(classRepository)
@@ -38,6 +41,7 @@ export const scoreStudentUseCase = createScoreStudentUseCase(
   scoreStudentRepository,
 )
 
+export * from './document.usecase'
 export * from './user.usecase'
 export * from './year.usecase'
 export * from './class.usecase'
@@ -55,5 +59,6 @@ export type { ClassUseCase } from '@/core/domain/usecases/class'
 export type { ScoreAssignUseCase } from '@/core/domain/usecases/score-assign'
 export type { ScoreStudentUseCase } from '@/core/domain/usecases/score-student'
 export type { StudentUseCase } from '@/core/domain/usecases/student'
+export type { DocumentUseCase } from '@/core/domain/usecases/document'
 export type { UserUseCase } from '@/core/domain/usecases/user'
 export type { YearUseCase } from '@/core/domain/usecases/year'

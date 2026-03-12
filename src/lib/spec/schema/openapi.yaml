@@ -13,6 +13,7 @@ tags:
   - name: Check Students
   - name: Score Assigns
   - name: Score Students
+  - name: Documents
 paths:
   /admin/users:
     get:
@@ -1333,6 +1334,376 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       tags:
         - Classes
+  /document:
+    get:
+      operationId: Documents_list
+      parameters:
+        - name: filter
+          in: query
+          required: false
+          schema:
+            type: string
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DocumentData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Documents
+    post:
+      operationId: Documents_create
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/DocumentData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Documents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentCreateBody'
+  /document/latest:
+    get:
+      operationId: Documents_getLatestByType
+      parameters:
+        - name: latestType
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/PrismaModels.DocumentType'
+          explode: false
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    anyOf:
+                      - $ref: '#/components/schemas/DocumentData'
+                      - type: 'null'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Documents
+  /document/{id}:
+    get:
+      operationId: Documents_getById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/DocumentWithAcceptances'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Documents
+    patch:
+      operationId: Documents_update
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/DocumentData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Documents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentUpdateBody'
+    delete:
+      operationId: Documents_delete
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - message
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    $ref: '#/components/schemas/EmptyData'
+                  error:
+                    type: string
+        '400':
+          description: The server could not understand the request due to invalid syntax.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Access is unauthorized.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: The server cannot find the requested resource.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: The request conflicts with the current state of the server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      tags:
+        - Documents
   /score-assign:
     post:
       operationId: ScoreAssigns_create
@@ -3393,6 +3764,63 @@ components:
             $ref: '#/components/schemas/ClassMemberWithStudent'
       allOf:
         - $ref: '#/components/schemas/ClassData'
+    DocumentCreateBody:
+      type: object
+      required:
+        - type
+        - version
+        - content
+      properties:
+        type:
+          $ref: '#/components/schemas/PrismaModels.DocumentType'
+        version:
+          type: string
+        content:
+          type: string
+        isActive:
+          type: boolean
+    DocumentData:
+      type: object
+      required:
+        - id
+        - type
+        - version
+        - content
+        - isActive
+        - createdAt
+      properties:
+        id:
+          type: string
+        type:
+          $ref: '#/components/schemas/PrismaModels.DocumentType'
+        version:
+          type: string
+        content:
+          type: string
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+      description: 'DB table: documents'
+    DocumentUpdateBody:
+      type: object
+      properties:
+        content:
+          type: string
+        isActive:
+          type: boolean
+    DocumentWithAcceptances:
+      type: object
+      required:
+        - acceptances
+      properties:
+        acceptances:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrismaModels.UserAcceptance'
+      allOf:
+        - $ref: '#/components/schemas/DocumentData'
     EmptyData:
       type: object
     ErrorResponse:
@@ -3644,6 +4072,35 @@ components:
             - type: string
             - type: 'null'
       description: 'DB table: class_members'
+    PrismaModels.Document:
+      type: object
+      required:
+        - id
+        - type
+        - version
+        - content
+        - isActive
+        - createdAt
+      properties:
+        id:
+          type: string
+        type:
+          $ref: '#/components/schemas/PrismaModels.DocumentType'
+        version:
+          type: string
+        content:
+          type: string
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+      description: 'DB table: documents'
+    PrismaModels.DocumentType:
+      type: string
+      enum:
+        - TOS
+        - PRIVACY_POLICY
     PrismaModels.Score:
       type: object
       required:
@@ -3786,6 +4243,32 @@ components:
           type: string
           format: date-time
       description: 'DB table: users'
+    PrismaModels.UserAcceptance:
+      type: object
+      required:
+        - id
+        - userId
+        - documentId
+        - acceptedAt
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        documentId:
+          type: string
+        acceptedAt:
+          type: string
+          format: date-time
+        ipAddress:
+          anyOf:
+            - type: string
+            - type: 'null'
+        userAgent:
+          anyOf:
+            - type: string
+            - type: 'null'
+      description: 'DB table: user_acceptances'
     PrismaModels.VerificationToken:
       type: object
       required:

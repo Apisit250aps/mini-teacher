@@ -1,3 +1,4 @@
+export { default as documentRepository } from './document.repo'
 export { default as userRepository } from './user.repo'
 export { default as yearRepository } from './year.repo'
 export { default as classRepository } from './class.repo'

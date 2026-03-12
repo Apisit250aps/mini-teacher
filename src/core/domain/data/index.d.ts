@@ -1,5 +1,11 @@
 export type { SortOrder, QueryWhere, FindManyOptions } from './common'
 
+export type {
+  DocumentWithAcceptances,
+  DocumentCreateData,
+  DocumentUpdateData,
+  DocumentQuery,
+} from './document'
 export type { CheckDateWithStudents, CheckDateQuery } from './check-date'
 export type {
   CheckStudentWithRelations,

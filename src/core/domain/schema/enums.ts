@@ -17,3 +17,6 @@ export const assignType = [
 
 export const checkStatusSchema = z.enum(checkStatus)
 export const assignTypeSchema = z.enum(assignType)
+
+export const documentType = ['TOS', 'PRIVACY_POLICY'] as const
+export const documentTypeSchema = z.enum(documentType)
