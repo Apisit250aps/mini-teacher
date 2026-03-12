@@ -46,30 +46,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.email = user.email
       }
       if (token.sub) {
-        const [latestTos, latestPp] = await Promise.all([
-          prisma.document.findFirst({
-            where: { type: 'TOS', isActive: true },
-            orderBy: { createdAt: 'desc' },
-          }),
-          prisma.document.findFirst({
-            where: { type: 'PRIVACY_POLICY', isActive: true },
-            orderBy: { createdAt: 'desc' },
-          }),
-        ])
-        const [tosAccepted, ppAccepted] = await Promise.all([
-          latestTos
-            ? prisma.userAcceptance.findFirst({
-                where: { userId: token.sub, documentId: latestTos.id },
-              })
-            : null,
-          latestPp
-            ? prisma.userAcceptance.findFirst({
-                where: { userId: token.sub, documentId: latestPp.id },
-              })
-            : null,
-        ])
-        token.hasAcceptedLatestTos = !!tosAccepted
-        token.hasAcceptedLatestPp = !!ppAccepted
       }
       return token
     },
@@ -82,8 +58,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.firstName = token.firstName as string
         session.user.lastName = token.lastName as string
         session.user.email = token.email as string
-        session.user.hasAcceptedLatestTos = token.hasAcceptedLatestTos
-        session.user.hasAcceptedLatestPp = token.hasAcceptedLatestPp
       }
       return session
     },

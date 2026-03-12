@@ -13,8 +13,6 @@ declare module 'next-auth' {
     isAdmin: boolean
     firstName?: string
     lastName?: string
-    hasAcceptedLatestTos?: boolean
-    hasAcceptedLatestPp?: boolean
   }
   /**
    * The shape of the account object returned in the OAuth providers' `account` callback,
@@ -81,7 +79,5 @@ declare module 'next-auth/jwt' {
     firstName?: string
     lastName?: string
     isAdmin?: boolean
-    hasAcceptedLatestTos?: boolean
-    hasAcceptedLatestPp?: boolean
   }
 }
