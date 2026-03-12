@@ -20,6 +20,11 @@ enum AssignType {
   PROJECT,
 }
 
+enum DocumentType {
+  TOS,
+  PRIVACY_POLICY,
+}
+
 @doc("DB table: users")
 model User {
   @key
@@ -75,6 +80,28 @@ model VerificationToken {
   identifier: string;
   token: string;
   expires: utcDateTime;
+}
+
+@doc("DB table: documents")
+model Document {
+  @key
+  id: string;
+  type: DocumentType;
+  version: string;
+  content: string;
+  isActive: boolean;
+  createdAt: utcDateTime;
+}
+
+@doc("DB table: user_acceptances")
+model UserAcceptance {
+  @key
+  id: string;
+  userId: string;
+  documentId: string;
+  acceptedAt: utcDateTime;
+  ipAddress?: string | null;
+  userAgent?: string | null;
 }
 
 @doc("DB table: years")
