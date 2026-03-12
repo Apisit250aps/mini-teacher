@@ -1,4 +1,5 @@
 // Auto-generated from prisma/schema.prisma. Do not edit manually.
+
 import type { DocumentType } from './enums'
 
 export interface Document {

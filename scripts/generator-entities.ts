@@ -183,11 +183,24 @@ function buildEntityFile(
   entitySuffix: string,
 ): string {
   const interfaceName = `${model.name}${entitySuffix}`
+
+  const usedEnums = [
+    ...new Set(
+      model.fields.filter((f) => f.kind === 'enum').map((f) => String(f.type)),
+    ),
+  ]
+
   const lines: string[] = [
     '// Auto-generated from prisma/schema.prisma. Do not edit manually.',
     '',
-    `export interface ${interfaceName} {`,
   ]
+
+  if (usedEnums.length > 0) {
+    lines.push(`import type { ${usedEnums.join(', ')} } from './enums'`)
+    lines.push('')
+  }
+
+  lines.push(`export interface ${interfaceName} {`)
 
   for (const field of model.fields) {
     const rendered = renderField(field, modelNames, emitRelations, entitySuffix)

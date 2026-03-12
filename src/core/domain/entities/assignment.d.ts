@@ -1,5 +1,7 @@
 // Auto-generated from prisma/schema.prisma. Do not edit manually.
 
+import type { AssignType } from './enums'
+
 export interface Assignment {
   id: string
   classId: string
