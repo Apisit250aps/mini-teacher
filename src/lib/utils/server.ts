@@ -47,6 +47,15 @@ export const unauthorized = () =>
     { status: 401 },
   )
 
+export const forbidden = () =>
+  NextResponse.json(
+    {
+      success: false,
+      message: 'Forbidden',
+    } satisfies ApiResponse<null>,
+    { status: 403 },
+  )
+
 export const getJsonSearchParam = <T>(
   request: Request,
   key: string,

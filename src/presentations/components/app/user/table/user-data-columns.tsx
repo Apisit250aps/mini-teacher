@@ -5,10 +5,14 @@ import { ColumnDef, Cell } from '@tanstack/react-table'
 import { Badge } from '@/presentations/components/ui/badge'
 import { ActionDropdown } from '@/presentations/components/share/overlay/action-dropdown'
 import UserEditStatusAction from '../action/user-edit-status-action'
+import UserEditAction from '../action/user-edit-action'
+import UserDeleteAction from '../action/user-delete-action'
 
 const UserActionColumn = ({ cell }: { cell: Cell<User, unknown> }) => (
   <ActionDropdown id={`USER_ACTION_${cell.row.original.id}`}>
+    <UserEditAction user={cell.row.original} />
     <UserEditStatusAction user={cell.row.original} />
+    <UserDeleteAction userId={cell.row.original.id} />
   </ActionDropdown>
 )
 

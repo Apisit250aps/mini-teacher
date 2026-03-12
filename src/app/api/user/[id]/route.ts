@@ -1,6 +1,12 @@
 import { userUseCase } from '@/core/usecases'
 import { toErrorResponse } from '@/lib/utils/error'
-import { authorized, ok, okOnlyMessage, unauthorized } from '@/lib/utils/server'
+import {
+  authorized,
+  forbidden,
+  ok,
+  okOnlyMessage,
+  unauthorized,
+} from '@/lib/utils/server'
 import type { NextRequest } from 'next/server'
 
 type Context = {
@@ -22,6 +28,7 @@ export async function PATCH(request: NextRequest, context: Context) {
     const user = await authorized(request)
     if (!user) return unauthorized()
     const { id } = await context.params
+    if (!user.isAdmin && user.id !== id) return forbidden()
     const payload = await request.json()
     const data = await userUseCase.update(id, payload)
     return ok('แก้ไขผู้ใช้สำเร็จ', data)
@@ -35,6 +42,7 @@ export async function DELETE(request: NextRequest, context: Context) {
     const user = await authorized(request)
     if (!user) return unauthorized()
     const { id } = await context.params
+    if (!user.isAdmin && user.id !== id) return forbidden()
     await userUseCase.delete(id)
     return okOnlyMessage('ลบผู้ใช้สำเร็จ')
   } catch (error) {
