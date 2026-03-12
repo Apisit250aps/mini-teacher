@@ -6,6 +6,7 @@ import type {
 } from '../data/user'
 
 interface UserRepository {
+  getAll: () => Promise<User[]>
   getById: (id: string) => Promise<UserWithYears | null>
   getByEmail: (email: string) => Promise<UserWithYears | null>
   create: (data: UserCreateData) => Promise<User>

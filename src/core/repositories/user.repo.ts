@@ -2,6 +2,9 @@ import { prisma } from '@/lib/prisma'
 import type { UserRepository } from '@/core/domain/repositories/user'
 
 const userRepository: UserRepository = {
+  getAll: async () => {
+    return prisma.user.findMany({ orderBy: { createdAt: 'asc' } })
+  },
   getById: async (id) => {
     const user = await prisma.user.findUnique({
       where: { id },

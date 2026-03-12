@@ -1,4 +1,5 @@
 export * from './_shared'
+export * from './admin-user-query'
 export * from './check-date-query'
 export * from './check-student-query'
 export * from './class-member-query'

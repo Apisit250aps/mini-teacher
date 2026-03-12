@@ -9,6 +9,9 @@ import { AppError } from '@/lib/utils/error'
 import { ensureFoundOrThrow, parseOrThrow, parseUuidOrThrow } from './_shared'
 
 export const createUserUseCase = (repository: UserRepository): UserUseCase => ({
+  getAll: async () => {
+    return repository.getAll()
+  },
   create: async (data) => {
     const payload = parseOrThrow<UserCreateData>(userCreateSchema, data)
 

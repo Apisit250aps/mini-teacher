@@ -12,6 +12,7 @@ import "./models/student.tsp";
 import "./models/check.tsp";
 import "./models/score.tsp";
 // services
+import "./services/admin.tsp";
 import "./services/user.tsp";
 import "./services/year.tsp";
 import "./services/class.tsp";
