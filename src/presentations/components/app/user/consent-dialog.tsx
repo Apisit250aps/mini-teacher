@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import ReactMarkdown from 'react-markdown'
+import MDEditor from '@uiw/react-md-editor'
 import {
   Dialog,
   DialogContent,
@@ -81,8 +81,8 @@ function ConsentContent({
               className="mt-3 min-h-0 flex-1 overflow-y-auto rounded-md border p-4"
             >
               {tos ? (
-                <div className="prose prose-sm max-w-none dark:prose-invert">
-                  <ReactMarkdown>{tos.content}</ReactMarkdown>
+                <div data-color-mode="light">
+                  <MDEditor.Markdown source={tos.content} />
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground">
@@ -95,8 +95,8 @@ function ConsentContent({
               className="mt-3 min-h-0 flex-1 overflow-y-auto rounded-md border p-4"
             >
               {pp ? (
-                <div className="prose prose-sm max-w-none dark:prose-invert">
-                  <ReactMarkdown>{pp.content}</ReactMarkdown>
+                <div data-color-mode="light">
+                  <MDEditor.Markdown source={pp.content} />
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground">
