@@ -52,14 +52,14 @@ export default function MarkdownEditor({
           onChange={(e) => onChange?.(e.target.value)}
           placeholder="เขียนเนื้อหาเอกสารในรูปแบบ Markdown..."
           className="font-mono text-sm resize-none"
-          style={{ minHeight }}
+          style={{ minHeight, maxHeight: '400px', overflowY: 'auto' }}
         />
       </TabsContent>
 
       <TabsContent value="preview">
         <div
           className="prose prose-sm dark:prose-invert max-w-none overflow-auto rounded-md border p-4 bg-background"
-          style={{ minHeight }}
+          style={{ minHeight, maxHeight: '400px' }}
         >
           {value ? (
             <ReactMarkdown>{value}</ReactMarkdown>

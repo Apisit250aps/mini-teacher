@@ -61,90 +61,96 @@ export default function DocumentForm({
 
   return (
     <Form {...methods}>
-      <form className="grid gap-4" onSubmit={methods.handleSubmit(onSubmit)}>
-        <FormField
-          control={methods.control}
-          name="type"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>ประเภทเอกสาร</FormLabel>
-              <Select
-                disabled={lockType}
-                value={field.value}
-                onValueChange={field.onChange}
-              >
+      <form
+        className="flex flex-col gap-4 max-h-[70vh] overflow-hidden"
+        onSubmit={methods.handleSubmit(onSubmit)}
+      >
+        <div className="flex flex-col gap-4 overflow-y-auto pr-1 flex-1">
+          <FormField
+            control={methods.control}
+            name="type"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>ประเภทเอกสาร</FormLabel>
+                <Select
+                  disabled={lockType}
+                  value={field.value}
+                  onValueChange={field.onChange}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="เลือกประเภทเอกสาร" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {Object.entries(DOCUMENT_TYPE_LABELS).map(
+                      ([key, label]) => (
+                        <SelectItem key={key} value={key}>
+                          {label}
+                        </SelectItem>
+                      ),
+                    )}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={methods.control}
+            name="version"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>เวอร์ชัน</FormLabel>
                 <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="เลือกประเภทเอกสาร" />
-                  </SelectTrigger>
+                  <Input placeholder="เช่น 1.0.0 หรือ 2024.03" {...field} />
                 </FormControl>
-                <SelectContent>
-                  {Object.entries(DOCUMENT_TYPE_LABELS).map(([key, label]) => (
-                    <SelectItem key={key} value={key}>
-                      {label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={methods.control}
-          name="version"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>เวอร์ชัน</FormLabel>
-              <FormControl>
-                <Input placeholder="เช่น 1.0.0 หรือ 2024.03" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Controller
-          control={methods.control}
-          name="content"
-          render={({ field, fieldState }) => (
-            <FormItem>
-              <FormLabel>เนื้อหาเอกสาร (Markdown)</FormLabel>
-              <MarkdownEditor
-                value={field.value}
-                onChange={field.onChange}
-                minHeight="320px"
-              />
-              {fieldState.error && (
-                <p className="text-destructive text-sm">
-                  {fieldState.error.message}
-                </p>
-              )}
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={methods.control}
-          name="isActive"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
+          <Controller
+            control={methods.control}
+            name="content"
+            render={({ field, fieldState }) => (
+              <FormItem>
+                <FormLabel>เนื้อหาเอกสาร (Markdown)</FormLabel>
+                <MarkdownEditor
+                  value={field.value}
+                  onChange={field.onChange}
+                  minHeight="320px"
                 />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>เปิดใช้งาน</FormLabel>
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                {fieldState.error && (
+                  <p className="text-destructive text-sm">
+                    {fieldState.error.message}
+                  </p>
+                )}
+              </FormItem>
+            )}
+          />
 
-        <div className="flex justify-end">
+          <FormField
+            control={methods.control}
+            name="isActive"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <div className="space-y-1 leading-none">
+                  <FormLabel>เปิดใช้งาน</FormLabel>
+                </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className="flex justify-end shrink-0 pt-2 border-t">
           <Button type="submit">บันทึก</Button>
         </div>
       </form>
