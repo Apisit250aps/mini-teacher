@@ -13,6 +13,8 @@ declare module 'next-auth' {
     isAdmin: boolean
     firstName?: string
     lastName?: string
+    hasAcceptedLatestTos?: boolean
+    hasAcceptedLatestPp?: boolean
   }
   /**
    * The shape of the account object returned in the OAuth providers' `account` callback,
@@ -34,13 +36,14 @@ declare module 'next-auth' {
 
 declare module 'next-auth/adapters' {
   interface AdapterUser {
-    id: string
+    id?: string
 
     name?: string | null
     email: string
     emailVerified: Date | null
     image?: string | null
 
+    isAdmin: boolean
     isActive: boolean
     isTeacher: boolean
     firstName?: string
@@ -61,6 +64,7 @@ declare module '@auth/core/adapters' {
     isTeacher: boolean
     firstName?: string
     lastName?: string
+    isAdmin: boolean
   }
 }
 
@@ -76,5 +80,8 @@ declare module 'next-auth/jwt' {
     isTeacher?: boolean
     firstName?: string
     lastName?: string
+    isAdmin?: boolean
+    hasAcceptedLatestTos?: boolean
+    hasAcceptedLatestPp?: boolean
   }
 }

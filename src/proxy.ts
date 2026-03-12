@@ -26,6 +26,6 @@ export const config = {
      * 2. Exclude /api/auth in all formats (e.g., /api/auth/signin, /api/auth/callback)
      * 3. But still apply to all other /api routes
      */
-    '/((?!api/auth|_next/static|_next/image|favicon.ico).*)',
+    '/((?!api/auth|api/document|_next/static|_next/image|favicon.ico).*)',
   ],
 }

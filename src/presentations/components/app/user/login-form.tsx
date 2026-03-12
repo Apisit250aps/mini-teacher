@@ -18,16 +18,29 @@ import {
   FormMessage,
 } from '@/presentations/components/ui/form'
 import { useLogin } from '@/hooks/use-login'
+import { ConsentDialog } from './consent-dialog'
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
-  const { onSubmit, form, onGoogleSignIn } = useLogin()
+  const {
+    onCredentialSubmit,
+    form,
+    onGoogleSignIn,
+    showConsent,
+    onConsentAccept,
+    onConsentDecline,
+  } = useLogin()
   return (
     <Form {...form}>
+      <ConsentDialog
+        open={showConsent}
+        onAccept={onConsentAccept}
+        onDecline={onConsentDecline}
+      />
       <div className={cn('flex flex-col gap-6', className)} {...props}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
+        <form onSubmit={form.handleSubmit(onCredentialSubmit)}>
           <FieldGroup>
             <div className="flex flex-col items-center gap-2 text-center">
               <a
