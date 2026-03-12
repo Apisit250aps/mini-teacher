@@ -1,17 +1,21 @@
 {
   "name": "mini-teacher",
   "main": "./src/spec/main.tsp",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "NODE_OPTIONS='--max-old-space-size=2048' next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "node scripts/main.js",
     "gen:spec": "tsp compile ./src/lib/spec/main.tsp",
     "gen:api": "npm run gen:spec && tsx ./scripts/generator-api.ts",
     "db:push": "prisma db push",
-    "db:generate": "prisma generate"
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.11.1",

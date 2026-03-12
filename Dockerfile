@@ -49,7 +49,7 @@ RUN addgroup -g 1001 -S nodegroup \
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
-# COPY --from=builder /app/backup /app/backup
+COPY --from=builder /app/backup /app/backup
 COPY --from=builder /app/scripts /app/scripts
 # Optional: copy env if you want to bake it into the image
 # Usually better to pass via runtime or docker-compose

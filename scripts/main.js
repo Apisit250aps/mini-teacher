@@ -1,0 +1,1 @@
+console.log("Hello, Mini Teacher! This is the main.js file.");
