@@ -16,7 +16,7 @@ import {
 import { IconInnerShadowTop } from '@tabler/icons-react'
 import { NavUser } from '../app/base/nav-user'
 import Link from 'next/link'
-import { Users } from 'lucide-react'
+import { NotebookText, Users } from 'lucide-react'
 
 export default function AdminLayout({
   children,
@@ -24,6 +24,11 @@ export default function AdminLayout({
   children: React.ReactNode
 }) {
   const items = [
+    {
+      title: 'Documents',
+      url: '/admin/documents',
+      icon: NotebookText,
+    },
     {
       title: 'Users',
       url: '/admin/users',
