@@ -22,6 +22,7 @@ import {
   IconCalendarCheck,
   IconChartBar,
 } from '@tabler/icons-react'
+import { cn } from '@/lib/utils'
 
 // ---------------------------------------------------------------------------
 // Grade configuration — exported so callers can override in the future
@@ -71,12 +72,12 @@ type StudentSummaryRow = {
 }
 
 const GRADE_COLOR: Record<string, string> = {
-  A: 'bg-green-100 text-green-800 dark:bg-green-800/20 dark:text-green-400',
-  'B+': 'bg-emerald-100 text-emerald-800 dark:bg-emerald-800/20 dark:text-emerald-400',
-  B: 'bg-teal-100 text-teal-800 dark:bg-teal-800/20 dark:text-teal-400',
-  'C+': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-700/20 dark:text-yellow-400',
-  C: 'bg-amber-100 text-amber-800 dark:bg-amber-700/20 dark:text-amber-400',
-  'D+': 'bg-orange-100 text-orange-800 dark:bg-orange-700/20 dark:text-orange-400',
+  A: 'bg-green-100 text-green-500 dark:bg-green-500/20 dark:text-green-400',
+  'B+': 'bg-emerald-100 text-emerald-500 dark:bg-emerald-500/20 dark:text-emerald-400',
+  B: 'bg-teal-100 text-teal-500 dark:bg-teal-500/20 dark:text-teal-400',
+  'C+': 'bg-yellow-100 text-yellow-500 dark:bg-yellow-700/20 dark:text-yellow-400',
+  C: 'bg-amber-100 text-amber-500 dark:bg-amber-700/20 dark:text-amber-400',
+  'D+': 'bg-orange-100 text-orange-500 dark:bg-orange-700/20 dark:text-orange-400',
   D: 'bg-red-100 text-red-700 dark:bg-red-700/20 dark:text-red-400',
   F: 'bg-red-200 text-red-900 dark:bg-red-900/20 dark:text-red-300',
   I: 'bg-muted text-muted-foreground',
@@ -111,7 +112,7 @@ function buildColumns(
       size: 55,
       meta: { className: 'text-center' },
       cell: ({ row }) => (
-        <span className="font-medium text-green-600">
+        <span className="font-medium text-green-500 bg-green-50 px-1 rounded">
           {row.original.present}
         </span>
       ),
@@ -122,7 +123,9 @@ function buildColumns(
       size: 55,
       meta: { className: 'text-center' },
       cell: ({ row }) => (
-        <span className="font-medium text-red-600">{row.original.absent}</span>
+        <span className="font-medium text-red-500 bg-red-50 px-1 rounded">
+          {row.original.absent}
+        </span>
       ),
     },
     {
@@ -131,7 +134,9 @@ function buildColumns(
       size: 55,
       meta: { className: 'text-center' },
       cell: ({ row }) => (
-        <span className="font-medium text-amber-600">{row.original.late}</span>
+        <span className="font-medium text-amber-500 bg-amber-50 px-1 rounded">
+          {row.original.late}
+        </span>
       ),
     },
     {
@@ -140,7 +145,9 @@ function buildColumns(
       size: 55,
       meta: { className: 'text-center' },
       cell: ({ row }) => (
-        <span className="font-medium text-blue-600">{row.original.leave}</span>
+        <span className="font-medium text-blue-500 bg-blue-50 px-1 rounded">
+          {row.original.leave}
+        </span>
       ),
     },
     {
@@ -199,11 +206,12 @@ type StatCardProps = {
   icon: React.ReactNode
   label: string
   value: string | number
+  className?: string
 }
 
-function StatCard({ icon, label, value }: StatCardProps) {
+function StatCard({ icon, label, value, className }: StatCardProps) {
   return (
-    <Card>
+    <Card className={cn(`border-2`, className)}>
       <CardContent className="flex items-center gap-3 p-4">
         <div className="rounded-lg bg-muted p-2">{icon}</div>
         <div className="min-w-0">
