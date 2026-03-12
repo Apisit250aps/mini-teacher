@@ -33,7 +33,7 @@ export default function DocumentCreateAction({
       dialogKey={dialogKey}
       trigger={<Button size="sm">+ สร้างเวอร์ชันใหม่</Button>}
       closeOutside={false}
-      size="xl"
+      size="full"
     >
       <DocumentForm
         value={defaultType ? { type: defaultType } : undefined}
