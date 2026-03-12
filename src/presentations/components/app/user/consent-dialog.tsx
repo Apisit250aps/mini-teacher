@@ -25,13 +25,22 @@ interface ConsentDialogProps {
   open: boolean
   onAccept: () => void
   onDecline: () => void
+  readOnly?: boolean
+  initialTab?: 'tos' | 'pp'
+  onClose?: () => void
 }
 
 // Inner component — only mounted when dialog is open, so useEffect runs once on mount
 function ConsentContent({
   onAccept,
   onDecline,
-}: Pick<ConsentDialogProps, 'onAccept' | 'onDecline'>) {
+  readOnly = false,
+  initialTab = 'tos',
+  onClose,
+}: Pick<
+  ConsentDialogProps,
+  'onAccept' | 'onDecline' | 'readOnly' | 'initialTab' | 'onClose'
+>) {
   const [tos, setTos] = useState<DocumentData>(null)
   const [pp, setPp] = useState<DocumentData>(null)
   const [loading, setLoading] = useState(true)
@@ -61,7 +70,9 @@ function ConsentContent({
       <DialogHeader className="shrink-0 px-6 pt-6 pb-3">
         <DialogTitle>ข้อกำหนดและนโยบายความเป็นส่วนตัว</DialogTitle>
         <DialogDescription>
-          กรุณาอ่านและยอมรับข้อกำหนดการใช้งานและนโยบายความเป็นส่วนตัวก่อนเข้าสู่ระบบ
+          {readOnly
+            ? 'ข้อกำหนดการใช้งานและนโยบายความเป็นส่วนตัวของ Mini Teacher'
+            : 'กรุณาอ่านและยอมรับข้อกำหนดการใช้งานและนโยบายความเป็นส่วนตัวก่อนเข้าสู่ระบบ'}
         </DialogDescription>
       </DialogHeader>
 
@@ -71,7 +82,10 @@ function ConsentContent({
             กำลังโหลดเอกสาร...
           </div>
         ) : (
-          <Tabs defaultValue="tos" className="flex min-h-0 flex-1 flex-col">
+          <Tabs
+            defaultValue={initialTab}
+            className="flex min-h-0 flex-1 flex-col"
+          >
             <TabsList className="shrink-0">
               <TabsTrigger value="tos">ข้อกำหนดการใช้งาน</TabsTrigger>
               <TabsTrigger value="pp">นโยบายความเป็นส่วนตัว</TabsTrigger>
@@ -109,38 +123,48 @@ function ConsentContent({
       </div>
 
       <DialogFooter className="shrink-0 flex-col items-start gap-3 border-t px-6 py-4 sm:flex-col sm:items-start">
-        <div className="flex flex-col gap-2">
-          <label className="flex cursor-pointer items-center gap-2 text-sm">
-            <Checkbox
-              checked={acceptedTos}
-              onCheckedChange={(v) => setAcceptedTos(v === true)}
-              id="consent-tos"
-            />
-            <span>
-              ฉันได้อ่านและยอมรับ <strong>ข้อกำหนดการใช้งาน</strong>
-              {tos?.version ? ` (${tos.version})` : ''}
-            </span>
-          </label>
-          <label className="flex cursor-pointer items-center gap-2 text-sm">
-            <Checkbox
-              checked={acceptedPp}
-              onCheckedChange={(v) => setAcceptedPp(v === true)}
-              id="consent-pp"
-            />
-            <span>
-              ฉันได้อ่านและยอมรับ <strong>นโยบายความเป็นส่วนตัว</strong>
-              {pp?.version ? ` (${pp.version})` : ''}
-            </span>
-          </label>
-        </div>
-        <div className="flex w-full justify-end gap-2">
-          <Button variant="outline" type="button" onClick={onDecline}>
-            ยกเลิก
-          </Button>
-          <Button type="button" disabled={!canAccept} onClick={onAccept}>
-            ยอมรับและเข้าสู่ระบบ
-          </Button>
-        </div>
+        {readOnly ? (
+          <div className="flex w-full justify-end">
+            <Button type="button" onClick={onClose}>
+              ปิด
+            </Button>
+          </div>
+        ) : (
+          <>
+            <div className="flex flex-col gap-2">
+              <label className="flex cursor-pointer items-center gap-2 text-sm">
+                <Checkbox
+                  checked={acceptedTos}
+                  onCheckedChange={(v) => setAcceptedTos(v === true)}
+                  id="consent-tos"
+                />
+                <span>
+                  ฉันได้อ่านและยอมรับ <strong>ข้อกำหนดการใช้งาน</strong>
+                  {tos?.version ? ` (${tos.version})` : ''}
+                </span>
+              </label>
+              <label className="flex cursor-pointer items-center gap-2 text-sm">
+                <Checkbox
+                  checked={acceptedPp}
+                  onCheckedChange={(v) => setAcceptedPp(v === true)}
+                  id="consent-pp"
+                />
+                <span>
+                  ฉันได้อ่านและยอมรับ <strong>นโยบายความเป็นส่วนตัว</strong>
+                  {pp?.version ? ` (${pp.version})` : ''}
+                </span>
+              </label>
+            </div>
+            <div className="flex w-full justify-end gap-2">
+              <Button variant="outline" type="button" onClick={onDecline}>
+                ยกเลิก
+              </Button>
+              <Button type="button" disabled={!canAccept} onClick={onAccept}>
+                ยอมรับและเข้าสู่ระบบ
+              </Button>
+            </div>
+          </>
+        )}
       </DialogFooter>
     </>
   )
@@ -150,6 +174,9 @@ export function ConsentDialog({
   open,
   onAccept,
   onDecline,
+  readOnly = false,
+  initialTab = 'tos',
+  onClose,
 }: ConsentDialogProps) {
   return (
     <Dialog open={open}>
@@ -157,7 +184,15 @@ export function ConsentDialog({
         showCloseButton={false}
         className="flex max-h-[90vh] flex-col gap-0 p-0 sm:max-w-2xl"
       >
-        {open && <ConsentContent onAccept={onAccept} onDecline={onDecline} />}
+        {open && (
+          <ConsentContent
+            onAccept={onAccept}
+            onDecline={onDecline}
+            readOnly={readOnly}
+            initialTab={initialTab}
+            onClose={onClose}
+          />
+        )}
       </DialogContent>
     </Dialog>
   )

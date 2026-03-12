@@ -25,7 +25,8 @@ RUN npm ci --legacy-peer-deps
 COPY . .
 # ARG DATABASE_URL
 # ENV DATABASE_URL=$DATABASE_URL
-
+# RUN npm run db:generate
+# RUN npm run db:deploy
 
 # Build the Next.js app in standalone mode
 # RUN NODE_OPTIONS="--max-old-space-size=2048" npm run build

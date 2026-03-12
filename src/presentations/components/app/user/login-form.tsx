@@ -1,4 +1,5 @@
 'use client'
+import { useState } from 'react'
 import { GalleryVerticalEnd } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/presentations/components/ui/button'
@@ -24,6 +25,10 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
+  const [docView, setDocView] = useState<{ open: boolean; tab: 'tos' | 'pp' }>({
+    open: false,
+    tab: 'tos',
+  })
   const {
     onCredentialSubmit,
     form,
@@ -38,6 +43,14 @@ export function LoginForm({
         open={showConsent}
         onAccept={onConsentAccept}
         onDecline={onConsentDecline}
+      />
+      <ConsentDialog
+        open={docView.open}
+        readOnly
+        initialTab={docView.tab}
+        onClose={() => setDocView({ open: false, tab: 'tos' })}
+        onAccept={() => {}}
+        onDecline={() => {}}
       />
       <div className={cn('flex flex-col gap-6', className)} {...props}>
         <form onSubmit={form.handleSubmit(onCredentialSubmit)}>
@@ -107,6 +120,22 @@ export function LoginForm({
             </Field>
           </FieldGroup>
         </form>
+      </div>
+      <div className="flex justify-center gap-4 mt-4 text-sm text-muted-foreground">
+        <button
+          type="button"
+          className="underline hover:text-foreground"
+          onClick={() => setDocView({ open: true, tab: 'tos' })}
+        >
+          ข้อกำหนดการใช้งาน
+        </button>
+        <button
+          type="button"
+          className="underline hover:text-foreground"
+          onClick={() => setDocView({ open: true, tab: 'pp' })}
+        >
+          นโยบายความเป็นส่วนตัว
+        </button>
       </div>
     </Form>
   )
