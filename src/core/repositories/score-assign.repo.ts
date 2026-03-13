@@ -13,18 +13,36 @@ const scoreAssignRepository: ScoreAssignRepository = {
   create: async (data) => {
     await ensureClassExists(data.classId)
 
-    const result = await prisma.assignment.create({
-      data: {
-        classId: data.classId,
-        title: data.title,
-        description: data.description,
-        minScore: data.minScore,
-        maxScore: data.maxScore,
-        type: data.type,
-        assignDate: data.assignDate,
-        dueDate: data.dueDate,
-        isEditable: data.isEditable,
-      },
+    const result = await prisma.$transaction(async (tx) => {
+      const assign = await tx.assignment.create({
+        data: {
+          classId: data.classId,
+          title: data.title,
+          description: data.description,
+          minScore: data.minScore,
+          maxScore: data.maxScore,
+          type: data.type,
+          assignDate: data.assignDate,
+          dueDate: data.dueDate,
+          isEditable: data.isEditable,
+        },
+      })
+
+      const members = await tx.classMember.findMany({
+        where: { classId: data.classId },
+      })
+
+      const scoresData = members.map((member) => ({
+        assignmentId: assign.id,
+        studentId: member.studentId,
+        score: assign.minScore,
+      }))
+
+      await tx.score.createMany({
+        data: scoresData,
+      })
+
+      return assign
     })
     return result
   },
