@@ -51,6 +51,11 @@ enum DocumentType {
   PRIVACY_POLICY
 }
 
+enum DocumentLanguage {
+  EN
+  TH
+}
+
 model User {
   id            String        @id @default(uuid()) @db.Uuid
   name          String?
@@ -123,30 +128,31 @@ model VerificationToken {
 }
 
 model Document {
-  id         String         @id @default(uuid()) // หรือใช้ logic UUID v7 ในระดับ code
-  type       DocumentType
-  version    String         // เช่น "1.0.0" หรือ "2024.03"
-  content    String         @db.Text // เก็บ Markdown Syntax
-  isActive   Boolean        @default(true)
-  createdAt  DateTime       @default(now())
-  
+  id        String           @id @default(uuid()) // หรือใช้ logic UUID v7 ในระดับ code
+  type      DocumentType
+  version   String // เช่น "1.0.0" หรือ "2024.03"
+  content   String           @db.Text // เก็บ Markdown Syntax
+  language  DocumentLanguage @default(TH)
+  isActive  Boolean          @default(true)
+  createdAt DateTime         @default(now())
+
   // ความสัมพันธ์: หนึ่งเอกสารมีการยอมรับได้หลายคน
   acceptances UserAcceptance[]
 
-  @@unique([type, version]) // ป้องกัน Version ซ้ำในประเภทเดียวกัน
+  @@unique([type, version, language]) // ป้องกัน Version ซ้ำในประเภทเดียวกัน
   @@map("documents")
 }
 
 model UserAcceptance {
-  id          String   @id @default(uuid())
-  userId      String
-  documentId  String
-  acceptedAt  DateTime @default(now())
-  ipAddress   String?
-  userAgent   String?  // เก็บ Browser/Device ที่ใช้กดยอมรับไว้เป็นหลักฐาน
+  id         String   @id @default(uuid())
+  userId     String
+  documentId String
+  acceptedAt DateTime @default(now())
+  ipAddress  String?
+  userAgent  String? // เก็บ Browser/Device ที่ใช้กดยอมรับไว้เป็นหลักฐาน
 
-  document    Document @relation(fields: [documentId], references: [id])
-  
+  document Document @relation(fields: [documentId], references: [id])
+
   @@index([userId, documentId])
   @@map("user_acceptances")
 }
