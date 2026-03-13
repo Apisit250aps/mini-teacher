@@ -25,6 +25,11 @@ enum DocumentType {
   PRIVACY_POLICY,
 }
 
+enum DocumentLanguage {
+  EN,
+  TH,
+}
+
 @doc("DB table: users")
 model User {
   @key
@@ -89,6 +94,7 @@ model Document {
   type: DocumentType;
   version: string;
   content: string;
+  language: DocumentLanguage;
   isActive: boolean;
   createdAt: utcDateTime;
 }
