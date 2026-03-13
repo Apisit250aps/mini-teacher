@@ -10,7 +10,10 @@ import {
 } from '@/lib/utils/server'
 import type { NextRequest } from 'next/server'
 import type { DocumentQuery } from '@/core/domain/data'
-import type { DocumentType } from '@/core/domain/entities/enums'
+import type {
+  DocumentType,
+  DocumentLanguage,
+} from '@/core/domain/entities/enums'
 
 export async function GET(request: NextRequest) {
   try {
@@ -19,7 +22,11 @@ export async function GET(request: NextRequest) {
       'latestType',
     ) as DocumentType | null
     if (latestType) {
-      const data = await documentUseCase.getLatestByType(latestType)
+      const lang = getSearchParam(request, 'lang') as DocumentLanguage | null
+      const data = await documentUseCase.getLatestByType(
+        latestType,
+        lang ?? 'TH',
+      )
       return ok('ดึงเอกสารล่าสุดสำเร็จ', data)
     }
     const filter = getJsonSearchParam<DocumentQuery>(request, 'filter')

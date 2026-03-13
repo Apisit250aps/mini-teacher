@@ -3,6 +3,7 @@ import type { Prisma } from '@prisma'
 import type { Document } from '@/core/domain/entities/document'
 import type { DocumentWithAcceptances } from '@/core/domain/data/document'
 import type { DocumentRepository } from '@/core/domain/repositories/document'
+import type { DocumentLanguage } from '@/core/domain/entities/enums'
 
 const documentRepository: DocumentRepository = {
   getAll: async (filter = {}) => {
@@ -20,9 +21,9 @@ const documentRepository: DocumentRepository = {
     return document as unknown as DocumentWithAcceptances | null
   },
 
-  getLatestByType: async (type) => {
+  getLatestByType: async (type, language?: DocumentLanguage) => {
     const document = await prisma.document.findFirst({
-      where: { type, isActive: true },
+      where: { type, isActive: true, ...(language ? { language } : {}) },
       orderBy: { createdAt: 'desc' },
     })
     return document as unknown as Document | null
@@ -35,6 +36,7 @@ const documentRepository: DocumentRepository = {
         version: data.version,
         content: data.content,
         isActive: data.isActive ?? true,
+        ...(data.language ? { language: data.language } : {}),
       },
     })
     return document as unknown as Document

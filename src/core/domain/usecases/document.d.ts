@@ -1,4 +1,4 @@
-import type { DocumentType } from '../entities/enums'
+import type { DocumentType, DocumentLanguage } from '../entities/enums'
 import type {
   DocumentCreateData,
   DocumentQuery,
@@ -15,6 +15,7 @@ interface DocumentUseCase {
   ) => Promise<Awaited<ReturnType<DocumentRepository['getById']>>>
   getLatestByType: (
     type: DocumentType,
+    language?: DocumentLanguage,
   ) => Promise<Awaited<ReturnType<DocumentRepository['getLatestByType']>>>
   create: (
     data: DocumentCreateData,

@@ -5,7 +5,10 @@ import type {
   DocumentWithAcceptances,
 } from '@/core/domain/data'
 import type { Document } from '@/core/domain/entities'
-import type { DocumentType } from '@/core/domain/entities/enums'
+import type {
+  DocumentType,
+  DocumentLanguage,
+} from '@/core/domain/entities/enums'
 import { useApiMutationWithDates, useApiQueryWithDates } from '@/lib/client'
 import { mutateApiData, mutateApiSuccess } from '@/lib/utils'
 import { selectData, toFilterQuery } from './_shared'
@@ -52,13 +55,16 @@ export const useDocumentByIdQuery = (id: string) => {
   }
 }
 
-export const useDocumentLatestByTypeQuery = (latestType: DocumentType) => {
+export const useDocumentLatestByTypeQuery = (
+  latestType: DocumentType,
+  lang?: DocumentLanguage,
+) => {
   const query = useApiQueryWithDates(
     'get',
     '/document/latest',
     {
       params: {
-        query: { latestType },
+        query: { latestType, ...(lang ? { lang } : {}) },
       },
     },
     {

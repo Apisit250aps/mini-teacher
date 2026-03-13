@@ -1,5 +1,5 @@
 import z from 'zod'
-import { documentTypeSchema } from './enums'
+import { documentTypeSchema, documentLanguageSchema } from './enums'
 import { ensureAtLeastOneField, querySchema } from './common'
 
 export const documentEntitySchema = z.object({
@@ -7,6 +7,7 @@ export const documentEntitySchema = z.object({
   type: documentTypeSchema,
   version: z.string().trim().min(1, 'กรุณาระบุเวอร์ชัน'),
   content: z.string().min(1, 'กรุณาระบุเนื้อหาเอกสาร'),
+  language: documentLanguageSchema.default('TH'),
   isActive: z.boolean(),
   createdAt: z.date(),
 })

@@ -20,3 +20,6 @@ export const assignTypeSchema = z.enum(assignType)
 
 export const documentType = ['TOS', 'PRIVACY_POLICY'] as const
 export const documentTypeSchema = z.enum(documentType)
+
+export const documentLanguage = ['EN', 'TH'] as const
+export const documentLanguageSchema = z.enum(documentLanguage)

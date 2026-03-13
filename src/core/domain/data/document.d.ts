@@ -1,6 +1,6 @@
 import type { Document } from '../entities/document'
 import type { UserAcceptance } from '../entities/user-acceptance'
-import type { DocumentType } from '../entities/enums'
+import type { DocumentType, DocumentLanguage } from '../entities/enums'
 import type { FindManyOptions } from './common'
 
 export interface DocumentWithAcceptances extends Document {
@@ -11,6 +11,7 @@ export interface DocumentCreateData {
   type: DocumentType
   version: string
   content: string
+  language?: DocumentLanguage
   isActive?: boolean
 }
 

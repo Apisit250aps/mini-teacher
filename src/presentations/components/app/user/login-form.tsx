@@ -20,6 +20,7 @@ import {
 } from '@/presentations/components/ui/form'
 import { useLogin } from '@/hooks/use-login'
 import { ConsentDialog } from './consent-dialog'
+import Link from 'next/link';
 
 export function LoginForm({
   className,
@@ -122,20 +123,8 @@ export function LoginForm({
         </form>
       </div>
       <div className="flex justify-center gap-4 mt-4 text-sm text-muted-foreground">
-        <button
-          type="button"
-          className="underline hover:text-foreground"
-          onClick={() => setDocView({ open: true, tab: 'tos' })}
-        >
-          ข้อกำหนดการใช้งาน
-        </button>
-        <button
-          type="button"
-          className="underline hover:text-foreground"
-          onClick={() => setDocView({ open: true, tab: 'pp' })}
-        >
-          นโยบายความเป็นส่วนตัว
-        </button>
+        <Link className=' underline' href="/legal/terms">ข้อกำหนดการใช้งาน</Link>
+        <Link className=' underline' href="/legal/privacy">นโยบายความเป็นส่วนตัว</Link>
       </div>
     </Form>
   )

@@ -12,6 +12,7 @@ interface Documents {
   @route("latest")
   getLatestByType(
     @query latestType: PrismaModels.DocumentType,
+    @query lang?: PrismaModels.DocumentLanguage,
   ): ApiResponse<DocumentData | null> | ApiError;
 
   @post create(

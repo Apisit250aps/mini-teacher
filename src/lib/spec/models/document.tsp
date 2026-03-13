@@ -10,6 +10,7 @@ model DocumentCreateBody {
   type: PrismaModels.DocumentType;
   version: string;
   content: string;
+  language?: PrismaModels.DocumentLanguage;
   isActive?: boolean;
 }
 

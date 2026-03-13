@@ -8,6 +8,7 @@ import {
   SidebarTrigger,
 } from '@/presentations/components/ui/sidebar'
 import AppBreadCrumb from '@/presentations/components/app/base/app-bread-crumb'
+import Link from 'next/link'
 
 export default function DashboardLayout({
   children,
@@ -30,6 +31,14 @@ export default function DashboardLayout({
         </header>
         <div className="flex min-w-0 flex-1 flex-col gap-4 overflow-x-hidden p-4 pt-0">
           {children}
+        </div>
+        <div className="flex justify-center gap-4 m-4 text-sm text-muted-foreground">
+          <Link className=" underline" href="/legal/terms">
+            ข้อกำหนดการใช้งาน
+          </Link>
+          <Link className=" underline" href="/legal/privacy">
+            นโยบายความเป็นส่วนตัว
+          </Link>
         </div>
       </SidebarInset>
     </SidebarProvider>

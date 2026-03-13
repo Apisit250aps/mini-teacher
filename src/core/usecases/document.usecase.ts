@@ -3,7 +3,10 @@ import type {
   DocumentQuery,
   DocumentUpdateData,
 } from '@/core/domain/data/document'
-import type { DocumentType } from '@/core/domain/entities/enums'
+import type {
+  DocumentType,
+  DocumentLanguage,
+} from '@/core/domain/entities/enums'
 import type { DocumentRepository } from '@/core/domain/repositories/document'
 import type { DocumentUseCase } from '@/core/domain/usecases/document'
 import {
@@ -11,7 +14,10 @@ import {
   documentQuerySchema,
   documentUpdateSchema,
 } from '@/core/domain/schema/document.schema'
-import { documentTypeSchema } from '@/core/domain/schema/enums'
+import {
+  documentTypeSchema,
+  documentLanguageSchema,
+} from '@/core/domain/schema/enums'
 import { AppError } from '@/lib/utils/error'
 import { ensureFoundOrThrow, parseOrThrow } from './_shared'
 
@@ -29,9 +35,12 @@ export const createDocumentUseCase = (
     return ensureFoundOrThrow(await repository.getById(id), 'ไม่พบเอกสาร')
   },
 
-  getLatestByType: async (type) => {
+  getLatestByType: async (type, language?: DocumentLanguage) => {
     const parsedType = parseOrThrow<DocumentType>(documentTypeSchema, type)
-    return repository.getLatestByType(parsedType)
+    const parsedLang = language
+      ? parseOrThrow<DocumentLanguage>(documentLanguageSchema, language)
+      : undefined
+    return repository.getLatestByType(parsedType, parsedLang)
   },
 
   create: async (data) => {

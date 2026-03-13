@@ -28,6 +28,7 @@ const documentFormSchema = z.object({
   type: z.enum(['TOS', 'PRIVACY_POLICY']),
   version: z.string().trim().min(1, 'กรุณาระบุเวอร์ชัน เช่น 1.0.0'),
   content: z.string().min(1, 'กรุณาระบุเนื้อหาเอกสาร'),
+  language: z.enum(['TH', 'EN']),
   isActive: z.boolean(),
 })
 
@@ -55,6 +56,7 @@ export default function DocumentForm({
       type: (value?.type as 'TOS' | 'PRIVACY_POLICY') ?? 'TOS',
       version: value?.version ?? '',
       content: value?.content ?? '',
+      language: (value?.language as 'TH' | 'EN') ?? 'TH',
       isActive: value?.isActive ?? true,
     },
   })
@@ -106,6 +108,28 @@ export default function DocumentForm({
                 <FormControl>
                   <Input placeholder="เช่น 1.0.0 หรือ 2024.03" {...field} />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={methods.control}
+            name="language"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>ภาษา</FormLabel>
+                <Select value={field.value} onValueChange={field.onChange}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="เลือกภาษา" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="TH">ภาษาไทย (TH)</SelectItem>
+                    <SelectItem value="EN">English (EN)</SelectItem>
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
