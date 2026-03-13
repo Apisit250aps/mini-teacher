@@ -34,12 +34,36 @@ const classMemberRepository: ClassMemberRepository = {
     }
     await Promise.all(guards)
 
-    const result = await prisma.classMember.create({
-      data: {
-        classId: data.classId,
+    const result = await prisma.$transaction(async (tx) => {
+      const classMember = await tx.classMember.create({
+        data: {
+          classId: data.classId,
+          studentId: data.studentId,
+          userId: data.userId,
+        },
+      })
+      const checkDates = await tx.checkDate.findMany({
+        where: { classId: data.classId },
+      })
+      const checkStudentsData = checkDates.map((checkDate) => ({
+        checkDateId: checkDate.id,
         studentId: data.studentId,
-        userId: data.userId,
-      },
+      }))
+      await tx.checkStudent.createMany({
+        data: checkStudentsData,
+      })
+      const assignments = await tx.assignment.findMany({
+        where: { classId: data.classId },
+      })
+      const scoresData = assignments.map((assignment) => ({
+        assignmentId: assignment.id,
+        studentId: data.studentId,
+        score: assignment.minScore,
+      }))
+      await tx.score.createMany({
+        data: scoresData,
+      })
+      return classMember
     })
     return result
   },
