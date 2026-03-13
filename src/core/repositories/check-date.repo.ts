@@ -13,13 +13,26 @@ const checkDateRepository: CheckDateRepository = {
   create: async (data) => {
     await ensureClassExists(data.classId)
 
-    const result = await prisma.checkDate.create({
-      data: {
-        classId: data.classId,
-        date: data.date,
-        description: data.description,
-        isEditable: data.isEditable,
-      },
+    const result = await prisma.$transaction(async (tx) => {
+      const check = await tx.checkDate.create({
+        data: {
+          classId: data.classId,
+          date: data.date,
+          description: data.description,
+          isEditable: data.isEditable,
+        },
+      })
+      const members = await tx.classMember.findMany({
+        where: { classId: data.classId },
+      })
+      const checkStudentsData = members.map((member) => ({
+        checkDateId: check.id,
+        studentId: member.studentId,
+      }))
+      await tx.checkStudent.createMany({
+        data: checkStudentsData,
+      })
+      return check
     })
     return result
   },
