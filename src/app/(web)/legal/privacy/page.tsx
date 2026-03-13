@@ -39,7 +39,7 @@ export default async function PrivacyPage({
               )}
             </p>
           </div>
-          <div className="flex gap-2">
+          {/* <div className="flex gap-2">
             <Link
               href="?lang=th"
               className={`rounded-md border px-3 py-1.5 text-sm font-medium transition-colors ${
@@ -60,7 +60,7 @@ export default async function PrivacyPage({
             >
               EN
             </Link>
-          </div>
+          </div> */}
         </div>
 
         <div className="rounded-lg border p-6">
