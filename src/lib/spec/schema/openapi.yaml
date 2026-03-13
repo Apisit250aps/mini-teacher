@@ -1467,6 +1467,12 @@ paths:
           schema:
             $ref: '#/components/schemas/PrismaModels.DocumentType'
           explode: false
+        - name: lang
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/PrismaModels.DocumentLanguage'
+          explode: false
       responses:
         '200':
           description: The request has succeeded.
@@ -3777,6 +3783,8 @@ components:
           type: string
         content:
           type: string
+        language:
+          $ref: '#/components/schemas/PrismaModels.DocumentLanguage'
         isActive:
           type: boolean
     DocumentData:
@@ -3786,6 +3794,7 @@ components:
         - type
         - version
         - content
+        - language
         - isActive
         - createdAt
       properties:
@@ -3797,6 +3806,8 @@ components:
           type: string
         content:
           type: string
+        language:
+          $ref: '#/components/schemas/PrismaModels.DocumentLanguage'
         isActive:
           type: boolean
         createdAt:
@@ -4079,6 +4090,7 @@ components:
         - type
         - version
         - content
+        - language
         - isActive
         - createdAt
       properties:
@@ -4090,12 +4102,19 @@ components:
           type: string
         content:
           type: string
+        language:
+          $ref: '#/components/schemas/PrismaModels.DocumentLanguage'
         isActive:
           type: boolean
         createdAt:
           type: string
           format: date-time
       description: 'DB table: documents'
+    PrismaModels.DocumentLanguage:
+      type: string
+      enum:
+        - EN
+        - TH
     PrismaModels.DocumentType:
       type: string
       enum:
